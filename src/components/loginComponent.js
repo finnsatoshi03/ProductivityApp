@@ -1,4 +1,4 @@
-import { Image, View } from "react-native";
+import { Image, View, Text } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -20,6 +20,34 @@ export default function LoginComponent() {
         }}
         source={require("../../assets/logo.png")}
       />
+      <View
+        style={{
+          position: "absolute",
+          top: hp("40%"),
+          zIndex: 3,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Text
+          style={{
+            fontFamily: "montserrat-bold",
+            fontSize: hp("5%"),
+          }}
+        >
+          WELCOME
+        </Text>
+        <Text
+          style={{
+            fontFamily: "montserrat-regular",
+            fontSize: hp("1.5%"),
+            textAlign: "center",
+          }}
+        >
+          ProductivityApp — where productivity meets simplicity. Log in and
+          power up your efficiency effortlessly!
+        </Text>
+      </View>
       <View style={{ position: "relative", top: hp("20%") }}>
         <Image
           style={{
