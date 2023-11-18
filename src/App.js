@@ -35,7 +35,13 @@ export default function App() {
           <EventCard
             date="22 Jul 2022"
             time="1:00PM"
-            event="Tree sadsaiods sijadioasj doa sd"
+            event="Tree sadsaiods sijadioasj doa sdsadasdas sad asd as"
+            location="Tree sadsaiods sijadioasj doa sd dkapso kdpsao kdpsao kdaps sadpkaos"
+          />
+          <EventCard
+            date="22 Jul 2022"
+            time="1:00PM"
+            event="Sample2"
             location="Tree sadsaiods sijadioasj doa sd dkapso kdpsao kdpsao kdaps sadpkaos"
           />
         </View>
