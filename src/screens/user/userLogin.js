@@ -5,8 +5,8 @@ import Login from "../../components/login";
 export default function AdminLogin({ navigation }) {
   return (
     <Login
-      header="Welcome, Admin!"
-      description="Take control of efficiency with ProductivityApp. Your dashboard for seamless management awaits. Let's elevate productivity together!"
+      header="Hello User!"
+      description="Step into a world of productivity with ProductivityApp. Your personalized workspace for streamlined efficiency. Let's make every login count!"
     />
   );
 }

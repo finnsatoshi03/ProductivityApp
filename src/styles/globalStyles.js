@@ -1,6 +1,14 @@
 import { StyleSheet } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 const lightGreen = "#d6efc3";
+//fonts
+const bold = "montserrat-bold";
+const semiBold = "montserrat-semiBold";
+const regular = "montserrat-regular";
 
 export const globalStyles = StyleSheet.create({
   container: {
@@ -9,4 +17,76 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 24,
     backgroundColor: lightGreen,
   },
+  // Components
+  // Log in
+  welcomeContainer: {
+    // flex: 1,
+    // top: hp("40%"),
+    marginVertical: hp("5%"),
+    zIndex: 3,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  welcomeHeader: {
+    fontFamily: "montserrat-semiBold",
+    fontSize: hp("5%"),
+    textAlign: "center",
+  },
+  welcomeHeaderBold: {
+    fontFamily: "montserrat-bold",
+    fontSize: hp("5%"),
+    textAlign: "center",
+    lineHeight: hp("5%"),
+  },
+  welcomeDescription: {
+    fontFamily: regular,
+    fontSize: hp("1.5%"),
+    textAlign: "center",
+  },
+  buttonContainer: {
+    width: wp("70%"),
+    zIndex: 3,
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  overlayImage: {
+    position: "absolute",
+    zIndex: 2,
+    height: hp("100%"),
+    width: wp("100%"),
+    marginLeft: wp("-30.8%"),
+  },
+  backgroundView: {
+    position: "absolute",
+    zIndex: 1,
+    backgroundColor: "#f3fadc",
+    height: hp("100%"),
+    width: wp("100%"),
+    // marginLeft: wp("-5.8%"),
+    borderTopRightRadius: 100,
+  },
+  // Admin Login
+  adminLogo: {
+    zIndex: 2,
+    height: hp("15%"),
+    width: wp("29%"),
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  input: {
+    backgroundColor: "#e8f6d2",
+    borderColor: "black",
+    borderWidth: 1,
+    borderRadius: 20,
+    paddingVertical: 10,
+    paddingHorizontal: 20,
+    marginBottom: 20,
+  },
+  loginButtonContainer: {
+    zIndex: 2,
+    width: wp("70%"),
+    justifyContent: "center",
+    alignSelf: "center",
+  },
+  footerDeveloper: {},
 });

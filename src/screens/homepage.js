@@ -5,12 +5,7 @@ import LoginComponent from "../components/loginComponent";
 export default function Login({ navigation }) {
   return (
     <View style={globalStyles.container}>
-      <LoginComponent />
-      <Text>Login Screen</Text>
-      <Button
-        title="Navigate"
-        onPress={() => navigation.navigate("Admin Login")}
-      />
+      <LoginComponent navigation={navigation} />
     </View>
   );
 }
