@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Login from "../screens/login";
-import Admin from "../screens/admin/adminLogin";
-import LoginButtons from "../components/loginButtons";
+import Homepage from "../screens/homepage";
+import Login from "../components/login";
+import AdminScreen from "../screens/admin/adminLogin";
+import UserScreen from "../screens/user/userLogin";
+import LoginButtons from "../components/loginButton";
 
 const Stack = createNativeStackNavigator();
 
@@ -12,15 +14,25 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Login">
+      <Stack.Navigator initialRouteName="Homepage">
         <Stack.Screen
-          name="Login"
-          component={Login}
+          name="Homepage"
+          component={Homepage}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Admin Login"
-          component={Admin}
+          name="Admin"
+          component={AdminScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="User"
+          component={UserScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Login"
+          component={Login}
           options={{ headerShown: false }}
         />
         <Stack.Screen

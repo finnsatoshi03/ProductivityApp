@@ -7,7 +7,15 @@ import {
 
 export default function LoginComponent({ topProperty }) {
   return (
-    <View style={{ position: "relative", top: hp("20%") || topProperty }}>
+    <View
+      style={{
+        position: "absolute",
+        top: topProperty,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    >
       <Image
         style={globalStyles.overlayImage}
         source={require("../../assets/background-overlay.png")}

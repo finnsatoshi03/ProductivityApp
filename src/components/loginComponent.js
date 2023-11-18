@@ -4,54 +4,44 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import LoginButon from "./loginButtons";
+import LoginButton from "./loginButton";
 import Background from "./background";
+import HeroMessage from "./heroMessage";
 
 export default function LoginComponent({ navigation }) {
   return (
-    <View style={globalStyles.logInComponent}>
+    <View style={globalStyles.container}>
       <Image
         style={{
-          position: "absolute",
-          top: hp("5%"),
-          zIndex: 3,
-          justifyContent: "center",
-          alignSelf: "center",
           height: hp("30%"),
           width: wp("60%"),
+          zIndex: 3,
+          alignSelf: "center",
         }}
         source={require("../../assets/logo.png")}
       />
-      <View style={globalStyles.welcomeContainer}>
-        <Text style={globalStyles.welcomeHeader}>WELCOME</Text>
-        <Text style={globalStyles.welcomeDescription}>
-          ProductivityApp — where productivity meets simplicity. Log in and
-          power up your efficiency effortlessly!
-        </Text>
+      <HeroMessage
+        header="Welcome"
+        description="ProductivityApp — where productivity meets simplicity. Log in and power
+        up your efficiency effortlessly!"
+      />
+      <View style={{ marginBottom: hp("3%") }}>
+        <View style={[globalStyles.buttonContainer]}>
+          <LoginButton
+            navigation={navigation}
+            destination="Admin"
+            text="Admin"
+          />
+        </View>
       </View>
-      <View style={globalStyles.buttonContainer}>
-        <LoginButon
-          navigation={navigation}
-          destination="Admin Login"
-          text="Admin"
-        />
-      </View>
-      <View
-        style={{
-          width: wp("70%"),
-          position: "absolute",
-          zIndex: 3,
-          top: hp("63%"),
-          justifyContent: "center",
-          alignSelf: "center",
-        }}
-      >
-        <LoginButon navigation={navigation} text="User" />
+      <View style={{ marginBottom: hp("3%") }}>
+        <View style={[globalStyles.buttonContainer]}>
+          <LoginButton navigation={navigation} destination="User" text="User" />
+        </View>
       </View>
       <View
         style={{
           zIndex: 3,
-          top: hp("70%"),
           justifyContent: "center",
           alignSelf: "center",
         }}
@@ -62,14 +52,13 @@ export default function LoginComponent({ navigation }) {
           </Text>
         </Pressable>
       </View>
-      <Background />
       <View
         style={{
-          //   flex: 1,
-          justifyContent: "flex-end",
-          alignSelf: "flex-end",
           position: "absolute",
-          top: hp("98%"),
+          right: 0,
+          bottom: hp("-3%"),
+          justifyContent: "flex-end",
+          alignItems: "flex-end",
           zIndex: 4,
         }}
       >
@@ -81,6 +70,7 @@ export default function LoginComponent({ navigation }) {
           </Text>
         </Pressable>
       </View>
+      <Background topProperty={hp("20%")} />
     </View>
   );
 }
