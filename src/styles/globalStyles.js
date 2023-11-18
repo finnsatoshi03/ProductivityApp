@@ -19,9 +19,6 @@ export const globalStyles = StyleSheet.create({
   },
   // Components
   // Log in
-  logInComponent: {
-    flex: 1,
-  },
   welcomeContainer: {
     position: "absolute",
     top: hp("40%"),
@@ -66,4 +63,5 @@ export const globalStyles = StyleSheet.create({
     // marginLeft: wp("-5.8%"),
     borderTopRightRadius: 100,
   },
+  footerDeveloper: {},
 });

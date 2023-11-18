@@ -67,12 +67,12 @@ export default function LoginComponent() {
       </View>
       <View
         style={{
-          flex: 1,
+          //   flex: 1,
           justifyContent: "flex-end",
           alignSelf: "flex-end",
-          //   position: "absolute",
-          top: hp("10%"),
-          zIndex: 3,
+          position: "absolute",
+          top: hp("95%"),
+          zIndex: 4,
         }}
       >
         <Pressable>

@@ -6,11 +6,11 @@ export default function Login({ navigation }) {
   return (
     <View style={globalStyles.container}>
       <LoginComponent />
-      <Text>Login Screen</Text>
+      {/* <Text>Login Screen</Text>
       <Button
         title="Navigate"
         onPress={() => navigation.navigate("Admin Login")}
-      />
+      /> */}
     </View>
   );
 }
