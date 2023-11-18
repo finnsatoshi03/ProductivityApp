@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import Calendar from "../screens/calendar";
-import Reports from "../screens/reports";
+import Login from "../screens/login";
+import Admin from "../screens/adminLogin";
 
 const Stack = createNativeStackNavigator();
 
@@ -11,14 +11,14 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator initialRouteName="Landing">
+      <Stack.Navigator initialRouteName="Login">
         <Stack.Screen
-          name="Calendar"
-          component={Calendar}
+          name="Login"
+          component={Login}
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="Reports"
+          name="Admin Login"
           component={Reports}
           options={{ headerShown: false }}
         />

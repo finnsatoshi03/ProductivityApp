@@ -1,10 +1,10 @@
 import { Text, View } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
+import { globalStyles } from "./styles/globalStyles";
 
-export default function Calendar() {
+export default function AdminLogin() {
   return (
     <View style={globalStyles.container}>
-      <Text>Events Screen</Text>
+      <Text>Admin Screen</Text>
       <StatusBar style="auto" />
     </View>
   );
