@@ -8,6 +8,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  Easing,
 } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import Background from "../components/background";
@@ -21,27 +22,40 @@ import HeroMessage from "../components/heroMessage";
 export default function AdminLogin({ navigation, header, description }) {
   const [isFocused, setIsFocused] = useState(false);
   const logoSize = useRef(new Animated.Value(1)).current;
+  const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
 
   const handleFocus = () => {
-    logoSize.stopAnimation(() => {
-      logoSize.setValue(1);
+    Animated.parallel([
       Animated.timing(logoSize, {
         toValue: 0.5,
         duration: 200,
         useNativeDriver: true,
-      }).start();
-    });
+        easing: Easing.inOut(Easing.quad),
+      }),
+      Animated.timing(logoPosition, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.quad),
+      }),
+    ]).start();
   };
 
   const handleBlur = () => {
-    logoSize.stopAnimation(() => {
-      logoSize.setValue(0.5);
+    Animated.parallel([
       Animated.timing(logoSize, {
         toValue: 1,
         duration: 200,
         useNativeDriver: true,
-      }).start();
-    });
+        easing: Easing.inOut(Easing.quad),
+      }),
+      Animated.timing(logoPosition, {
+        toValue: 0,
+        duration: 200,
+        useNativeDriver: true,
+        easing: Easing.inOut(Easing.quad),
+      }),
+    ]).start();
   };
 
   useEffect(() => {
@@ -73,7 +87,15 @@ export default function AdminLogin({ navigation, header, description }) {
         style={[
           globalStyles.adminLogo,
           {
-            transform: [{ scale: logoSize }],
+            transform: [
+              { scale: logoSize },
+              {
+                translateY: logoPosition.interpolate({
+                  inputRange: [0, 1],
+                  outputRange: [0, 50], // Change the numbers here to adjust the position
+                }),
+              },
+            ],
           },
         ]}
         source={require("../../assets/logo.png")}
