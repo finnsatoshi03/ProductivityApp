@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-import Navigator from "./routes/navigationStack";
+import Navigator from "./Layout/navigationStack";
 
 const getFonts = () =>
   Font.loadAsync({
