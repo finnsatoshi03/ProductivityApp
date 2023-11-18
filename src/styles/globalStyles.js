@@ -1,11 +1,12 @@
-import React from "react";
 import { StyleSheet } from "react-native";
 
-export default styles = StyleSheet.create({
+const lightGreen = "#d6efc3";
+
+export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+    paddingVertical: 54,
+    paddingHorizontal: 24,
+    backgroundColor: lightGreen,
   },
 });
