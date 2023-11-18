@@ -80,7 +80,6 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   loginButtonContainer: {
     zIndex: 2,

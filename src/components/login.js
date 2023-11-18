@@ -1,9 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  Text,
   View,
-  Image,
-  TextInput,
   Animated,
   KeyboardAvoidingView,
   Platform,
@@ -102,7 +99,19 @@ export default function AdminLogin({ navigation, header, description }) {
         source={require("../../assets/logo.png")}
       />
       <HeroMessage header={header} description={description} />
-      <InputFields handleFocus={handleFocus} handleBlur={handleBlur} />
+      <View style={{ marginBottom: 20 }}>
+        <InputFields
+          handleFocus={handleFocus}
+          handleBlur={handleBlur}
+          placeholder="User ID"
+        />
+        <InputFields
+          handleFocus={handleFocus}
+          handleBlur={handleBlur}
+          placeholder="Password"
+          secureTextEntry={true}
+        />
+      </View>
       <View style={globalStyles.loginButtonContainer}>
         <LoginButton
           navigation={navigation}
