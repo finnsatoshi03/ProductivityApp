@@ -10,6 +10,11 @@ const bold = "montserrat-bold";
 const semiBold = "montserrat-semiBold";
 const regular = "montserrat-regular";
 
+// font sizes
+const header = hp("5%");
+const subHeader = hp("2.5%");
+const description = hp("1.5%");
+
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
@@ -29,18 +34,18 @@ export const globalStyles = StyleSheet.create({
   },
   welcomeHeader: {
     fontFamily: "montserrat-semiBold",
-    fontSize: hp("5%"),
+    fontSize: header,
     textAlign: "center",
   },
   welcomeHeaderBold: {
     fontFamily: "montserrat-bold",
-    fontSize: hp("5%"),
+    fontSize: header,
     textAlign: "center",
     lineHeight: hp("5%"),
   },
   welcomeDescription: {
     fontFamily: regular,
-    fontSize: hp("1.5%"),
+    fontSize: description,
     textAlign: "center",
   },
   buttonContainer: {
