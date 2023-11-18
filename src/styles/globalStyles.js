@@ -22,6 +22,24 @@ export const globalStyles = StyleSheet.create({
     paddingHorizontal: 24,
     backgroundColor: lightGreen,
   },
+  // Global styles
+  // Colors
+  colors: {
+    lightGreen: "#d6efc3",
+    darkGreen: "#32620e",
+  },
+  // FontsSize
+  fontSize: {
+    header: hp("5%"),
+    subHeader: hp("2.5%"),
+    description: hp("1.5%"),
+  },
+  // Fonts
+  fontStyle: {
+    bold: "montserrat-bold",
+    semiBold: "montserrat-semiBold",
+    regular: "montserrat-regular",
+  },
   // Components
   // Log in
   welcomeContainer: {
