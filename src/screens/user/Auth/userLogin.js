@@ -1,6 +1,6 @@
 import React from "react";
 import { Text, View } from "react-native";
-import Login from "../../Auth/components/LoginForm";
+import Login from "../../../components/Auth/LoginForm";
 
 export default function AdminLogin({ navigation }) {
   return (

@@ -17,6 +17,7 @@ import LoginButton from "../loginButton";
 import HeroMessage from "../heroMessage";
 import InputFields from "../Input";
 
+
 export default function AdminLogin({ navigation, header, description }) {
   const [isFocused, setIsFocused] = useState(false);
   const logoSize = useRef(new Animated.Value(1)).current;
@@ -96,7 +97,7 @@ export default function AdminLogin({ navigation, header, description }) {
             ],
           },
         ]}
-        source={require("../../assets/logo.png")}
+        source={require("../../../assets/logo.png")}
       />
       <HeroMessage header={header} description={description} />
       <View style={{ marginBottom: 20 }}>
