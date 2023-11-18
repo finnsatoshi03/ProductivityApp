@@ -93,7 +93,7 @@ export default function AdminLogin({ navigation, header, description }) {
               {
                 translateY: logoPosition.interpolate({
                   inputRange: [0, 1],
-                  outputRange: [0, 50], // Change the numbers here to adjust the position
+                  outputRange: [0, 50],
                 }),
               },
             ],
