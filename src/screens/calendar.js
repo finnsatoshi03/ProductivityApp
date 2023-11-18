@@ -1,10 +1,10 @@
-import { StatusBar } from "expo-status-bar";
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
+import { globalStyles } from "./styles/globalStyles";
 
-export default function App() {
+export default function Calendar() {
   return (
-    <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+    <View style={globalStyles.container}>
+      <Text>Calendar Screen</Text>
       <StatusBar style="auto" />
     </View>
   );
