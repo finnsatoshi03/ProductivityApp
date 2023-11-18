@@ -29,18 +29,14 @@ export default function LoginComponent({ navigation }) {
         <View style={[globalStyles.buttonContainer]}>
           <LoginButton
             navigation={navigation}
-            destination="Admin Login"
+            destination="Admin"
             text="Admin"
           />
         </View>
       </View>
       <View style={{ marginBottom: hp("3%") }}>
         <View style={[globalStyles.buttonContainer]}>
-          <LoginButton
-            navigation={navigation}
-            destination="Admin Login"
-            text="User"
-          />
+          <LoginButton navigation={navigation} destination="User" text="User" />
         </View>
       </View>
       <View
