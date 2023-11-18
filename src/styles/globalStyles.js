@@ -33,6 +33,8 @@ export const globalStyles = StyleSheet.create({
   fontSize: {
     header: hp("5%"),
     subHeader: hp("2.5%"),
+    largeDescription: hp("3.5%"),
+    mediumDescription: hp("1.8%"),
     description: hp("1.5%"),
   },
   // Fonts
