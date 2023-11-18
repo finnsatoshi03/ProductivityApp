@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/login";
-import Admin from "../screens/adminLogin";
+import Admin from "../screens/admin/adminLogin";
 
 const Stack = createNativeStackNavigator();
 
@@ -19,7 +19,7 @@ export default function App() {
         />
         <Stack.Screen
           name="Admin Login"
-          component={Reports}
+          component={Admin}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
