@@ -29,13 +29,13 @@ export default function AdminLogin({ navigation, header, description }) {
     Animated.parallel([
       Animated.timing(logoSize, {
         toValue: 0.5,
-        duration: 200,
+        duration: 100,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.quad),
       }),
       Animated.timing(logoPosition, {
         toValue: 1,
-        duration: 200,
+        duration: 100,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.quad),
       }),
@@ -46,13 +46,13 @@ export default function AdminLogin({ navigation, header, description }) {
     Animated.parallel([
       Animated.timing(logoSize, {
         toValue: 1,
-        duration: 200,
+        duration: 100,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.quad),
       }),
       Animated.timing(logoPosition, {
         toValue: 0,
-        duration: 200,
+        duration: 100,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.quad),
       }),
