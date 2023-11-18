@@ -13,7 +13,7 @@ const regular = "montserrat-regular";
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 54,
+    paddingVertical: 24,
     paddingHorizontal: 24,
     backgroundColor: lightGreen,
   },
@@ -42,10 +42,6 @@ export const globalStyles = StyleSheet.create({
     top: hp("55%"),
     justifyContent: "center",
     alignSelf: "center",
-  },
-  backgroundContainer: {
-    position: "relative",
-    top: hp("20%"),
   },
   overlayImage: {
     position: "absolute",

@@ -5,8 +5,9 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import LoginButon from "./loginButtons";
+import Background from "./background";
 
-export default function LoginComponent() {
+export default function LoginComponent({ navigation }) {
   return (
     <View style={globalStyles.logInComponent}>
       <Image
@@ -29,7 +30,11 @@ export default function LoginComponent() {
         </Text>
       </View>
       <View style={globalStyles.buttonContainer}>
-        <LoginButon text="Admin" />
+        <LoginButon
+          navigation={navigation}
+          destination="Admin Login"
+          text="Admin"
+        />
       </View>
       <View
         style={{
@@ -41,7 +46,7 @@ export default function LoginComponent() {
           alignSelf: "center",
         }}
       >
-        <LoginButon text="User" />
+        <LoginButon navigation={navigation} text="User" />
       </View>
       <View
         style={{
@@ -57,21 +62,14 @@ export default function LoginComponent() {
           </Text>
         </Pressable>
       </View>
-      <View style={globalStyles.backgroundContainer}>
-        <Image
-          style={globalStyles.overlayImage}
-          source={require("../../assets/background-overlay.png")}
-          resizeMode="stretch"
-        />
-        <View style={globalStyles.backgroundView}></View>
-      </View>
+      <Background />
       <View
         style={{
           //   flex: 1,
           justifyContent: "flex-end",
           alignSelf: "flex-end",
           position: "absolute",
-          top: hp("95%"),
+          top: hp("98%"),
           zIndex: 4,
         }}
       >
