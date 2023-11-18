@@ -4,7 +4,7 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import LoginButton from "./loginButton";
+import LoginButton from "./button";
 import Background from "./background";
 import HeroMessage from "./heroMessage";
 

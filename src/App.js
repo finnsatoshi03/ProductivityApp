@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
-import Modal from './components/modal.js';
+import Modal from "./components/modal.js";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -26,11 +26,12 @@ export default function App() {
   }, []);
 
   if (loadFonts) {
-    return(<>
-    <Modal/>
-    <Navigator />
-
-    </>) ;
+    return (
+      <>
+        {/* <Modal/> */}
+        <Navigator />
+      </>
+    );
   } else {
     return null;
   }

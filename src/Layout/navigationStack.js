@@ -5,7 +5,7 @@ import Homepage from "../screens/homepage";
 import Login from "../components/Auth/LoginForm";
 import AdminScreen from "../screens/admin/Auth/adminLogin";
 import UserScreen from "../screens/user/Auth/userLogin";
-import LoginButtons from "../components/loginButton";
+import LoginButtons from "../components/button";
 
 const Stack = createNativeStackNavigator();
 

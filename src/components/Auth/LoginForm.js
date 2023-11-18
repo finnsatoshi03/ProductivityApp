@@ -13,10 +13,9 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import LoginButton from "../loginButton";
+import LoginButton from "../button";
 import HeroMessage from "../heroMessage";
-import InputFields from "../Input";
-
+import InputFields from "../input";
 
 export default function AdminLogin({ navigation, header, description }) {
   const [isFocused, setIsFocused] = useState(false);
