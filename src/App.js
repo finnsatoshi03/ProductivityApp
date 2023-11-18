@@ -5,7 +5,7 @@ import Navigator from "./Layout/navigationStack";
 import Modal from "./components/modal.js";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import EventCard from "./components/eventCard";
+import ChatCard from "./components/chatCard";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -32,12 +32,7 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <EventCard
-            date="22 Jul 2022"
-            time="1:00PM"
-            event="Tree sadsaiods sijadioasj doa sd"
-            location="Tree sadsaiods sijadioasj doa sd dkapso kdpsao kdpsao kdaps sadpkaos"
-          />
+          <ChatCard />
         </View>
         {/* <Navigator /> */}
       </>
