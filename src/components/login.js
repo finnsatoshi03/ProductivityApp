@@ -35,7 +35,7 @@ export default function AdminLogin({ navigation, header, description }) {
       }),
       Animated.timing(logoPosition, {
         toValue: 1,
-        duration: 100,
+        duration: 200,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.quad),
       }),
@@ -52,7 +52,7 @@ export default function AdminLogin({ navigation, header, description }) {
       }),
       Animated.timing(logoPosition, {
         toValue: 0,
-        duration: 100,
+        duration: 200,
         useNativeDriver: true,
         easing: Easing.inOut(Easing.quad),
       }),
