@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { View, Text, Pressable, Image } from "react-native";
+import React, { useState, useRef } from "react";
+import { View, Text, Pressable, Image, Animated } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -17,15 +17,25 @@ const commonStyles = {
     fontSize: globalStyles.fontSize.description,
   },
   image: {
-    height: hp("2%"),
-    width: hp("2%"),
+    height: hp("2.5%"),
+    width: hp("2.5%"),
   },
 };
 
 export default function eventCard({ date, time, event, location }) {
   const [isExpanded, setIsExpanded] = useState(false);
+  const animationRef = useRef(new Animated.Value(0)).current;
+  const rotateInterpolation = animationRef.interpolate({
+    inputRange: [0, 1],
+    outputRange: ["0deg", "180deg"],
+  });
 
   const toggleExpand = () => {
+    Animated.timing(animationRef, {
+      toValue: isExpanded ? 0 : 1,
+      duration: 300,
+      useNativeDriver: true,
+    }).start();
     setIsExpanded(!isExpanded);
   };
 
@@ -50,16 +60,31 @@ export default function eventCard({ date, time, event, location }) {
             paddingBottom: isExpanded ? 10 : 20,
           }}
         >
-          <Text
+          <View
             style={{
-              ...commonStyles.text,
-              color: "#fff",
-              opacity: 0.5,
-              fontFamily: globalStyles.fontStyle.regular,
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "space-between",
             }}
           >
-            Schedule Event
-          </Text>
+            <Text
+              style={{
+                ...commonStyles.text,
+                color: "#fff",
+                opacity: 0.5,
+                fontFamily: globalStyles.fontStyle.regular,
+              }}
+            >
+              Schedule Event
+            </Text>
+            <Animated.Image
+              style={{
+                ...commonStyles.image,
+                transform: [{ rotate: rotateInterpolation }],
+              }}
+              source={require("../../assets/arrow-expand.png")}
+            />
+          </View>
           <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
             <Image
               style={commonStyles.image}
