@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
-import Modal from "./components/modal.js";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import EventCard from "./components/eventCard";
+import Participants from "./components/profileCard";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -32,12 +31,8 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <EventCard
-            date="22 Jul 2022"
-            time="1:00PM"
-            event="Tree sadsaiods sijadioasj doa sd"
-            location="Tree sadsaiods sijadioasj doa sd dkapso kdpsao kdpsao kdaps sadpkaos"
-          />
+          <Participants avatar={require("../assets/profile.png")} name="Mark" />
+          <Participants name="Mark" />
         </View>
         {/* <Navigator /> */}
       </>
