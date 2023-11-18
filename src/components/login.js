@@ -18,6 +18,7 @@ import {
 } from "react-native-responsive-screen";
 import LoginButton from "../components/loginButton";
 import HeroMessage from "../components/heroMessage";
+import InputFields from "../components/input";
 
 export default function AdminLogin({ navigation, header, description }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -101,21 +102,7 @@ export default function AdminLogin({ navigation, header, description }) {
         source={require("../../assets/logo.png")}
       />
       <HeroMessage header={header} description={description} />
-      <View style={{ padding: 10, zIndex: 3, width: wp("80%") }}>
-        <TextInput
-          style={globalStyles.input}
-          placeholder="Username"
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-        <TextInput
-          style={globalStyles.input}
-          placeholder="Password"
-          secureTextEntry
-          onFocus={handleFocus}
-          onBlur={handleBlur}
-        />
-      </View>
+      <InputFields handleFocus={handleFocus} handleBlur={handleBlur} />
       <View style={globalStyles.loginButtonContainer}>
         <LoginButton
           navigation={navigation}
