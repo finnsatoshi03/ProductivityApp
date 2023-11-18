@@ -8,7 +8,7 @@ import LoginButon from "./loginButtons";
 
 export default function LoginComponent() {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={globalStyles.logInComponent}>
       <Image
         style={{
           position: "absolute",
@@ -21,44 +21,14 @@ export default function LoginComponent() {
         }}
         source={require("../../assets/logo.png")}
       />
-      <View
-        style={{
-          position: "absolute",
-          top: hp("40%"),
-          zIndex: 3,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "montserrat-bold",
-            fontSize: hp("5%"),
-          }}
-        >
-          WELCOME
-        </Text>
-        <Text
-          style={{
-            fontFamily: "montserrat-regular",
-            fontSize: hp("1.5%"),
-            textAlign: "center",
-          }}
-        >
+      <View style={globalStyles.welcomeContainer}>
+        <Text style={globalStyles.welcomeHeader}>WELCOME</Text>
+        <Text style={globalStyles.welcomeDescription}>
           ProductivityApp — where productivity meets simplicity. Log in and
           power up your efficiency effortlessly!
         </Text>
       </View>
-      <View
-        style={{
-          width: wp("70%"),
-          position: "absolute",
-          zIndex: 3,
-          top: hp("55%"),
-          justifyContent: "center",
-          alignSelf: "center",
-        }}
-      >
+      <View style={globalStyles.buttonContainer}>
         <LoginButon text="Admin" />
       </View>
       <View
@@ -75,7 +45,6 @@ export default function LoginComponent() {
       </View>
       <View
         style={{
-          position: "absolute",
           zIndex: 3,
           top: hp("70%"),
           justifyContent: "center",
@@ -88,29 +57,13 @@ export default function LoginComponent() {
           </Text>
         </Pressable>
       </View>
-      <View style={{ position: "relative", top: hp("20%") }}>
+      <View style={globalStyles.backgroundContainer}>
         <Image
-          style={{
-            position: "absolute",
-            zIndex: 2,
-            height: hp("100%"),
-            width: wp("100%"),
-            marginLeft: wp("-30.8%"),
-          }}
+          style={globalStyles.overlayImage}
           source={require("../../assets/background-overlay.png")}
           resizeMode="stretch"
         />
-        <View
-          style={{
-            position: "absolute",
-            zIndex: 1,
-            backgroundColor: "#f3fadc",
-            height: hp("100%"),
-            width: wp("100%"),
-            // marginLeft: wp("-5.8%"),
-            borderTopRightRadius: 100,
-          }}
-        ></View>
+        <View style={globalStyles.backgroundView}></View>
       </View>
       <View
         style={{
