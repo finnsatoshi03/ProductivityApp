@@ -1,4 +1,14 @@
-import { Text, View, Image, TextInput } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  Text,
+  View,
+  Image,
+  TextInput,
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
+  Keyboard,
+} from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
 import Background from "../../components/background";
 import {
@@ -9,16 +19,51 @@ import LoginButton from "../../components/loginButton";
 import HeroMessage from "../../components/heroMessage";
 
 export default function AdminLogin({ navigation }) {
+  const [isFocused, setIsFocused] = useState(false);
+  const logoSize = useRef(new Animated.Value(1)).current;
+
+  const handleFocus = () => {
+    setIsFocused(true);
+    Animated.timing(logoSize, {
+      toValue: 0.5,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    Animated.timing(logoSize, {
+      toValue: 1,
+      duration: 200,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  useEffect(() => {
+    Keyboard.addListener("keyboardDidHide", handleBlur);
+
+    return () => {
+      Keyboard.removeListener("keyboardDidHide", handleBlur);
+    };
+  }, []);
+
   return (
-    <View
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={[
         globalStyles.container,
         { justifyContent: "center", alignItems: "center" },
       ]}
     >
       <Background topProperty={hp("5%")} />
-      <Image
-        style={globalStyles.adminLogo}
+      <Animated.Image
+        style={[
+          globalStyles.adminLogo,
+          {
+            transform: [{ scale: logoSize }],
+          },
+        ]}
         source={require("../../../assets/logo.png")}
       />
       <HeroMessage
@@ -26,11 +71,18 @@ export default function AdminLogin({ navigation }) {
         description="Take control of efficiency with ProductivityApp. Your dashboard for seamless management awaits. Let's elevate productivity together!"
       />
       <View style={{ padding: 10, zIndex: 3, width: wp("80%") }}>
-        <TextInput style={globalStyles.input} placeholder="Username" />
+        <TextInput
+          style={globalStyles.input}
+          placeholder="Username"
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+        />
         <TextInput
           style={globalStyles.input}
           placeholder="Password"
           secureTextEntry
+          onFocus={handleFocus}
+          onBlur={handleBlur}
         />
       </View>
       <View style={globalStyles.loginButtonContainer}>
@@ -40,6 +92,6 @@ export default function AdminLogin({ navigation }) {
           text="Login"
         />
       </View>
-    </View>
+    </KeyboardAvoidingView>
   );
 }
