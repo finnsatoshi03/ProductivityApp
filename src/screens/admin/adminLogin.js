@@ -23,28 +23,40 @@ export default function AdminLogin({ navigation }) {
   const logoSize = useRef(new Animated.Value(1)).current;
 
   const handleFocus = () => {
-    setIsFocused(true);
-    Animated.timing(logoSize, {
-      toValue: 0.5,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
+    logoSize.stopAnimation(() => {
+      logoSize.setValue(1);
+      Animated.timing(logoSize, {
+        toValue: 0.5,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    });
   };
 
   const handleBlur = () => {
-    setIsFocused(false);
-    Animated.timing(logoSize, {
-      toValue: 1,
-      duration: 200,
-      useNativeDriver: true,
-    }).start();
+    logoSize.stopAnimation(() => {
+      logoSize.setValue(0.5);
+      Animated.timing(logoSize, {
+        toValue: 1,
+        duration: 200,
+        useNativeDriver: true,
+      }).start();
+    });
   };
 
   useEffect(() => {
-    Keyboard.addListener("keyboardDidHide", handleBlur);
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      handleFocus
+    );
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      handleBlur
+    );
 
     return () => {
-      Keyboard.removeListener("keyboardDidHide", handleBlur);
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
     };
   }, []);
 
