@@ -1,6 +1,5 @@
 import React from "react";
 import { Text, View, Pressable } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
 
 export default function LoginButton({ navigation, text, destination }) {
   return (
