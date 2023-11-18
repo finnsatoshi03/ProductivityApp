@@ -3,6 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import Login from "../screens/login";
 import Admin from "../screens/admin/adminLogin";
+import LoginButtons from "../components/loginButtons";
 
 const Stack = createNativeStackNavigator();
 
@@ -20,6 +21,11 @@ export default function App() {
         <Stack.Screen
           name="Admin Login"
           component={Admin}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="LoginButtons"
+          component={LoginButtons}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

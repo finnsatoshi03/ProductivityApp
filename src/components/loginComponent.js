@@ -5,10 +5,11 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import LoginButon from "./loginButtons";
+import Background from "./background";
 
-export default function LoginComponent() {
+export default function LoginComponent({ navigation }) {
   return (
-    <View style={{ flex: 1 }}>
+    <View style={globalStyles.logInComponent}>
       <Image
         style={{
           position: "absolute",
@@ -21,45 +22,19 @@ export default function LoginComponent() {
         }}
         source={require("../../assets/logo.png")}
       />
-      <View
-        style={{
-          position: "absolute",
-          top: hp("40%"),
-          zIndex: 3,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Text
-          style={{
-            fontFamily: "montserrat-bold",
-            fontSize: hp("5%"),
-          }}
-        >
-          WELCOME
-        </Text>
-        <Text
-          style={{
-            fontFamily: "montserrat-regular",
-            fontSize: hp("1.5%"),
-            textAlign: "center",
-          }}
-        >
+      <View style={globalStyles.welcomeContainer}>
+        <Text style={globalStyles.welcomeHeader}>WELCOME</Text>
+        <Text style={globalStyles.welcomeDescription}>
           ProductivityApp — where productivity meets simplicity. Log in and
           power up your efficiency effortlessly!
         </Text>
       </View>
-      <View
-        style={{
-          width: wp("70%"),
-          position: "absolute",
-          zIndex: 3,
-          top: hp("55%"),
-          justifyContent: "center",
-          alignSelf: "center",
-        }}
-      >
-        <LoginButon text="Admin" />
+      <View style={globalStyles.buttonContainer}>
+        <LoginButon
+          navigation={navigation}
+          destination="Admin Login"
+          text="Admin"
+        />
       </View>
       <View
         style={{
@@ -71,11 +46,10 @@ export default function LoginComponent() {
           alignSelf: "center",
         }}
       >
-        <LoginButon text="User" />
+        <LoginButon navigation={navigation} text="User" />
       </View>
       <View
         style={{
-          position: "absolute",
           zIndex: 3,
           top: hp("70%"),
           justifyContent: "center",
@@ -88,38 +62,15 @@ export default function LoginComponent() {
           </Text>
         </Pressable>
       </View>
-      <View style={{ position: "relative", top: hp("20%") }}>
-        <Image
-          style={{
-            position: "absolute",
-            zIndex: 2,
-            height: hp("100%"),
-            width: wp("100%"),
-            marginLeft: wp("-30.8%"),
-          }}
-          source={require("../../assets/background-overlay.png")}
-          resizeMode="stretch"
-        />
-        <View
-          style={{
-            position: "absolute",
-            zIndex: 1,
-            backgroundColor: "#f3fadc",
-            height: hp("100%"),
-            width: wp("100%"),
-            // marginLeft: wp("-5.8%"),
-            borderTopRightRadius: 100,
-          }}
-        ></View>
-      </View>
+      <Background />
       <View
         style={{
-          flex: 1,
+          //   flex: 1,
           justifyContent: "flex-end",
           alignSelf: "flex-end",
-          //   position: "absolute",
-          top: hp("10%"),
-          zIndex: 3,
+          position: "absolute",
+          top: hp("98%"),
+          zIndex: 4,
         }}
       >
         <Pressable>
