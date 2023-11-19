@@ -31,12 +31,7 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <EventCard
-            date="22 Jul 2022"
-            time="1:00PM"
-            event="Tree sadsaiods sijadioasj doa sd"
-            location="Tree sadsaiods sijadioasj doa sd dkapso kdpsao kdpsao kdaps sadpkaos"
-          />
+          <ChatCard name="Mark Nelson" />
         </View>
         {/* <Navigator /> */}
       </>
