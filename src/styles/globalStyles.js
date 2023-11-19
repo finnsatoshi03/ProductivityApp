@@ -27,6 +27,7 @@ export const globalStyles = StyleSheet.create({
   colors: {
     lightGreen: "#d6efc3",
     green: "#7D9C65",
+    green200: "#A1C983",
     darkGreen: "#32620e",
   },
   // FontsSize

@@ -4,7 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import MessageBox from "./components/messagebox";
+
 
 const getFonts = () =>
   Font.loadAsync({
@@ -30,14 +30,7 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <View style={globalStyles.container}>
-          <MessageBox message="MOney Mone sad asdsy" time="13:00" />
-          <MessageBox
-            message="MOney  sad sad asd asdo apso dasp odkaspo kdpoask das"
-            sender={true}
-            time="12:00 PM"
-          />
-        </View>
+        
         {/* <Navigator /> */}
       </>
     );
