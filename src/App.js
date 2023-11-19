@@ -5,7 +5,6 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 
-
 const getFonts = () =>
   Font.loadAsync({
     "montserrat-regular": require("../assets/fonts/Montserrat-Regular.ttf"),
