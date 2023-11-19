@@ -1,6 +1,10 @@
 import React, { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
+import Navigator from "./Layout/navigationStack";
+import { View, Text } from "react-native";
+import { globalStyles } from "./styles/globalStyles";
+import Header from "./components/header";
 import Navigator from "./routes/navigationStack";
 
 const getFonts = () =>
@@ -25,7 +29,14 @@ export default function App() {
   }, []);
 
   if (loadFonts) {
-    return <Navigator />;
+    return (
+      <>
+        <View style={globalStyles.container}>
+          <Header title="Header" subTitle="SubHeader" />
+        </View>
+        {/* <Navigator /> */}
+      </>
+    );
   } else {
     return null;
   }
