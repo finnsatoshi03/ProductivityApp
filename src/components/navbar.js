@@ -11,6 +11,7 @@ const navIcons = [
     name: "Calendar",
     source: require("../../assets/calendar.png"),
     altSource: require("../../assets/calendar-alt.png"),
+    destination: "Home",
   },
   {
     name: "Event",
@@ -29,7 +30,7 @@ const navIcons = [
   },
 ];
 
-export default function Avatar() {
+export default function Navbar({ navigation }) {
   const [selectedIcon, setSelectedIcon] = useState("Calendar");
 
   useEffect(() => {
@@ -71,7 +72,10 @@ export default function Avatar() {
                 ? globalStyles.colors.green
                 : "transparent",
           }}
-          onPress={() => setSelectedIcon(item.name)}
+          onPress={() => {
+            setSelectedIcon(item.name);
+            navigation.navigate(item.destination);
+          }}
         >
           <Image
             style={{ height: 30, width: 30 }}
