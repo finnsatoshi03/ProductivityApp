@@ -1,9 +1,6 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import React, { useState, useEffect } from "react";
 
 const navIcons = [
@@ -11,25 +8,25 @@ const navIcons = [
     name: "Calendar",
     source: require("../../assets/calendar.png"),
     altSource: require("../../assets/calendar-alt.png"),
-    destination: "Home",
+    // destination: "Homepage",
   },
   {
     name: "Event",
     source: require("../../assets/event-1.png"),
     altSource: require("../../assets/event-alt.png"),
-    //Add destination
+    // destination: "Homepage",
   },
   {
     name: "Reports",
     source: require("../../assets/reports.png"),
     altSource: require("../../assets/reports-alt.png"),
-    //Add destination
+    // destination: "Homepage",
   },
   {
     name: "Chat",
     source: require("../../assets/chat.png"),
     altSource: require("../../assets/chat-alt.png"),
-    //Add destination
+    // destination: "Homepage",
   },
 ];
 
@@ -66,7 +63,7 @@ export default function Navbar({ navigation }) {
             alignItems: "center",
             justifyContent: "space-between",
             paddingVertical: 7,
-            paddingHorizontal: 10,
+            paddingHorizontal: 15,
             marginLeft: index > centerIndex ? 10 : 0,
             marginRight: index < centerIndex ? 10 : 0,
             gap: 5,
@@ -77,11 +74,11 @@ export default function Navbar({ navigation }) {
           }}
           onPress={() => {
             setSelectedIcon(item.name);
-            navigation.navigate(item.destination);
+            // navigation.navigate(item.destination);
           }}
         >
           <Image
-            style={{ height: 30, width: 30 }}
+            style={{ height: 25, width: 25 }}
             source={selectedIcon === item.name ? item.altSource : item.source}
           />
           {selectedIcon === item.name && (
