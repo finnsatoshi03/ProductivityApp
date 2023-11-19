@@ -1,6 +1,6 @@
 import React from "react";
 import { View, FlatList } from "react-native";
-import Profile from "./profileCard"; // import your eventCard component
+import Profile from "./profileCard";
 
 export default function listView() {
   const data = [
