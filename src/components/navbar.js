@@ -17,16 +17,19 @@ const navIcons = [
     name: "Event",
     source: require("../../assets/event-1.png"),
     altSource: require("../../assets/event-alt.png"),
+    //Add destination
   },
   {
     name: "Reports",
     source: require("../../assets/reports.png"),
     altSource: require("../../assets/reports-alt.png"),
+    //Add destination
   },
   {
     name: "Chat",
     source: require("../../assets/chat.png"),
     altSource: require("../../assets/chat-alt.png"),
+    //Add destination
   },
 ];
 
