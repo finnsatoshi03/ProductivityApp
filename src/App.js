@@ -31,7 +31,11 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <Header title="Header" subTitle="SubHeader" />
+          <Header
+            title="Header"
+            icon="back"
+            avatar={require("./../assets/profile.png")}
+          />
         </View>
         {/* <Navigator /> */}
       </>
