@@ -31,7 +31,11 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <ChatCard name="Mark Nelson" />
+          <ChatCard
+            name="Mark Nelson"
+            lastMessage="SJDAO pasokc poakcp oakspo kdapso kdapsok dpsaokd apsoksaokd sapo  saokd paosk pdso dksapod ksapo ds sapokd aspokd psaods sad asd saodk sapokd aposkd posa ds"
+            time="12:00PM"
+          />
         </View>
         {/* <Navigator /> */}
       </>
