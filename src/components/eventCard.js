@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-import { View, Text, Pressable, Image, Animated } from "react-native";
+import { View, Text, Image, Animated } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
