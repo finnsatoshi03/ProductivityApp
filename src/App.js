@@ -4,7 +4,6 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import ListView from "./components/listView";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -30,9 +29,7 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <View style={globalStyles.container}>
-          <ListView />
-        </View>
+        <View style={globalStyles.container}></View>
         {/* <Navigator /> */}
       </>
     );
