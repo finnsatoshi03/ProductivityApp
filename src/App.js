@@ -2,10 +2,9 @@ import React, { useState, useEffect } from "react";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
-import Modal from "./components/modal.js";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import EventCard from "./components/eventCard";
+
 
 const getFonts = () =>
   Font.loadAsync({
@@ -31,20 +30,7 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <View style={globalStyles.container}>
-          <EventCard
-            date="22 Jul 2022"
-            time="1:00PM"
-            event="Tree sadsaiods sijadioasj doa sdsadasdas sad asd as"
-            location="Tree sadsaiods sijadioasj doa sd dkapso kdpsao kdpsao kdaps sadpkaos"
-          />
-          <EventCard
-            date="22 Jul 2022"
-            time="1:00PM"
-            event="Sample2"
-            location="Tree sadsaiods sijadioasj doa sd dkapso kdpsao kdpsao kdaps sadpkaos"
-          />
-        </View>
+
         {/* <Navigator /> */}
       </>
     );
