@@ -6,7 +6,7 @@ import Modal from "./components/modal.js";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import EventCard from "./components/eventCard";
-
+import GlobalIconButton from "./components/globalIconButton.js";
 const getFonts = () =>
   Font.loadAsync({
     "montserrat-regular": require("../assets/fonts/Montserrat-Regular.ttf"),
@@ -29,8 +29,18 @@ export default function App() {
   }, []);
 
   if (loadFonts) {
+    const handleButtonPress = () => {
+      // Define what happens when the button is pressed
+      console.log('Button pressed!');
+    };
     return (
       <>
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <GlobalIconButton iconType="bar" onPressed={handleButtonPress} />
+        <GlobalIconButton iconType="search" onPressed={handleButtonPress} />
+        <GlobalIconButton iconType="trash" onPressed={handleButtonPress} />
+        <GlobalIconButton iconType="plus" onPressed={handleButtonPress} />
+      </View>
         <View style={globalStyles.container}>
           <EventCard
             date="22 Jul 2022"
