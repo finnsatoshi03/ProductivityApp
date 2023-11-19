@@ -8,7 +8,7 @@ import {
 
 const buttonSize = wp('12%'); // Adjust the percentage as needed
 
-const GlobalIconButton = ({ iconType, onPressed }) => {
+const GlobalIconButton = ({ iconType, onPressed, color = '#000' }) => {
   let iconName;
 
   switch (iconType) {
@@ -29,8 +29,14 @@ const GlobalIconButton = ({ iconType, onPressed }) => {
   }
 
   return (
-    <TouchableOpacity style={[styles.button, { width: buttonSize, height: buttonSize }]} onPress={onPressed}>
-      <Icon name={iconName} size={buttonSize * 0.5} color="#000" />
+    <TouchableOpacity
+      style={[
+        styles.button,
+        { width: buttonSize, height: buttonSize, borderColor: color },
+      ]}
+      onPress={onPressed}
+    >
+      <Icon name={iconName} size={buttonSize * 0.5} color={color} />
     </TouchableOpacity>
   );
 };
@@ -42,7 +48,6 @@ const styles = StyleSheet.create({
     borderRadius: buttonSize * 0.5,
     backgroundColor: 'transparent',
     borderWidth: 1,
-    borderColor: '#000',
   },
 });
 
