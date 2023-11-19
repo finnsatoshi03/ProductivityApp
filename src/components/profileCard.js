@@ -1,10 +1,7 @@
 import React from "react";
 import { Text, View, Image } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import Avatar from "./avatar";
 
 export default function profileCard({ avatar, name }) {
   return (
@@ -19,7 +16,7 @@ export default function profileCard({ avatar, name }) {
         borderRadius: 20,
       }}
     >
-      <Image style={{ height: hp("7%"), width: wp("14.5%") }} source={avatar} />
+      <Avatar avatar={avatar} firstName={name} />
       <Text
         style={{
           fontFamily: globalStyles.fontStyle.semiBold,
