@@ -5,7 +5,6 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import Header from "./components/header";
-import Navigator from "./routes/navigationStack";
 
 const getFonts = () =>
   Font.loadAsync({

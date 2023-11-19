@@ -1,12 +1,18 @@
 import React from "react";
 import { Text, View, Pressable } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
 
-export default function LoginButton({ navigation, text, destination }) {
+export default function LoginButton({
+  navigation,
+  text,
+  destination,
+  bgColor,
+  textColor,
+  width,
+}) {
   return (
-    <View style={{ backgroundColor: "#32620e", borderRadius: 20 }}>
+    <View style={{ backgroundColor: bgColor || "#32620e", borderRadius: 20 }}>
       <Pressable
-        style={{ paddingHorizontal: 30, paddingVertical: 10 }}
+        style={{ paddingHorizontal: 30, paddingVertical: 10, width: width }}
         onPress={() => {
           if (navigation) {
             navigation.navigate(destination);
@@ -18,7 +24,7 @@ export default function LoginButton({ navigation, text, destination }) {
         <Text
           style={{
             fontFamily: "montserrat-semiBold",
-            color: "#fff",
+            color: textColor || "#fff",
             alignSelf: "center",
           }}
         >

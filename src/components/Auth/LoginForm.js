@@ -1,24 +1,21 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  Text,
   View,
-  Image,
-  TextInput,
   Animated,
   KeyboardAvoidingView,
   Platform,
   Keyboard,
   Easing,
 } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
-import Background from "../components/background";
+import { globalStyles } from "../../styles/globalStyles";
+import Background from "../background";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import LoginButton from "../components/loginButton";
-import HeroMessage from "../components/heroMessage";
-import InputFields from "../components/input";
+import LoginButton from "../button";
+import HeroMessage from "../heroMessage";
+import InputFields from "../input";
 
 export default function AdminLogin({ navigation, header, description }) {
   const [isFocused, setIsFocused] = useState(false);
@@ -99,10 +96,22 @@ export default function AdminLogin({ navigation, header, description }) {
             ],
           },
         ]}
-        source={require("../../assets/logo.png")}
+        source={require("../../../assets/logo.png")}
       />
       <HeroMessage header={header} description={description} />
-      <InputFields handleFocus={handleFocus} handleBlur={handleBlur} />
+      <View style={{ marginBottom: 20 }}>
+        <InputFields
+          handleFocus={handleFocus}
+          handleBlur={handleBlur}
+          placeholder="User ID"
+        />
+        <InputFields
+          handleFocus={handleFocus}
+          handleBlur={handleBlur}
+          placeholder="Password"
+          secureTextEntry={true}
+        />
+      </View>
       <View style={globalStyles.loginButtonContainer}>
         <LoginButton
           navigation={navigation}

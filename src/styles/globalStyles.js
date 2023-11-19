@@ -10,12 +10,40 @@ const bold = "montserrat-bold";
 const semiBold = "montserrat-semiBold";
 const regular = "montserrat-regular";
 
+// font sizes
+const header = hp("5%");
+const subHeader = hp("2.5%");
+const description = hp("1.5%");
+
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
     paddingVertical: 54,
     paddingHorizontal: 24,
     backgroundColor: lightGreen,
+  },
+  // Global styles
+  // Colors
+  colors: {
+    lightGreen: "#d6efc3",
+    green: "#7D9C65",
+    green200: "#A1C983",
+    darkGreen: "#32620e",
+  },
+  // FontsSize
+  fontSize: {
+    header: hp("5%"),
+    subHeader: hp("2.5%"),
+    largeDescription: hp("3.5%"),
+    mediumDescription: hp("1.8%"),
+    description: hp("1.5%"),
+    smallDescription: hp("1.2%"),
+  },
+  // Fonts
+  fontStyle: {
+    bold: "montserrat-bold",
+    semiBold: "montserrat-semiBold",
+    regular: "montserrat-regular",
   },
   // Components
   // Log in
@@ -29,18 +57,18 @@ export const globalStyles = StyleSheet.create({
   },
   welcomeHeader: {
     fontFamily: "montserrat-semiBold",
-    fontSize: hp("5%"),
+    fontSize: header,
     textAlign: "center",
   },
   welcomeHeaderBold: {
     fontFamily: "montserrat-bold",
-    fontSize: hp("5%"),
+    fontSize: header,
     textAlign: "center",
     lineHeight: hp("5%"),
   },
   welcomeDescription: {
     fontFamily: regular,
-    fontSize: hp("1.5%"),
+    fontSize: description,
     textAlign: "center",
   },
   buttonContainer: {
@@ -80,7 +108,6 @@ export const globalStyles = StyleSheet.create({
     borderRadius: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
-    marginBottom: 20,
   },
   loginButtonContainer: {
     zIndex: 2,
