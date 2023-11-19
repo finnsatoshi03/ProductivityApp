@@ -27,7 +27,14 @@ export default function App() {
   }, []);
 
   if (loadFonts) {
-    return <>{/* <Navigator /> */}</>;
+
+    return (
+      <>
+
+        {/* <Navigator /> */}
+      </>
+    );
+
   } else {
     return null;
   }
