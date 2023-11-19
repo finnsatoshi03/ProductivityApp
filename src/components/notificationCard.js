@@ -1,7 +1,7 @@
 import { Text, View } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 
-export default function notificationCard({ invite }) {
+export default function notificationCard({ name, description, date, time }) {
   return (
     <View
       style={{
@@ -20,7 +20,7 @@ export default function notificationCard({ invite }) {
             flexShrink: 1,
           }}
         >
-          {`${invite.name} `}
+          {`${name} `}
         </Text>
         <Text
           style={{
@@ -29,12 +29,12 @@ export default function notificationCard({ invite }) {
             flexShrink: 1,
           }}
         >
-          {invite.description}
+          {description}
         </Text>
       </View>
 
       <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-        {invite.date}, {invite.time}
+        {date}, {time}
       </Text>
     </View>
   );

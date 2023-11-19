@@ -20,7 +20,7 @@ export default function profileCard({ avatar, name }) {
       <Text
         style={{
           fontFamily: globalStyles.fontStyle.semiBold,
-          color: "black",
+          color: "white",
         }}
       >
         {name}

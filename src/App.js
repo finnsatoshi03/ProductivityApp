@@ -4,7 +4,6 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import ChatCard from "./components/chatCard";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -28,20 +27,12 @@ export default function App() {
   }, []);
 
   if (loadFonts) {
-
     return (
       <>
-        <View style={globalStyles.container}>
-          <ChatCard
-            name="Mark Nelson"
-            lastMessage="SJDAO pasokc poakcp oakspo kdapso kdapsok dpsaokd apsoksaokd sapo  saokd paosk pdso dksapod ksapo ds sapokd aspokd psaods sad asd saodk sapokd aposkd posa ds"
-            time="12:00PM"
-          />
-        </View>
+        <View style={globalStyles.container}></View>
         {/* <Navigator /> */}
       </>
     );
-
   } else {
     return null;
   }
