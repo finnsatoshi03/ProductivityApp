@@ -4,7 +4,6 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import NotificationCard from "./components/notificationCard";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -27,22 +26,8 @@ export default function App() {
       .finally(() => SplashScreen.hideAsync());
   }, []);
 
-  const invite = {
-    name: "Merk Poe",
-    description: "You have been invited to a meeting sad sa",
-    date: "2022-01-01",
-    time: "10:00 AM",
-  };
-
   if (loadFonts) {
-    return (
-      <>
-        <View style={globalStyles.container}>
-          <NotificationCard invite={invite} />
-        </View>
-        {/* <Navigator /> */}
-      </>
-    );
+    return <>{/* <Navigator /> */}</>;
   } else {
     return null;
   }
