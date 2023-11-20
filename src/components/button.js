@@ -1,7 +1,7 @@
 import React from "react";
 import { Text, View, Pressable, Image } from "react-native";
 
-export default function LoginButton({
+export default function Button({
   navigation,
   text,
   destination,
@@ -35,7 +35,13 @@ export default function LoginButton({
           }
         }}
       >
-        <View style={{ flexDirection: "row", alignItems: "center" }}>
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: flexStart ? "flex-start" : "center",
+          }}
+        >
           {iconSource && (
             <Image
               source={iconSource}
@@ -46,7 +52,6 @@ export default function LoginButton({
             style={{
               fontFamily: "montserrat-semiBold",
               color: textColor || "#fff",
-              alignSelf: flexStart ? "flex-start" : "center",
               fontSize: fontSize,
             }}
           >
