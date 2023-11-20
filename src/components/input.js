@@ -10,6 +10,7 @@ const InputFields = ({
   secureTextEntry,
   placeholder,
   maxWidth,
+  noWidth,
   isDropdown,
   data,
   margin,
@@ -22,7 +23,7 @@ const InputFields = ({
         // padding: 10,
         marginBottom: margin ? 10 : 0,
         zIndex: 2,
-        width: maxWidth ? wp("90%") : wp("80%"),
+        width: noWidth ? "85%" : maxWidth ? wp("90%") : wp("80%"),
       }}
     >
       {isDropdown ? (

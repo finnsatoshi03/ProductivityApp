@@ -5,8 +5,9 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 // import Sidebar from "./components/sidebar";
-import SignupForm from "./components/Auth/SignupForm";
-import Dropdown from "./components/dropdown";
+// import Dropdown from "./components/dropdown";
+// import SignupForm from "./components/Auth/SignupForm";
+import Conversation from "./components/conversationComponent";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -32,11 +33,11 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
+        {/* <Navigator /> */}
         <View style={globalStyles.container}>
-          <SignupForm />
+          <Conversation />
           {/* <SignupForm /> */}
         </View>
-        {/* <Navigator /> */}
       </>
     );
   } else {
