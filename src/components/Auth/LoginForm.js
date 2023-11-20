@@ -105,6 +105,7 @@ export default function AdminLogin({ navigation, header, description }) {
           handleBlur={handleBlur}
           placeholder="User ID"
         />
+        <View style={{ marginBottom: 20 }}></View>
         <InputFields
           handleFocus={handleFocus}
           handleBlur={handleBlur}

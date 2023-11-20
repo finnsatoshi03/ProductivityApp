@@ -9,6 +9,7 @@ import { globalStyles } from "./styles/globalStyles";
 // import SignupForm from "./components/Auth/SignupForm";
 import Conversation from "./components/conversationComponent";
 import Calendar from "./components/calendarComponent";
+import SignupForm from "./components/Auth/SignupForm";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -34,12 +35,7 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        {/* <Navigator /> */}
-        <View style={globalStyles.container}>
-          <Conversation />
-          <Calendar />
-          {/* <SignupForm /> */}
-        </View>
+
       </>
     );
   } else {
