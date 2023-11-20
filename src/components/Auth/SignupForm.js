@@ -1,9 +1,11 @@
 import React, { useState } from "react";
-import { View, Image } from "react-native";
+import { View, Image, Text, Pressable } from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
 import Background from "../background";
 import HeroMessage from "../heroMessage";
 import InputFields from "../input";
+import Label from "../globalLabel";
+import VerifyButton from "../button";
 
 export default function SignupForm() {
   const [selectedValue, setSelectedValue] = useState(null);
@@ -17,6 +19,18 @@ export default function SignupForm() {
     { label: "Item 7", value: "7" },
     { label: "Item 8", value: "8" },
   ];
+
+  const SignUpLabel = ({ text }) => (
+    <Label
+      text={text}
+      color={"black"}
+      zIndex={true}
+      textAlign={"left"}
+      flexStart={true}
+      fontFamily={globalStyles.fontStyle.semiBold}
+      style={{ marginBottom: 2 }}
+    />
+  );
 
   return (
     <View>
@@ -41,9 +55,7 @@ export default function SignupForm() {
       <View style={{ marginBottom: 20 }}>
         <HeroMessage
           header={"Account Verification"}
-          description={
-            "Sign up now for a personalized experience with ProductivityApp. Join us and make your agenda more productive!"
-          }
+          description={"Join us and make your agenda more productive!"}
           textAlign={true}
           noPadding={true}
           width={true}
@@ -51,21 +63,61 @@ export default function SignupForm() {
       </View>
       <View
         style={{
-          marginBottom: 20,
+          marginBottom: 40,
           justifyContent: "center",
           alignItems: "center",
         }}
       >
-        <InputFields placeholder="Your chosen username" maxWidth={true} />
+        <SignUpLabel text="Username" />
+        <InputFields
+          placeholder="Your chosen username"
+          maxWidth={true}
+          margin={true}
+        />
+        <SignUpLabel text="Password" />
         <InputFields
           placeholder="Your secure password"
           maxWidth={true}
           secureTextEntry={true}
+          margin={true}
         />
-        <InputFields placeholder="Your full name" maxWidth={true} />
-        <InputFields placeholder="Your unique employee ID" maxWidth={true} />
-        <InputFields maxWidth={true} isDropdown={true} data={data} />
+        <SignUpLabel text="Fullname" />
+        <InputFields
+          placeholder="Your full name"
+          maxWidth={true}
+          margin={true}
+        />
+        <SignUpLabel text="Employment ID" />
+        <InputFields
+          placeholder="Your unique employee ID"
+          maxWidth={true}
+          margin={true}
+        />
+        <SignUpLabel text="Designated Office" />
+        <InputFields
+          maxWidth={true}
+          isDropdown={true}
+          data={data}
+          margin={true}
+          placeholder={"Your office location"}
+        />
+        <SignUpLabel text="Email Account" />
         <InputFields placeholder="Your email address" maxWidth={true} />
+      </View>
+      <View style={{ zIndex: 4 }}>
+        <VerifyButton text="VERIFY ACCOUNT" />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "center",
+            marginTop: 5,
+          }}
+        >
+          <Text>Already verified your account?</Text>
+          <Pressable style={{ alignItems: "center" }}>
+            <Text style={{ fontWeight: "bold" }}> Login</Text>
+          </Pressable>
+        </View>
       </View>
     </View>
   );
