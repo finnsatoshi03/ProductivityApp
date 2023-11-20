@@ -1,8 +1,7 @@
 import React from "react";
 import { Text } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
 
-const Label = ({ text, ...props }) => {
+const Label = ({ text, style, ...props }) => {
   return (
     <Text
       style={[
