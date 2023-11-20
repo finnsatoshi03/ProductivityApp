@@ -12,15 +12,17 @@ const InputFields = ({
   maxWidth,
   isDropdown,
   data,
+  margin,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
     <View
       style={{
-        padding: 10,
+        // padding: 10,
+        marginBottom: margin ? 10 : 0,
         zIndex: 2,
-        width: maxWidth ? wp("95%") : wp("80%"),
+        width: maxWidth ? wp("90%") : wp("80%"),
       }}
     >
       {isDropdown ? (
