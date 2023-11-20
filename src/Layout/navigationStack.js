@@ -6,7 +6,6 @@ import Login from "../components/Auth/LoginForm";
 import AdminScreen from "../screens/admin/Auth/adminLogin";
 import UserScreen from "../screens/user/Auth/userLogin";
 import LoginButtons from "../components/button";
-import Navbar from "../components/navbar";
 
 const Stack = createNativeStackNavigator();
 
@@ -39,11 +38,6 @@ export default function App() {
         <Stack.Screen
           name="LoginButtons"
           component={LoginButtons}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="Navbar"
-          component={Navbar}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
