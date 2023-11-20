@@ -32,10 +32,25 @@ export default function sideBar({ avatar, name, roleLabel }) {
   }, []);
 
   return (
-    <Pressable onPress={slideOut} style={{ flex: 1 }}>
+    <Pressable
+      onPress={slideOut}
+      style={{
+        flex: 1,
+        position: "absolute",
+        zIndex: 99,
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    >
       <Pressable
         onPress={(event) => event.stopPropagation()}
-        style={{ width: wp("70%"), height: hp("100%"), flex: 1 }}
+        style={{
+          width: wp("70%"),
+          height: hp("100%"),
+          flex: 1,
+        }}
       >
         <Animated.View
           style={{
