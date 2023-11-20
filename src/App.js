@@ -4,7 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import Calendar from "./components/calendarComponent";
+import Calendar from "./screens/calendar";
 import SignupForm from "./components/Auth/SignupForm";
 
 const getFonts = () =>
@@ -31,11 +31,11 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        {/* <View style={globalStyles.container}>
-          <SignupForm />
-        </View> */}
+        <View style={globalStyles.container}>
+          <Calendar />
+        </View>
         {/* <Calendar /> */}
-        <Navigator />
+        {/* <Navigator /> */}
       </>
     );
   } else {
