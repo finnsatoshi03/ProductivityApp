@@ -4,7 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import Calendar from "./components/calendarComponent";
+import Navbar from "./Layout/navbar";
 import UserControl from "./screens/userControl";
 import Modal from "./components/modalCard";
 
@@ -33,7 +33,7 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <Modal />
+          <UserControl />
         </View>
         {/* <Calendar /> */}
         {/* <Navigator /> */}
