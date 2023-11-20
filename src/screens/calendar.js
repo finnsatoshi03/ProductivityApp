@@ -83,7 +83,7 @@ export default function Calendar() {
         <ListView data={data} renderItem={({ item }) => <Events {...item} />} />
       </View>
       <View style={{ height: hp("14%") }}>
-        <Navbar notifCounts={{}} />
+        <Navbar notifCounts={{}} current="Calendar" />
       </View>
       {/* <Text>Tite</Text> */}
     </View>
