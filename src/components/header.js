@@ -1,13 +1,16 @@
-import React from "react";
-import { View, Text, Image } from "react-native";
+import React, { useContext } from "react";
+import { View, Text, Image, Pressable } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Avatar from "./avatar";
+import { SidebarContext } from "../Layout/sidebar";
 
 export default function header({ title, subTitle, icon, avatar, chat }) {
+  const toggleSidebar = useContext(SidebarContext);
+
   return (
     <View
       style={{
@@ -17,14 +20,24 @@ export default function header({ title, subTitle, icon, avatar, chat }) {
         gap: icon === "back" ? 0 : 15,
       }}
     >
-      <Image
-        style={{ width: 55, height: 55 }}
-        source={
-          icon === "back"
-            ? require("../../assets/back.png")
-            : require("../../assets/fries-menu.png")
-        }
-      />
+      <Pressable
+        onPress={() => {
+          if (icon !== "back") {
+            console.log("Toggled");
+            toggleSidebar();
+          }
+        }}
+        style={{ width: 55, height: 55, backgroundColor: "red" }}
+      >
+        <Image
+          style={{ width: 55, height: 55 }}
+          source={
+            icon === "back"
+              ? require("../../assets/back.png")
+              : require("../../assets/fries-menu.png")
+          }
+        />
+      </Pressable>
       <View>
         <View
           style={{
