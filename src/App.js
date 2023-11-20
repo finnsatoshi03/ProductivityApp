@@ -4,9 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import Navbar from "./Layout/navbar";
-import UserControl from "./screens/userControl";
-import Modal from "./components/modalCard";
+
 
 const getFonts = () =>
   Font.loadAsync({
@@ -32,11 +30,7 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <View style={globalStyles.container}>
-          <UserControl />
-        </View>
-        {/* <Calendar /> */}
-        {/* <Navigator /> */}
+
       </>
     );
   } else {
