@@ -12,6 +12,7 @@ export default function Avatar({
   customWidth,
   customHeight,
   size,
+  style,
 }) {
   const width = customWidth || wp("14.5%");
   const height = customHeight || hp("7%");
@@ -19,7 +20,7 @@ export default function Avatar({
   return (
     <View>
       {avatar ? (
-        <Image style={{ height, width }} source={avatar} />
+        <Image style={[style, { height, width }]} source={avatar} />
       ) : (
         defaultIconGenerator(firstName, size)
       )}

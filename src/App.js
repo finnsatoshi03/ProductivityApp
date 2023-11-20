@@ -4,12 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-// import Sidebar from "./components/sidebar";
-// import Dropdown from "./components/dropdown";
-// import SignupForm from "./components/Auth/SignupForm";
-import Conversation from "./components/conversationComponent";
-import Calendar from "./components/calendarComponent";
-import SignupForm from "./components/Auth/SignupForm";
+
 
 const getFonts = () =>
   Font.loadAsync({
