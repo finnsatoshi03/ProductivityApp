@@ -1,6 +1,8 @@
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { heightPercentageToDP as hp,
+       widthPercentageToDP as wp } 
+      from "react-native-responsive-screen";
 import React, { useState, useEffect } from "react";
 
 const navIcons = [
@@ -30,7 +32,7 @@ const navIcons = [
   },
 ];
 
-export default function Navbar({ navigation }) {
+export default function Navbar({ navigation, notifCounts }) {
   const [selectedIcon, setSelectedIcon] = useState("Calendar");
 
   useEffect(() => {
@@ -52,6 +54,7 @@ export default function Navbar({ navigation }) {
         marginBottom: 24,
         width: "100%",
         justifyContent: "space-between",
+        display: 'relative'
       }}
     >
       {navIcons.map((item, index) => (
@@ -71,6 +74,7 @@ export default function Navbar({ navigation }) {
               selectedIcon === item.name
                 ? globalStyles.colors.green
                 : "transparent",
+            position: "relative", // Added for positioning the badge
           }}
           onPress={() => {
             setSelectedIcon(item.name);
@@ -90,6 +94,24 @@ export default function Navbar({ navigation }) {
             >
               {item.name}
             </Text>
+          )}
+
+          {notifCounts[item.name] > 0 && (
+            <View
+            style={{
+              position: "absolute",
+              top: -hp("1%"),
+              right: -wp("1%"), 
+              backgroundColor: "green",
+              borderRadius: hp("2%"), 
+              width: wp("5%"), 
+              height: hp("2.5%"), 
+              justifyContent: "center",
+              alignItems: "center",
+            }}
+          >
+            <Text style={{ color: "white", fontSize: hp("1.6%") }}>{notifCounts[item.name]}</Text>
+          </View>
           )}
         </TouchableOpacity>
       ))}
