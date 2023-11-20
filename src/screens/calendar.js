@@ -79,8 +79,31 @@ export default function Calendar() {
       <View style={{ height: hp("40%") }}>
         <CalendarWidget />
       </View>
-      <View style={{ height: hp("38%") }}>
-        <ListView data={data} renderItem={({ item }) => <Events {...item} />} />
+      <View
+        style={{
+          height: hp("38%"),
+        }}
+      >
+        {data.length === 0 ? (
+          <View
+            style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}
+          >
+            <Text
+              style={{
+                textAlign: "center",
+                fontSize: 18,
+                color: "gray",
+              }}
+            >
+              Embracing Tranquility 🎉 {"\n"} No Current Events at the Moment
+            </Text>
+          </View>
+        ) : (
+          <ListView
+            data={data}
+            renderItem={({ item }) => <Events {...item} />}
+          />
+        )}
       </View>
       <View style={{ height: hp("14%") }}>
         <Navbar notifCounts={{}} current="Calendar" />
