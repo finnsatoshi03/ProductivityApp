@@ -54,6 +54,7 @@ export default function Navbar({ navigation, notifCounts }) {
         marginBottom: 24,
         width: "100%",
         justifyContent: "space-between",
+        display: 'relative'
       }}
     >
       {navIcons.map((item, index) => (
