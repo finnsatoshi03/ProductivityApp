@@ -4,6 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
+// import Sidebar from "./components/sidebar";
 import SignupForm from "./components/Auth/SignupForm";
 import Dropdown from "./components/dropdown";
 
@@ -33,6 +34,7 @@ export default function App() {
       <>
         <View style={globalStyles.container}>
           <SignupForm />
+          {/* <SignupForm /> */}
         </View>
         {/* <Navigator /> */}
       </>
