@@ -24,6 +24,7 @@ export default function Home({ navigation }) {
         header="Welcome"
         description="ProductivityApp — where productivity meets simplicity. Log in and power
         up your efficiency effortlessly!"
+        // width={true}
       />
       <View style={{ marginBottom: hp("3%") }}>
         <View style={[globalStyles.buttonContainer]}>
@@ -41,7 +42,7 @@ export default function Home({ navigation }) {
       </View>
       <View
         style={{
-          zIndex: 3,
+          zIndex: 4,
           justifyContent: "center",
           alignSelf: "center",
         }}
@@ -56,7 +57,7 @@ export default function Home({ navigation }) {
         style={{
           position: "absolute",
           right: 0,
-          bottom: hp("-3%"),
+          bottom: 0,
           justifyContent: "flex-end",
           alignItems: "flex-end",
           zIndex: 4,

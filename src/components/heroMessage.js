@@ -62,7 +62,7 @@ export default function HeroMessage({
           fontFamily: globalStyles.fontStyle.regular,
           fontSize: globalStyles.fontSize.description,
           textAlign: textAlign ? "left" : "center",
-          width: width ? "65%" : 0,
+          width: width ? "65%" : undefined,
         }}
       >
         {description}

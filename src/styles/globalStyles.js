@@ -18,7 +18,8 @@ const description = hp("1.5%");
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: 54,
+    paddingTop: 54,
+    paddingBottom: 24,
     paddingHorizontal: 24,
     backgroundColor: "#d6efc3",
   },
