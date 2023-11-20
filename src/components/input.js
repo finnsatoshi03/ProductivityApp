@@ -8,9 +8,16 @@ const InputFields = ({
   handleBlur,
   secureTextEntry,
   placeholder,
+  maxWidth,
 }) => {
   return (
-    <View style={{ padding: 10, zIndex: 3, width: wp("80%") }}>
+    <View
+      style={{
+        padding: 10,
+        zIndex: 3,
+        width: maxWidth ? wp("95%") : wp("80%"),
+      }}
+    >
       <TextInput
         style={globalStyles.input}
         placeholder={placeholder}

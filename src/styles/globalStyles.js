@@ -47,30 +47,6 @@ export const globalStyles = StyleSheet.create({
   },
   // Components
   // Log in
-  welcomeContainer: {
-    // flex: 1,
-    // top: hp("40%"),
-    marginVertical: hp("5%"),
-    zIndex: 3,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  welcomeHeader: {
-    fontFamily: "montserrat-semiBold",
-    fontSize: header,
-    textAlign: "center",
-  },
-  welcomeHeaderBold: {
-    fontFamily: "montserrat-bold",
-    fontSize: header,
-    textAlign: "center",
-    lineHeight: hp("5%"),
-  },
-  welcomeDescription: {
-    fontFamily: regular,
-    fontSize: description,
-    textAlign: "center",
-  },
   buttonContainer: {
     width: wp("70%"),
     zIndex: 3,
