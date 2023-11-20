@@ -4,7 +4,9 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import Sidebar from "./components/sidebar";
+import Sidebar from "./Layout/sidebar";
+import Header from "./components/header";
+// import Navbar from "./Layout/navbar";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -30,8 +32,10 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <Sidebar />
-        {/* <View style={globalStyles.container}></View> */}
+        <View style={globalStyles.container}>
+          <Sidebar />
+          <Header title="Sample" />
+        </View>
         {/* <Navigator /> */}
       </>
     );
