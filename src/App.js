@@ -5,7 +5,8 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import Calendar from "./components/calendarComponent";
-import SignupForm from "./components/Auth/SignupForm";
+import UserControl from "./screens/userControl";
+import Modal from "./components/modalCard";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -31,11 +32,11 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        {/* <View style={globalStyles.container}>
-          <SignupForm />
-        </View> */}
+        <View style={globalStyles.container}>
+          <Modal />
+        </View>
         {/* <Calendar /> */}
-        <Navigator />
+        {/* <Navigator /> */}
       </>
     );
   } else {
