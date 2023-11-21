@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { View, Image, TouchableOpacity } from "react-native";
+import { View, Image, TouchableOpacity, Text, Pressable } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
@@ -8,8 +8,10 @@ import ListView from "../components/listView";
 import ChatCard from "../components/chatCard";
 import Navbar from "../Layout/navbar";
 import Sidebar from "./../Layout/sidebar";
+import Conversation from "../components/conversationComponent";
+import { useNavigation } from "@react-navigation/native";
 
-export default function Chats({ navigation }) {
+export default function Chats() {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
   const data = [
@@ -75,8 +77,16 @@ export default function Chats({ navigation }) {
     },
   ]; // Sample
 
+  const navigation = useNavigation();
+
+  const navigateToConversation = (chatData) => {
+    console.log("Navigating to Conversation:", chatData);
+    navigation.navigate("Conversation", { chatData });
+  };
+
   return (
     <>
+      {/* {console.log("Navigating to Conversation:")}; */}
       <View style={globalStyles.container}>
         <View style={{ flex: 1 }}>
           <View style={{ height: hp("8%") }}>
@@ -107,7 +117,17 @@ export default function Chats({ navigation }) {
           <View style={{ height: hp("74%") }}>
             <ListView
               data={data}
-              renderItem={({ item }) => <ChatCard {...item} />}
+              renderItem={({ item }) => (
+                <Pressable
+                  // style={{ backgroundColor: "red" }} // Add a background color for testing
+                  onPress={() => {
+                    navigateToConversation(item);
+                    console.log("Navigating to Conversation:");
+                  }}
+                >
+                  <ChatCard {...item} />
+                </Pressable>
+              )}
             />
           </View>
           <View style={{ height: hp("14%") }}>

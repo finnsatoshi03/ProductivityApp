@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Image, Pressable, KeyboardAvoidingView } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
@@ -10,29 +10,32 @@ import ListView from "./listView";
 import Bubble from "./messagebox";
 import Input from "./input";
 
-export default function Conversation({ name }) {
+export default function Conversation({ route }) {
   const [inputValue, setInputValue] = useState("");
-  const [data, setData] = useState([
-    { message: "Hello!" },
-    { message: "Hi, how are you?", sender: true },
-    { message: "I am fine, thank you." },
-    { message: "Great to hear!", sender: true },
-    { message: "Got a question", sender: true },
-    { message: "Great to hear!", sender: true },
-    { message: "Hello!" },
-    { message: "Hi, how are you?", sender: true },
-    { message: "I am fine, thank you." },
-    { message: "Great to hear!", sender: true },
-    { message: "Got a question", sender: true },
-    { message: "Great to hear!", sender: true },
-    { message: "Hello!" },
-    { message: "Hi, how are you?", sender: true },
-    { message: "I am fine, thank you." },
-    { message: "Great to hear!", sender: true },
-    { message: "Got a question", sender: true },
-    { message: "Great to hear!", sender: true },
-    // sample data
-  ]);
+  const [data, setData] = useState([]);
+  const { chatData } = route.params;
+  const { name, time, lastMessage } = chatData;
+  // const [data, setData] = useState([
+  //   { message: "Hello!" },
+  //   { message: "Hi, how are you?", sender: true },
+  //   { message: "I am fine, thank you." },
+  //   { message: "Great to hear!", sender: true },
+  //   { message: "Got a question", sender: true },
+  //   { message: "Great to hear!", sender: true },
+  //   { message: "Hello!" },
+  //   { message: "Hi, how are you?", sender: true },
+  //   { message: "I am fine, thank you." },
+  //   { message: "Great to hear!", sender: true },
+  //   { message: "Got a question", sender: true },
+  //   { message: "Great to hear!", sender: true },
+  //   { message: "Hello!" },
+  //   { message: "Hi, how are you?", sender: true },
+  //   { message: "I am fine, thank you." },
+  //   { message: "Great to hear!", sender: true },
+  //   { message: "Got a question", sender: true },
+  //   { message: "Great to hear!", sender: true },
+  //   // sample data
+  // ]);
 
   const handleInputChange = (text) => {
     setInputValue(text);
@@ -54,6 +57,11 @@ export default function Conversation({ name }) {
       setInputValue("");
     }
   };
+
+  useEffect(() => {
+    console.log("Conversation component mounted with params:", route.params);
+    // ... rest of the code
+  }, []);
 
   return (
     <KeyboardAvoidingView
