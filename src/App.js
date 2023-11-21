@@ -9,6 +9,8 @@ import Chats from "./screens/chats";
 import Calendar from "./screens/calendar";
 import Conversation from "./components/conversationComponent";
 import Searchbar from "./components/searchbar";
+import Sidebar from "./Layout/sidebar";
+import EditProfile from "./screens/editProfileModal";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -35,11 +37,12 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <Chats />
+          {/* <Chats /> */}
           {/* <Searchbar /> */}
           {/* <Conversation /> */}
+          <EditProfile />
         </View>
-        {/*<Sidebar />*/}
+        <Sidebar />
         {/* <View style={globalStyles.container}></View> */}
         {/* <Navigator /> */}
       </>

@@ -14,6 +14,7 @@ const InputFields = ({
   isDropdown,
   data,
   margin,
+  style,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,7 +46,7 @@ const InputFields = ({
         />
       ) : (
         <TextInput
-          style={globalStyles.input}
+          style={[globalStyles.input, style]}
           placeholder={placeholder}
           secureTextEntry={secureTextEntry}
           onFocus={handleFocus}

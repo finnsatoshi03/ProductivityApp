@@ -10,7 +10,7 @@ export const globalStyles = StyleSheet.create({
     paddingTop: 54,
     paddingBottom: 24,
     paddingHorizontal: 24,
-    backgroundColor: "#d6efc3",
+    backgroundColor: "white",
   },
   // Global styles
   // Colors
