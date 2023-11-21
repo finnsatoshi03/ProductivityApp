@@ -115,8 +115,7 @@ export default function AdminLogin({ navigation, header, description }) {
       </View>
       <View style={globalStyles.loginButtonContainer}>
         <LoginButton
-          navigation={navigation}
-          destination="Admin Login"
+          onPress={() => navigation.navigate("Calendar")}
           text="Login"
         />
       </View>

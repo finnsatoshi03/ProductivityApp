@@ -7,7 +7,7 @@ import ListView from "./../components/listView";
 import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 
-export default function Calendar() {
+export default function Calendar({ navigation }) {
   const data = [
     {
       date: "2022-09-01",

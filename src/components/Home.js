@@ -47,7 +47,7 @@ export default function Home({ navigation }) {
           alignSelf: "center",
         }}
       >
-        <Pressable>
+        <Pressable onPress={() => navigation.navigate("Verification")}>
           <Text style={{ fontFamily: "montserrat-regular" }}>
             Account Verification
           </Text>

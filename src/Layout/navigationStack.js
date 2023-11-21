@@ -5,7 +5,8 @@ import Homepage from "../screens/homepage";
 import Login from "../components/Auth/LoginForm";
 import AdminScreen from "../screens/admin/Auth/adminLogin";
 import UserScreen from "../screens/user/Auth/userLogin";
-import LoginButtons from "../components/button";
+import AccountVerification from "../components/Auth/SignupForm";
+import CalendarScreen from "../screens/calendar";
 
 const Stack = createNativeStackNavigator();
 
@@ -36,10 +37,20 @@ export default function App() {
           options={{ headerShown: false }}
         />
         <Stack.Screen
+          name="Verification"
+          component={AccountVerification}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Calendar"
+          component={CalendarScreen}
+          options={{ headerShown: false }}
+        />
+        {/* <Stack.Screen
           name="LoginButtons"
           component={LoginButtons}
           options={{ headerShown: false }}
-        />
+        /> */}
       </Stack.Navigator>
     </NavigationContainer>
   );

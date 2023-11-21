@@ -8,7 +8,7 @@ import InputFields from "../input";
 import Label from "../globalLabel";
 import VerifyButton from "../button";
 
-export default function SignupForm() {
+export default function SignupForm({ navigation }) {
   const [selectedValue, setSelectedValue] = useState(null);
   const data = [
     { label: "Item 1", value: "1" },
@@ -34,108 +34,118 @@ export default function SignupForm() {
   );
 
   return (
-    <View style={{ flex: 1 }}>
-      <Background topProperty={"0%"} />
-      <View
-        style={{
-          zIndex: 2,
-          flexDirection: "row",
-          paddingVertical: 30,
-          justifyContent: "space-between",
-        }}
-      >
-        <Image
-          style={{ height: 40, width: 40 }}
-          source={require("../../../assets/back.png")}
-        />
-        <Image
-          style={{ height: 40, width: 40 }}
-          source={require("../../../assets/logo.png")}
-        />
-      </View>
-      <View style={{ marginBottom: 20 }}>
-        <HeroMessage
-          header={"Account Verification"}
-          description={"Join us and make your agenda more productive!"}
-          textAlign={true}
-          noPadding={true}
-          width={true}
-        />
-      </View>
-      <View
-        style={{
-          marginBottom: 40,
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <SignUpLabel text="Username" />
-        <InputFields
-          placeholder="Your chosen username"
-          maxWidth={true}
-          margin={true}
-        />
-        <SignUpLabel text="Password" />
-        <InputFields
-          placeholder="Your secure password"
-          maxWidth={true}
-          secureTextEntry={true}
-          margin={true}
-        />
-        <SignUpLabel text="Fullname" />
-        <InputFields
-          placeholder="Your full name"
-          maxWidth={true}
-          margin={true}
-        />
-        <SignUpLabel text="Employment ID" />
-        <InputFields
-          placeholder="Your unique employee ID"
-          maxWidth={true}
-          margin={true}
-        />
-        <SignUpLabel text="Designated Office" />
-        <InputFields
-          maxWidth={true}
-          isDropdown={true}
-          data={data}
-          margin={true}
-          placeholder={"Your office location"}
-        />
+    <View style={globalStyles.container}>
+      <View style={{ flex: 1 }}>
+        <Background topProperty={"0%"} />
         <View
           style={{
+            zIndex: 2,
             flexDirection: "row",
+            paddingVertical: 30,
             justifyContent: "space-between",
-            alignItems: "center",
-            gap: 15,
           }}
         >
-          <View style={{ flex: 1 }}>
-            <SignUpLabel text="Email Account" />
-            <InputFields placeholder="Your email address" noWidth={wp("43%")} />
-          </View>
-          <View style={{ flex: 1 }}>
-            <SignUpLabel text="Contact Number" />
-            <InputFields
-              placeholder="Your contact number"
-              noWidth={wp("43%")}
+          <Pressable onPress={() => navigation.navigate("Homepage")}>
+            <Image
+              style={{ height: 40, width: 40 }}
+              source={require("../../../assets/back.png")}
             />
+          </Pressable>
+          <Image
+            style={{ height: 40, width: 40 }}
+            source={require("../../../assets/logo.png")}
+          />
+        </View>
+        <View style={{ marginBottom: 20 }}>
+          <HeroMessage
+            header={"Account Verification"}
+            description={"Join us and make your agenda more productive!"}
+            textAlign={true}
+            noPadding={true}
+            width={true}
+          />
+        </View>
+        <View
+          style={{
+            marginBottom: 40,
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <SignUpLabel text="Username" />
+          <InputFields
+            placeholder="Your chosen username"
+            maxWidth={true}
+            margin={true}
+          />
+          <SignUpLabel text="Password" />
+          <InputFields
+            placeholder="Your secure password"
+            maxWidth={true}
+            secureTextEntry={true}
+            margin={true}
+          />
+          <SignUpLabel text="Fullname" />
+          <InputFields
+            placeholder="Your full name"
+            maxWidth={true}
+            margin={true}
+          />
+          <SignUpLabel text="Employment ID" />
+          <InputFields
+            placeholder="Your unique employee ID"
+            maxWidth={true}
+            margin={true}
+          />
+          <SignUpLabel text="Designated Office" />
+          <InputFields
+            maxWidth={true}
+            isDropdown={true}
+            data={data}
+            margin={true}
+            placeholder={"Your office location"}
+          />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              gap: 15,
+            }}
+          >
+            <View style={{ flex: 1 }}>
+              <SignUpLabel text="Email Account" />
+              <InputFields
+                placeholder="Your email address"
+                noWidth={wp("43%")}
+              />
+            </View>
+            <View style={{ flex: 1 }}>
+              <SignUpLabel text="Contact Number" />
+              <InputFields
+                placeholder="Your contact number"
+                noWidth={wp("43%")}
+              />
+            </View>
           </View>
         </View>
-      </View>
-      <View style={{ zIndex: 4 }}>
-        <VerifyButton text="VERIFY ACCOUNT" />
-        <View
-          style={{
-            flexDirection: "row",
-            justifyContent: "center",
-            marginTop: 5,
-          }}
-        >
-          <Text>Already verified your account?</Text>
-          <Pressable style={{ alignItems: "center" }}>
-            <Text style={{ fontWeight: "bold" }}> Login</Text>
-          </Pressable>
+        <View style={{ zIndex: 4 }}>
+          <VerifyButton text="VERIFY ACCOUNT" />
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "center",
+              marginTop: 5,
+            }}
+          >
+            <Text>Already verified your account?</Text>
+            <Pressable
+              style={{ alignItems: "center" }}
+              onPress={() => navigation.navigate("User")}
+            >
+              <Text style={{ fontWeight: "bold" }}> Login</Text>
+            </Pressable>
+          </View>
         </View>
       </View>
     </View>

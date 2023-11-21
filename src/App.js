@@ -36,15 +36,15 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <View style={globalStyles.container}>
-          {/* <Chats /> */}
-          {/* <Searchbar /> */}
-          {/* <Conversation /> */}
-          {/* <EditProfile /> */}
-          <Navbar notifCounts={0} />
-        </View>
+        {/* <View style={globalStyles.container}> */}
+        {/* <Chats /> */}
+        {/* <Searchbar /> */}
+        {/* <Conversation /> */}
+        {/* <EditProfile /> */}
+        {/* <Navbar notifCounts={0} /> */}
+        {/* </View> */}
         {/* <View style={globalStyles.container}></View> */}
-        {/* <Navigator /> */}
+        <Navigator />
       </>
     );
   } else {
