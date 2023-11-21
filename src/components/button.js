@@ -13,6 +13,7 @@ export default function Button({
   flexStart,
   iconSource,
   padding,
+  onPress,
 }) {
   return (
     <View
@@ -30,8 +31,10 @@ export default function Button({
         onPress={() => {
           if (navigation) {
             navigation.navigate(destination);
+          } else if (onPress) {
+            onPress();
           } else {
-            console.error("Navigation prop is not defined");
+            console.error("Navigation prop and onPress prop are not defined");
           }
         }}
       >

@@ -20,7 +20,10 @@ export default function Avatar({
   return (
     <View>
       {avatar ? (
-        <Image style={[style, { height, width }]} source={avatar} />
+        <Image
+          style={[style, { height, width, borderRadius: width / 2 }]}
+          source={avatar}
+        />
       ) : (
         defaultIconGenerator(firstName, size)
       )}

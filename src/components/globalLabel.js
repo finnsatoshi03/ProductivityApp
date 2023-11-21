@@ -5,7 +5,7 @@ const Label = ({ text, style, ...props }) => {
   return (
     <Text
       style={[
-        props.style,
+        style,
         {
           fontFamily: props.fontFamily,
           fontSize: props.fontSize,
