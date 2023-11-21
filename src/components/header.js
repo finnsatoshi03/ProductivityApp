@@ -34,25 +34,25 @@ export default function header({
             : require("../../assets/fries-menu.png")
         }
       />
-      <View>
-        <View
-          style={{
-            flex: 1,
-            flexDirection: "row",
-            justifyContent: "center",
-            alignItems: "center",
-            gap: 10,
-          }}
-        >
-          {chat && (
-            <Avatar
-              avatar={avatar}
-              firstName={title}
-              customWidth={hp("3.7%")}
-              customHeight={wp("7.5%")}
-              size={4}
-            />
-          )}
+      <View
+        style={{
+          flex: 1,
+          flexDirection: "row",
+          justifyContent: icon === "back" ? "center" : "flex-start",
+          alignItems: "center",
+          gap: 10,
+        }}
+      >
+        {chat && (
+          <Avatar
+            avatar={avatar}
+            firstName={title}
+            customWidth={hp("3.7%")}
+            customHeight={wp("7.5%")}
+            size={4}
+          />
+        )}
+        <View>
           <Text
             style={{
               fontFamily: globalStyles.fontStyle.bold,
@@ -66,33 +66,34 @@ export default function header({
           >
             {title}
           </Text>
-          {chat && (
-            <Image
+          {subTitle && (
+            <Text
               style={{
-                height: hp("4%"),
-                width: hp("4%"),
-                position: "absolute",
-                right: hp("-10%"),
-                top: "50%",
-                transform: [{ translateY: -hp("2%") }],
+                fontFamily: globalStyles.fontStyle.semiBold,
+                fontSize: globalStyles.fontSize.mediumDescription,
+                lineHeight: 15,
               }}
-              source={require("../../assets/info.png")}
-            />
+            >
+              {subTitle}
+            </Text>
           )}
         </View>
-        {subTitle && (
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.semiBold,
-              fontSize: globalStyles.fontSize.mediumDescription,
-              lineHeight: 15,
-            }}
-          >
-            {subTitle}
-          </Text>
-        )}
       </View>
-      {icon === "back" && <View style={{ width: 50 }} />}
+      {chat && (
+        <Image
+          style={{
+            height: hp("4%"),
+            width: hp("4%"),
+            // position: "absolute",
+            // right: hp("-10%"),
+            // top: "50%",
+            // transform: [{ translateY: -hp("2%") }],
+          }}
+          source={require("../../assets/info.png")}
+        />
+      )}
+
+      {/* {icon === "back" && <View style={{ width: 50 }} />} */}
     </View>
   );
 }

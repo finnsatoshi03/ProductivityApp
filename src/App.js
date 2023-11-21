@@ -5,7 +5,8 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import SignUp from "./components/Auth/SignupForm";
-import Events from "./screens/events";
+import Chats from "./screens/chats";
+import Calendar from "./screens/calendar";
 import Conversation from "./components/conversationComponent";
 
 const getFonts = () =>
@@ -33,8 +34,8 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
+          <Chats />
           <Conversation />
-          {/* <Events /> */}
         </View>
         {/*<Sidebar />*/}
         {/* <View style={globalStyles.container}></View> */}
