@@ -23,7 +23,7 @@ const InputFields = ({
         // padding: 10,
         marginBottom: margin ? 10 : 0,
         zIndex: 2,
-        width: noWidth ? "85%" : maxWidth ? wp("90%") : wp("80%"),
+        width: noWidth ? noWidth : maxWidth ? wp("90%") : wp("80%"),
       }}
     >
       {isDropdown ? (

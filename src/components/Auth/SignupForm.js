@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { View, Image, Text, Pressable } from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
+import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Background from "../background";
 import HeroMessage from "../heroMessage";
 import InputFields from "../input";
@@ -33,7 +34,7 @@ export default function SignupForm() {
   );
 
   return (
-    <View>
+    <View style={{ flex: 1 }}>
       <Background topProperty={"0%"} />
       <View
         style={{
@@ -101,8 +102,26 @@ export default function SignupForm() {
           margin={true}
           placeholder={"Your office location"}
         />
-        <SignUpLabel text="Email Account" />
-        <InputFields placeholder="Your email address" maxWidth={true} />
+        <View
+          style={{
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 15,
+          }}
+        >
+          <View style={{ flex: 1 }}>
+            <SignUpLabel text="Email Account" />
+            <InputFields placeholder="Your email address" noWidth={wp("43%")} />
+          </View>
+          <View style={{ flex: 1 }}>
+            <SignUpLabel text="Contact Number" />
+            <InputFields
+              placeholder="Your contact number"
+              noWidth={wp("43%")}
+            />
+          </View>
+        </View>
       </View>
       <View style={{ zIndex: 4 }}>
         <VerifyButton text="VERIFY ACCOUNT" />

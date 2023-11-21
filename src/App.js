@@ -32,8 +32,8 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          {/* <SignUp /> */}
-          <Events />
+          <SignUp />
+          {/* <Events /> */}
         </View>
         {/*<Sidebar />*/}
         {/* <View style={globalStyles.container}></View> */}
