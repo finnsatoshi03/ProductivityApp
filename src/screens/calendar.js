@@ -139,6 +139,7 @@ export default function Calendar({ navigation }) {
           <Sidebar
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
+            navigation={navigation}
           />
         </>
       )}

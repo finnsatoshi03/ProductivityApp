@@ -19,6 +19,7 @@ export default function EditProfile({ username, email, number, navigation }) {
 
   const hideModal = () => {
     setModalVisible(false);
+    navigation.goBack();
   };
 
   const requestPermission = async () => {

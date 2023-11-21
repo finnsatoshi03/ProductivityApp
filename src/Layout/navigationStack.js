@@ -68,12 +68,12 @@ export default function App() {
         />
         <Stack.Screen
           name="EditProfile"
-          component={ChatScreen}
+          component={EditProfile}
           options={{ headerShown: false }}
         />
         <Stack.Screen
           name="UserControl"
-          component={ChatScreen}
+          component={UserControl}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen

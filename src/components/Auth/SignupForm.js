@@ -141,7 +141,7 @@ export default function SignupForm({ navigation }) {
             <Text>Already verified your account?</Text>
             <Pressable
               style={{ alignItems: "center" }}
-              onPress={() => navigation.navigate("User")}
+              onPress={() => navigation.goBack()}
             >
               <Text style={{ fontWeight: "bold" }}> Login</Text>
             </Pressable>

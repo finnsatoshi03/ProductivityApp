@@ -15,6 +15,7 @@ export default function sideBar({
   roleLabel,
   isVisible,
   onHide,
+  navigation,
 }) {
   const position = useRef(
     new Animated.Value(isVisible ? 0 : -wp("70%"))
@@ -31,7 +32,7 @@ export default function sideBar({
   const slideOut = () => {
     Animated.timing(position, {
       toValue: -wp("70%"),
-      duration: 500,
+      duration: 300,
       useNativeDriver: true,
     }).start(onHide);
   };
@@ -121,6 +122,8 @@ export default function sideBar({
                 textColor={"black"}
                 fontSize={globalStyles.fontSize.mediumDescription}
                 iconSource={require("./../../assets/edit-user.png")}
+                navigation={navigation}
+                destination={"EditProfile"}
               />
               <Button
                 text={"Verify Account"}
@@ -129,6 +132,8 @@ export default function sideBar({
                 textColor={"black"}
                 fontSize={globalStyles.fontSize.mediumDescription}
                 iconSource={require("./../../assets/verify.png")}
+                navigation={navigation}
+                destination={"UserControl"}
               />
             </View>
             <View style={{ marginHorizontal: 30, marginTop: 20 }}>
@@ -139,6 +144,8 @@ export default function sideBar({
                 textColor={"black"}
                 fontSize={globalStyles.fontSize.mediumDescription}
                 iconSource={require("./../../assets/calendar.png")}
+                navigation={navigation}
+                destination={"Calendar"}
               />
               <Button
                 text={"Events"}
@@ -147,6 +154,8 @@ export default function sideBar({
                 textColor={"black"}
                 fontSize={globalStyles.fontSize.mediumDescription}
                 iconSource={require("./../../assets/event-1.png")}
+                navigation={navigation}
+                destination={"Events"}
               />
               <Button
                 text={"Reports"}
@@ -155,6 +164,8 @@ export default function sideBar({
                 textColor={"black"}
                 fontSize={globalStyles.fontSize.mediumDescription}
                 iconSource={require("./../../assets/reports.png")}
+                navigation={navigation}
+                destination={"Reports"}
               />
               <Button
                 text={"Chats"}
@@ -163,6 +174,8 @@ export default function sideBar({
                 textColor={"black"}
                 fontSize={globalStyles.fontSize.mediumDescription}
                 iconSource={require("./../../assets/chat.png")}
+                navigation={navigation}
+                destination={"Chat"}
               />
             </View>
           </View>

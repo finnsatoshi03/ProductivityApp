@@ -6,7 +6,7 @@ import ListView from "./../components/listView";
 import Participants from "./../components/profileCard";
 import Navbar from "./../Layout/navbar";
 
-export default function UserControl() {
+export default function UserControl({ navigation }) {
   //sample data
   const data = [
     {
@@ -67,22 +67,24 @@ export default function UserControl() {
   ];
 
   return (
-    <View>
-      <View style={{ height: hp("8%") }}>
-        <Header
-          title={"Account"}
-          subTitle={"Verification"}
-          marginBottom={true}
-        />
-      </View>
-      <View style={{ height: hp("79%") }}>
-        <ListView
-          data={data}
-          renderItem={({ item }) => <Participants {...item} />}
-        />
-      </View>
-      <View style={{ height: hp("13%") }}>
-        <Navbar notifCounts={2} />
+    <View style={globalStyles.container}>
+      <View>
+        <View style={{ height: hp("8%") }}>
+          <Header
+            title={"Account"}
+            subTitle={"Verification"}
+            marginBottom={true}
+          />
+        </View>
+        <View style={{ height: hp("79%") }}>
+          <ListView
+            data={data}
+            renderItem={({ item }) => <Participants {...item} />}
+          />
+        </View>
+        <View style={{ height: hp("13%") }}>
+          <Navbar notifCounts={2} icon="none" navigation={navigation} />
+        </View>
       </View>
     </View>
   );

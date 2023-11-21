@@ -125,6 +125,7 @@ export default function Chats({ navigation }) {
           <Sidebar
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
+            navigation={navigation}
           />
         </>
       )}
