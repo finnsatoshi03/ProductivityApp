@@ -36,7 +36,7 @@ export default function App() {
       <>
         <View style={globalStyles.container}>
           <Chats />
-          <Searchbar />
+          {/* <Searchbar /> */}
           {/* <Conversation /> */}
         </View>
         {/*<Sidebar />*/}
