@@ -3,6 +3,7 @@ import { Text, View } from "react-native";
 import Login from "../../../components/Auth/LoginForm";
 
 export default function AdminLogin({ navigation }) {
+  console.log(navigation);
   return (
     <Login
       header="Welcome, Admin!"

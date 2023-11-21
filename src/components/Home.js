@@ -9,6 +9,7 @@ import Background from "./background";
 import HeroMessage from "./heroMessage";
 
 export default function Home({ navigation }) {
+  console.log(navigation);
   return (
     <View style={globalStyles.container}>
       <Image
@@ -29,15 +30,17 @@ export default function Home({ navigation }) {
       <View style={{ marginBottom: hp("3%") }}>
         <View style={[globalStyles.buttonContainer]}>
           <LoginButton
-            navigation={navigation}
-            destination="Admin"
+            onPress={() => navigation.navigate("Admin")}
             text="Admin"
           />
         </View>
       </View>
       <View style={{ marginBottom: hp("3%") }}>
         <View style={[globalStyles.buttonContainer]}>
-          <LoginButton navigation={navigation} destination="User" text="User" />
+          <LoginButton
+            text="User"
+            onPress={() => navigation.navigate("User")}
+          />
         </View>
       </View>
       <View

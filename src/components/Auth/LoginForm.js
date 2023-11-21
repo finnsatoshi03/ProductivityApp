@@ -18,6 +18,7 @@ import HeroMessage from "../heroMessage";
 import InputFields from "../input";
 
 export default function AdminLogin({ navigation, header, description }) {
+  console.log(navigation);
   const [isFocused, setIsFocused] = useState(false);
   const logoSize = useRef(new Animated.Value(1)).current;
   const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
@@ -115,7 +116,8 @@ export default function AdminLogin({ navigation, header, description }) {
       </View>
       <View style={globalStyles.loginButtonContainer}>
         <LoginButton
-          onPress={() => navigation.navigate("Calendar")}
+          navigation={navigation}
+          destination="Calendar"
           text="Login"
         />
       </View>
