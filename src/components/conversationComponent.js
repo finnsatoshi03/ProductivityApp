@@ -40,9 +40,16 @@ export default function Conversation({ name }) {
 
   const handleSendPress = () => {
     if (inputValue.trim() !== "") {
+      const currentTime = new Date();
+      const formattedTime = currentTime.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "numeric",
+        hour12: true,
+      });
+
       setData((prevData) => [
         ...prevData,
-        { message: inputValue, sender: true },
+        { message: inputValue, sender: true, time: formattedTime },
       ]);
       setInputValue("");
     }
