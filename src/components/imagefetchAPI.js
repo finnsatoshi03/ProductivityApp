@@ -5,11 +5,13 @@ export default async function fetchSquareImage(query) {
     const params = new URLSearchParams({
         client_id: UNSPLASH_ACCESS_KEY,
         query: encodeURIComponent(query),
+
         orientation: 'portrait', // Example additional parameter for landscape images
         // Add more parameters as needed, such as color, collections, etc.
       });
   
     const apiUrl = `https://api.unsplash.com/photos/random?${params}`;
+
     
     const response = await fetch(apiUrl);
     const data = await response.json();
