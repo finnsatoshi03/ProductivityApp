@@ -6,6 +6,7 @@ import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import SignUp from "./components/Auth/SignupForm";
 import Events from "./screens/events";
+import Conversation from "./components/conversationComponent";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -32,7 +33,7 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <SignUp />
+          <Conversation />
           {/* <Events /> */}
         </View>
         {/*<Sidebar />*/}

@@ -57,7 +57,7 @@ export default function Conversation({ name }) {
           flexDirection: "row",
         }}
       >
-        <Input placeholder={"Type your message"} noWidth={true} />
+        <Input placeholder={"Type your message"} noWidth={wp("75%")} />
         <Pressable
           style={{
             backgroundColor: globalStyles.colors.green,
