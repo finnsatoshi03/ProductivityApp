@@ -11,8 +11,16 @@ import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
 
 export default function Calendar({ navigation }) {
-  const { eventData } = useData();
+  // const { eventData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const { eventData, setEventData } = useData();
+
+  const deleteEvent = (eventTitleToDelete) => {
+    setEventData(
+      eventData.filter((event) => event.event !== eventTitleToDelete)
+    );
+    console.log(`Event ${eventTitleToDelete} has been deleted.`);
+  };
 
   return (
     <>
@@ -56,7 +64,11 @@ export default function Calendar({ navigation }) {
               <ListView
                 data={eventData}
                 renderItem={({ item }) => (
-                  <Events navigation={navigation} {...item} />
+                  <Events
+                    navigation={navigation}
+                    {...item}
+                    onDelete={() => deleteEvent(item.event)}
+                  />
                 )}
               />
             )}
