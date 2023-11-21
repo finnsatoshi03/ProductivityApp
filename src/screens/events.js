@@ -141,6 +141,8 @@ export default function Calendar() {
               paddingHorizonal: 5,
               color: "white",
             }}
+            fontFamily={true}
+            selectedTextStyle={true}
             placeholderTextStyle={{
               fontFamily: globalStyles.fontStyle.semiBold,
             }}

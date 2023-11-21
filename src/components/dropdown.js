@@ -18,13 +18,17 @@ const DropdownComponent = ({ data, value: initialValue, style, ...props }) => {
       itemTextStyle={props.textStyle}
       selectedTextStyle={{
         fontSize: 14,
-        fontFamily: globalStyles.fontStyle.semiBold,
-        color: "white",
+        fontFamily: props.fontFamily
+          ? globalStyles.fontStyle.semiBold
+          : undefined,
+        color: props.selectedTextStyle ? "white" : "grey",
       }}
       placeholderStyle={{
-        color: "white",
+        color: props.selectedTextStyle ? "white" : "grey",
         fontSize: 14,
-        fontFamily: globalStyles.fontStyle.semiBold,
+        fontFamily: props.fontFamily
+          ? globalStyles.fontStyle.semiBold
+          : undefined,
       }}
       placeholder={props.placeholder}
       data={data}
