@@ -1,6 +1,7 @@
 import React from "react";
 import { TextInput, View, Image, Pressable } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export default function Searchbar({ placeholder, bgColor, padding }) {
   const inputRef = React.useRef();
@@ -20,7 +21,7 @@ export default function Searchbar({ placeholder, bgColor, padding }) {
       >
         <Pressable onPress={() => inputRef.current.focus()}>
           <Image
-            style={{ height: 20, width: 20 }}
+            style={{ height: hp("2%"), width: hp("2%") }}
             source={require("./../../assets/search.png")}
           />
         </Pressable>

@@ -5,6 +5,7 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import Homepage from "./screens/homepage";
+import ViewEvent from "./components/viewEvent";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -38,7 +39,7 @@ export default function App() {
         {/* <Navbar notifCounts={0} /> */}
         {/* <Sidebar isVisible={true} /> */}
         {/* </View> */}
-        {/* <Event /> */}
+        {/* <ViewEvent event={event} isModalVisible={true} /> */}
         {/* <View style={globalStyles.container}></View> */}
         
         <Navigator />

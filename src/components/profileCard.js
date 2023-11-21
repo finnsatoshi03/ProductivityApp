@@ -47,8 +47,8 @@ export default function profileCard({ avatar, name, date, showViewIcon }) {
         <Pressable>
           <Image
             style={{
-              height: 20,
-              width: 20,
+              height: hp("2%"),
+              width: hp("2%"),
             }}
             source={require("./../../assets/view.png")}
           />

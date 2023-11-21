@@ -45,10 +45,10 @@ export default function AdminLogin({ navigation, header, description, userType }
       let baseurl = "http://192.168.100.9:4000/adminlogin";
       
       if (userType === 'User') {
-          baseurl = "http://192.168.100.9:4000/login"
+          baseurl = "http://192.168.100.9:4000/userlogin"
       } 
-      // console.log(baseurl);
-      const response = await axios.post("http://192.168.100.9:4000/adminlogin", credentials);
+      console.log(baseurl);
+      const response = await axios.post(baseurl, credentials);
 
       if (response.status === 200) {
         login({

@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from "react";
+import { useIsFocused } from "@react-navigation/native";
+
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
@@ -35,10 +37,17 @@ const navIcons = [
 
 export default function Navbar({ navigation, notifCounts, icon }) {
   const [selectedIcon, setSelectedIcon] = useState(icon);
+  const isFocused = useIsFocused();
 
   useEffect(() => {
-    setSelectedIcon(icon || "Calendar");
-  }, []);
+    setSelectedIcon(icon); // Update selectedIcon when the icon prop changes
+  }, [icon]);
+
+  useEffect(() => {
+    if (isFocused) {
+      setSelectedIcon(icon);
+    }
+  }, [isFocused, icon]);
 
   const centerIndex = navIcons.findIndex((item) => item.name === selectedIcon);
 
@@ -83,7 +92,7 @@ export default function Navbar({ navigation, notifCounts, icon }) {
           }}
         >
           <Image
-            style={{ height: 25, width: 25 }}
+            style={{ height: hp("2.5%"), width: hp("2.5%") }}
             source={selectedIcon === item.name ? item.altSource : item.source}
           />
           {selectedIcon === item.name && (
@@ -109,6 +118,7 @@ export default function Navbar({ navigation, notifCounts, icon }) {
                 height: hp("2.5%"),
                 justifyContent: "center",
                 alignItems: "center",
+                zIndex: 5,
               }}
             >
               <Text style={{ color: "white", fontSize: hp("1.6%") }}>

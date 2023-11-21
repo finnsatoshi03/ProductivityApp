@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { View, Text, Image, Animated, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -22,13 +23,32 @@ const commonStyles = {
   },
 };
 
-export default function eventCard({ date, time, event, location }) {
+export default function eventCard({
+  date,
+  time,
+  event,
+  location,
+  reason,
+  description,
+}) {
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
   const rotateInterpolation = animationRef.interpolate({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+  const navigation = useNavigation();
+
+  const viewEvent = () => {
+    navigation.navigate("ViewEvent", {
+      title: event,
+      date: date,
+      time: time,
+      location: location,
+      description: description,
+      joinReasons: [reason],
+    });
+  };
 
   const toggleExpand = () => {
     Animated.timing(animationRef, {
@@ -154,7 +174,12 @@ export default function eventCard({ date, time, event, location }) {
               }}
             >
               <View style={{ width: "60%" }}>
-                <Button text="VIEW" bgColor={globalStyles.colors.green} />
+                <Button
+                  text="VIEW"
+                  bgColor={globalStyles.colors.green}
+                  onPress={viewEvent}
+                  fnc={'press'}
+                />
               </View>
               <Button
                 text="DELETE"

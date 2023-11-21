@@ -4,7 +4,8 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const Authentication = () => {
   const [user, setUser] = useState(null);
   const [token, setToken] = useState(null);
-
+  
+  
   useEffect(() => {
     // Load user and token from AsyncStorage on component mount
     const loadUserAndToken = async () => {
@@ -44,6 +45,29 @@ export const Authentication = () => {
     return token !== null && user !== null;
   };
 
+  const userRole = () => {  
+    return user.role === 'admin' ? 'admin' : 'user'
+  }
+
+  const userFullname = () => {
+    return user.fullname
+  }
+
+  const getUser = async () => {
+    try {
+        const userString = await AsyncStorage.getItem('user');
+        if (userString) {
+            const user = JSON.parse(userString);
+            console.log(user);            
+            return user; // Return the parsed user object
+        } else {
+            return null; // Return null if no user data is found
+        }
+    } catch (error) {
+        console.error('Error while getting user data:', error);
+        return null; // Return null in case of an error
+    }
+  };
  
   return {
     user,
@@ -51,6 +75,7 @@ export const Authentication = () => {
     role: user ? user.role : null,
     fullname: user ? user.fullname : null,    
     token,
+    getUser,
     login,
     logout,
     isAuthenticated,

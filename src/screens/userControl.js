@@ -1,12 +1,15 @@
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { Text, View,TouchableOpacity } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
 import ListView from "./../components/listView";
 import Participants from "./../components/profileCard";
 import Navbar from "./../Layout/navbar";
+import Sidebar from "./../Layout/sidebar";
 
 export default function UserControl({ navigation }) {
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
   //sample data
   const data = [
     {
@@ -67,25 +70,49 @@ export default function UserControl({ navigation }) {
   ];
 
   return (
-    <View style={globalStyles.container}>
-      <View>
-        <View style={{ height: hp("8%") }}>
-          <Header
-            title={"Account"}
-            subTitle={"Verification"}
-            marginBottom={true}
-          />
+    <>
+      <View style={globalStyles.container}>
+        <View>
+          <View style={{ height: hp("8%") }}>
+            <Header
+              title={"Account"}
+              subTitle={"Verification"}
+              gap={true}
+              marginBottom={true}
+              onPressMenu={() => setSidebarVisible(true)}
+            />
+          </View>
+          <View style={{ height: hp("79%") }}>
+            <ListView
+              data={data}
+              renderItem={({ item }) => <Participants {...item} />}
+            />
+          </View>
+          <View style={{ height: hp("13%") }}>
+            <Navbar
+              notifCounts={2}
+              icon="none"
+              navigation={navigation}
+              eventsData={data}
+            />
+          </View>
         </View>
-        <View style={{ height: hp("79%") }}>
-          <ListView
-            data={data}
-            renderItem={({ item }) => <Participants {...item} />}
-          />
-        </View>
-        <View style={{ height: hp("13%") }}>
-          <Navbar notifCounts={2} icon="none" navigation={navigation} />
-        </View>
+        
       </View>
-    </View>
+      {isSidebarVisible && (
+        <>
+          <TouchableOpacity
+            style={globalStyles.overlay}
+            onPress={() => setSidebarVisible(false)}
+          />
+          <Sidebar
+            isVisible={isSidebarVisible}
+            onHide={() => setSidebarVisible(false)}
+            navigation={navigation}
+          />
+        </>
+      )}
+    </>
+    
   );
 }

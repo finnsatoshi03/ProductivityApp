@@ -20,11 +20,18 @@ export default function sideBar({
   onHide,
   navigation,
 }) {
-  const {logout, user, isAuthenticated} = Authentication()
+  const {logout, getUser} = Authentication()
 
+  const [userData, setUserData] = useState(null);
 
-  console.log(user);
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+    };
 
+    fetchUserData();
+  }, [getUser]); // Include getUser in the dependency array to trigger the effect when it changes
 
 
   const position = useRef(
@@ -58,6 +65,7 @@ export default function sideBar({
   const handleLogout = () => {
     logout()
     console.log('yo');
+    navigation.navigate('Homepage')
   }
   return (
     <Pressable
@@ -109,7 +117,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.largeDescription,
                 }}
               >
-                {}
+                {'NAME'}
               </Text>
               <Text
                 style={{
@@ -117,7 +125,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.description,
                 }}
               >
-                {}
+                {'ROLE'}
               </Text>
             </View>
             <View
@@ -149,6 +157,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/verify.png")}
                 navigation={navigation}
                 destination={"UserControl"}
+                fnc='navigate'
               />
             </View>
             <View style={{ marginHorizontal: 30, marginTop: 20 }}>
@@ -161,6 +170,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/calendar.png")}
                 navigation={navigation}
                 destination={"Calendar"}
+                fnc='navigate'
               />
               <Button
                 text={"Events"}
@@ -171,6 +181,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/event-1.png")}
                 navigation={navigation}
                 destination={"Events"}
+                fnc='navigate'
               />
               <Button
                 text={"Reports"}
@@ -181,6 +192,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/reports.png")}
                 navigation={navigation}
                 destination={"Reports"}
+                fnc='navigate'
               />
               <Button
                 text={"Chats"}
@@ -191,6 +203,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/chat.png")}
                 navigation={navigation}
                 destination={"Chat"}
+                fnc='navigate'
               />
             </View>
           </View>

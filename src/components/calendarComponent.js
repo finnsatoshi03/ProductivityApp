@@ -7,6 +7,7 @@ import {
   ExpandableCalendar,
 } from "react-native-calendars";
 import { globalStyles } from "../styles/globalStyles";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -111,8 +112,8 @@ export default function CalendarComponent({ events }) {
           <Image
             source={require("../../assets/double-arrow-left.png")}
             style={{
-              width: 15,
-              height: 15,
+              width: hp("1.5%"),
+              height: hp("1.5%"),
               transform: direction === "right" ? [{ rotate: "180deg" }] : [],
             }}
           />
