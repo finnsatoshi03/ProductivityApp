@@ -39,7 +39,7 @@ export default function chatCard({ avatar, name, time, lastMessage }) {
               >
                 {name}
               </Text>
-              <View style={{ maxWidth: "87%" }}>
+              <View style={{ maxWidth: "90%" }}>
                 <Text
                   numberOfLines={2}
                   ellipsizeMode="tail"

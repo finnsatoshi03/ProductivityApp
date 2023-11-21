@@ -40,7 +40,11 @@ export default function Conversation({ name }) {
       style={{ flex: 1 }}
     >
       <View style={{ height: hp("8%") }}>
-        <Header title={name || "Person"} icon={"back"} chat={true} />
+        <Header
+          title={name || "Person Sample Long name"}
+          icon={"back"}
+          chat={true}
+        />
       </View>
       <View style={{ flex: 1, paddingBottom: 20 }}>
         <ListView

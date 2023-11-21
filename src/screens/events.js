@@ -121,7 +121,7 @@ export default function Calendar() {
   return (
     <View style={{ flex: 1 }}>
       <View style={{ height: hp("8%") }}>
-        <Header title={"Events"} />
+        <Header title={"Events"} gap={true} />
       </View>
       <View
         style={{
