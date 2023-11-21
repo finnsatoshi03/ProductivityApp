@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { View, Image, Pressable, KeyboardAvoidingView } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
@@ -11,7 +11,8 @@ import Bubble from "./messagebox";
 import Input from "./input";
 
 export default function Conversation({ name }) {
-  const data = [
+  const [inputValue, setInputValue] = useState("");
+  const [data, setData] = useState([
     { message: "Hello!" },
     { message: "Hi, how are you?", sender: true },
     { message: "I am fine, thank you." },
@@ -31,7 +32,21 @@ export default function Conversation({ name }) {
     { message: "Got a question", sender: true },
     { message: "Great to hear!", sender: true },
     // sample data
-  ];
+  ]);
+
+  const handleInputChange = (text) => {
+    setInputValue(text);
+  };
+
+  const handleSendPress = () => {
+    if (inputValue.trim() !== "") {
+      setData((prevData) => [
+        ...prevData,
+        { message: inputValue, sender: true },
+      ]);
+      setInputValue("");
+    }
+  };
 
   return (
     <KeyboardAvoidingView
@@ -61,7 +76,12 @@ export default function Conversation({ name }) {
           flexDirection: "row",
         }}
       >
-        <Input placeholder={"Type your message"} noWidth={wp("75%")} />
+        <Input
+          placeholder={"Type your message"}
+          noWidth={wp("75%")}
+          value={inputValue}
+          onChangeText={handleInputChange}
+        />
         <Pressable
           style={{
             backgroundColor: globalStyles.colors.green,
@@ -70,6 +90,10 @@ export default function Conversation({ name }) {
             height: 40,
             width: 40,
             alignSelf: "center",
+          }}
+          onPress={() => {
+            handleSendPress();
+            console.log("pressed");
           }}
         >
           <Image

@@ -15,6 +15,8 @@ const InputFields = ({
   data,
   margin,
   style,
+  value, // new prop
+  onChangeText, // new prop
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -51,6 +53,8 @@ const InputFields = ({
           secureTextEntry={secureTextEntry}
           onFocus={handleFocus}
           onBlur={handleBlur}
+          value={value} // new prop
+          onChangeText={onChangeText} // new prop
         />
       )}
     </View>
