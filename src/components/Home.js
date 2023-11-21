@@ -33,6 +33,7 @@ export default function Home({ navigation }) {
           <LoginButton
             onPress={() => navigation.navigate("Admin")}
             text="Admin"
+            fnc="press"
           />
         </View>
       </View>
@@ -41,6 +42,7 @@ export default function Home({ navigation }) {
           <LoginButton
             text="User"
             onPress={() => navigation.navigate("User")}
+            fnc="press"
           />
         </View>
       </View>

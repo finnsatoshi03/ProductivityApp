@@ -21,30 +21,35 @@ export const Authentication = () => {
     loadUserAndToken();
   }, []); // Empty dependency array to run the effect only once on mount
 
-  const login = ({ user, token }) => {
+  const login = ({ user, token, user_id, fullname, role }) => {
     setUser(user);
     setToken(token);
-
-    // Save user and token to AsyncStorage
-    AsyncStorage.setItem('user', JSON.stringify(user));
+    
+    // Save user, token, user_id, and role to AsyncStorage
+    AsyncStorage.setItem('user', JSON.stringify({ user_id, role, fullname}));
     AsyncStorage.setItem('token', JSON.stringify(token));
   };
 
   const logout = () => {
     setUser(null);
     setToken(null);
-
+    console.log(';yo');
     // Remove user and token from AsyncStorage
     AsyncStorage.removeItem('user');
     AsyncStorage.removeItem('token');
+    
   };
 
   const isAuthenticated = () => {
     return token !== null && user !== null;
   };
 
+ 
   return {
     user,
+    user_id: user ? user.user_id : null,
+    role: user ? user.role : null,
+    fullname: user ? user.fullname : null,    
     token,
     login,
     logout,

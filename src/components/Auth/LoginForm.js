@@ -43,7 +43,7 @@ export default function AdminLogin({ navigation, header, description, userType }
     }
     try {
       let baseurl = "http://192.168.100.9:4000/adminlogin";
-
+      
       if (userType === 'User') {
           baseurl = "http://192.168.100.9:4000/login"
       } 
@@ -54,8 +54,11 @@ export default function AdminLogin({ navigation, header, description, userType }
         login({
           user:response.data.username,
           token:response.data.token,
+          user_id:response.data.user_id,
+          role:response.data.role,
+          fullname:response.data.fullname,
         })
-        console.log('YOU GOT IT');
+        console.log(response.data);
         navigation.navigate("Calendar");
       }
 
@@ -172,6 +175,7 @@ export default function AdminLogin({ navigation, header, description, userType }
           destination="Calendar"
           text="Login"
           onPress={onSubmit}
+          fnc={'press'}
         />
       </View>
     </KeyboardAvoidingView>

@@ -19,7 +19,7 @@ const Stack = createNativeStackNavigator();
 
 export default function App() {
   // const [firstLaunch, setFirstLaunch] = useState(true);
-  const [userType, setUserType] = useState('user')
+  // const [userType, setUserType] = useState('user')
   
   return (      
     <NavigationContainer>

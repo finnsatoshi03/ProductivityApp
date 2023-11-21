@@ -14,6 +14,7 @@ export default function Button({
   iconSource,
   padding,
   onPress,
+  fnc,
 }) {
   return (
     <View
@@ -29,14 +30,11 @@ export default function Button({
           width: width,
         }}
         onPress={() => {
-          onPress();
-          // if (navigation) {
-          //   navigation.navigate(destination);
-          // } else if (onPress) {
-          //   onPress();
-          // } else {
-          //   console.error("Navigation prop and onPress prop are not defined");
-          // }
+          if (fnc == 'navigate') {
+            navigation.navigate(destination);
+          }else if (fnc == 'press') {
+            onPress();
+          } else console.error("Navigation prop and onPress prop are not defined");         
         }}
       >
         <View

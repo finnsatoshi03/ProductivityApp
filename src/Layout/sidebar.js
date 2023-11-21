@@ -9,6 +9,9 @@ import {
 import Button from "../components/button";
 import Avatar from "../components/avatar";
 
+import { Authentication } from "../Auth/Authentication";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
 export default function sideBar({
   avatar,
   name,
@@ -17,6 +20,13 @@ export default function sideBar({
   onHide,
   navigation,
 }) {
+  const {logout, user, isAuthenticated} = Authentication()
+
+
+  console.log(user);
+
+
+
   const position = useRef(
     new Animated.Value(isVisible ? 0 : -wp("70%"))
   ).current;
@@ -45,6 +55,10 @@ export default function sideBar({
     }
   }, [isVisible]);
 
+  const handleLogout = () => {
+    logout()
+    console.log('yo');
+  }
   return (
     <Pressable
       onPress={slideOut}
@@ -95,7 +109,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.largeDescription,
                 }}
               >
-                {name || "User Name"}
+                {}
               </Text>
               <Text
                 style={{
@@ -103,7 +117,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.description,
                 }}
               >
-                {roleLabel || "Role Label"}
+                {}
               </Text>
             </View>
             <View
@@ -124,6 +138,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/edit-user.png")}
                 navigation={navigation}
                 destination={"EditProfile"}
+                fnc='navigate'
               />
               <Button
                 text={"Verify Account"}
@@ -187,6 +202,8 @@ export default function sideBar({
               textColor={"black"}
               fontSize={globalStyles.fontSize.mediumDescription}
               iconSource={require("./../../assets/logout.png")}
+              onPress={handleLogout}
+              fnc={'press'}
             />
           </View>
         </Animated.View>
