@@ -30,6 +30,7 @@ export default function eventCard({
   location,
   reason,
   description,
+  onDelete,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
@@ -185,6 +186,7 @@ export default function eventCard({
                 bgColor="#e2e6f0"
                 textColor="#9198bc"
                 width={wp("25%")}
+                onPress={onDelete}
               />
             </View>
           </View>

@@ -104,6 +104,13 @@ export default function EventsScreen({ navigation, data }) {
     );
   };
 
+  const deleteEvent = (eventTitleToDelete) => {
+    setEventData(
+      eventData.filter((event) => event.event !== eventTitleToDelete)
+    );
+    console.log(`Event ${eventTitleToDelete} has been deleted.`);
+  };
+
   const closeBottomSheet = () => {
     setBottomSheetVisible(false);
   };
@@ -467,7 +474,9 @@ export default function EventsScreen({ navigation, data }) {
             ) : (
               <ListView
                 data={eventData}
-                renderItem={({ item }) => <Events {...item} />}
+                renderItem={({ item }) => (
+                  <Events {...item} onDelete={() => deleteEvent(item.event)} />
+                )}
               />
             )}
           </View>
