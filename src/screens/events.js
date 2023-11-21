@@ -268,7 +268,7 @@ export default function EventsScreen({ navigation, data }) {
             <View
               style={{
                 backgroundColor: globalStyles.colors.green,
-                padding: 16,
+                padding: 40,
                 borderTopLeftRadius: 20,
                 borderTopRightRadius: 20,
               }}
@@ -429,7 +429,7 @@ export default function EventsScreen({ navigation, data }) {
               >
                 <Button
                   text={"Create Event"}
-                  width={wp("60%")}
+                  width={wp("55%")}
                   onPress={() =>
                     addEvent(
                       eventTitle,
@@ -443,7 +443,7 @@ export default function EventsScreen({ navigation, data }) {
                 />
                 <Button
                   text={"Cancel"}
-                  width={wp("30%")}
+                  width={wp("23%")}
                   bgColor="rgba(0,0,0,0.3)"
                   textColor="#9198bc"
                   onPress={closeBottomSheet}
