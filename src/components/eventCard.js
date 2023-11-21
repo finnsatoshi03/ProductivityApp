@@ -156,7 +156,12 @@ export default function eventCard({ date, time, event, location }) {
               <View style={{ width: "60%" }}>
                 <Button text="VIEW" bgColor={globalStyles.colors.green} />
               </View>
-              <Button text="DELETE" bgColor="#e2e6f0" textColor="#9198bc" />
+              <Button
+                text="DELETE"
+                bgColor="#e2e6f0"
+                textColor="#9198bc"
+                width={wp("25%")}
+              />
             </View>
           </View>
         )}

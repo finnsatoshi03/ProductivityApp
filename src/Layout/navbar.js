@@ -33,11 +33,11 @@ const navIcons = [
   },
 ];
 
-export default function Navbar({ navigation, notifCounts }) {
+export default function Navbar({ navigation, notifCounts, current }) {
   const [selectedIcon, setSelectedIcon] = useState("Calendar");
 
   useEffect(() => {
-    setSelectedIcon("Calendar");
+    setSelectedIcon(current || "Calendar");
   }, []);
 
   const centerIndex = navIcons.findIndex((item) => item.name === selectedIcon);
@@ -55,7 +55,7 @@ export default function Navbar({ navigation, notifCounts }) {
         marginBottom: 24,
         width: "100%",
         justifyContent: "space-between",
-        // display: 'relative'
+        display: "relative",
       }}
     >
       {navIcons.map((item, index) => (
