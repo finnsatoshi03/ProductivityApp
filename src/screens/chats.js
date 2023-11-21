@@ -118,15 +118,13 @@ export default function Chats() {
             <ListView
               data={data}
               renderItem={({ item }) => (
-                <Pressable
-                  // style={{ backgroundColor: "red" }} // Add a background color for testing
+                <ChatCard
+                  {...item}
                   onPress={() => {
                     navigateToConversation(item);
-                    console.log("Navigating to Conversation:");
+                    console.log("Navigating to Conversation:", item);
                   }}
-                >
-                  <ChatCard {...item} />
-                </Pressable>
+                />
               )}
             />
           </View>
