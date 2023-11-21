@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -43,6 +43,8 @@ export default function EventsScreen({ navigation, data }) {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
+  const [editingEvent, setEditingEvent] = useState(null);
+
   const months = [
     { label: "January", value: "January" },
     { label: "February", value: "February" },
@@ -83,25 +85,19 @@ export default function EventsScreen({ navigation, data }) {
       description: description,
     };
 
-    console.log("New Event: ", newEvent);
+    if (editingEvent) {
+      console.log("Before edit:", eventData);
+      setEventData(
+        eventData.map((event, i) =>
+          i === editingEvent.index ? newEvent : event
+        )
+      );
+    } else {
+      setEventData([...eventData, newEvent]);
+    }
 
-    setEventData([...eventData, newEvent]);
-    setBottomSheetVisible(true);
-
-    Alert.alert(
-      "Event Created",
-      "Your event has been successfully created!",
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            console.log("OK Pressed");
-            setBottomSheetVisible(false);
-          },
-        },
-      ],
-      { cancelable: false }
-    );
+    setEditingEvent(null);
+    setBottomSheetVisible(false);
   };
 
   const deleteEvent = (eventTitleToDelete) => {
@@ -110,6 +106,15 @@ export default function EventsScreen({ navigation, data }) {
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
+
+  const editEvent = (event) => {
+    setEditingEvent(event);
+    setBottomSheetVisible(true);
+  };
+
+  useEffect(() => {
+    console.log("Updated state:", eventData);
+  }, [eventData]);
 
   const closeBottomSheet = () => {
     setBottomSheetVisible(false);
@@ -293,6 +298,7 @@ export default function EventsScreen({ navigation, data }) {
                   console.log("Event Name: ", text);
                   setEventTitle(text);
                 }}
+                value={editingEvent ? editingEvent.eventTitle : ""}
               />
               <View style={{ paddingVertical: 10 }}>
                 <Text
@@ -399,6 +405,7 @@ export default function EventsScreen({ navigation, data }) {
                     console.log("Location: ", text);
                     setLocation(text);
                   }}
+                  value={editingEvent ? editingEvent.eventTitle : ""}
                 />
               </View>
               <View style={{ paddingVertical: 10 }}>
@@ -424,6 +431,7 @@ export default function EventsScreen({ navigation, data }) {
                     console.log("Description: ", text);
                     setDescription(text);
                   }}
+                  value={editingEvent ? editingEvent.eventTitle : ""}
                 />
               </View>
               <View
@@ -435,7 +443,7 @@ export default function EventsScreen({ navigation, data }) {
                 }}
               >
                 <Button
-                  text={"Create Event"}
+                  text={editingEvent ? "Update Event" : "Create Event"}
                   width={wp("55%")}
                   onPress={() =>
                     addEvent(
@@ -474,8 +482,12 @@ export default function EventsScreen({ navigation, data }) {
             ) : (
               <ListView
                 data={eventData}
-                renderItem={({ item }) => (
-                  <Events {...item} onDelete={() => deleteEvent(item.event)} />
+                renderItem={({ item, index }) => (
+                  <Events
+                    {...item}
+                    onDelete={() => deleteEvent(item.event)}
+                    onEdit={() => editEvent(item.event, index)}
+                  />
                 )}
               />
             )}

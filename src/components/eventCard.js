@@ -31,6 +31,7 @@ export default function eventCard({
   reason,
   description,
   onDelete,
+  onEdit,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
@@ -160,10 +161,12 @@ export default function eventCard({
                   {location}
                 </Text>
               </View>
-              <Image
-                style={{ height: hp("4%"), width: hp("4%") }}
-                source={require("../../assets/edit.png")}
-              />
+              <Pressable onPress={onEdit}>
+                <Image
+                  style={{ height: hp("4%"), width: hp("4%") }}
+                  source={require("../../assets/edit.png")}
+                />
+              </Pressable>
             </View>
             <View
               style={{
