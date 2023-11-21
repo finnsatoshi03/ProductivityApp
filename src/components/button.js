@@ -1,5 +1,9 @@
 import React from "react";
 import { Text, View, Pressable, Image } from "react-native";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 
 export default function Button({
   navigation,
@@ -48,7 +52,7 @@ export default function Button({
           {iconSource && (
             <Image
               source={iconSource}
-              style={{ marginRight: 10, width: 20, height: 20 }}
+              style={{ marginRight: 10, width: hp("2%"), height: hp("2%") }}
             />
           )}
           <Text

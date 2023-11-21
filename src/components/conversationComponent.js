@@ -94,8 +94,8 @@ export default function Conversation({ name }) {
             backgroundColor: globalStyles.colors.green,
             padding: 10,
             borderRadius: hp("50%"),
-            height: 40,
-            width: 40,
+            height: hp("4%"),
+            width: hp("4%"),
             alignSelf: "center",
           }}
           onPress={() => {

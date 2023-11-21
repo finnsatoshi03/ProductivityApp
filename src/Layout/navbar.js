@@ -92,7 +92,7 @@ export default function Navbar({ navigation, notifCounts, icon }) {
           }}
         >
           <Image
-            style={{ height: 25, width: 25 }}
+            style={{ height: hp("2.5%"), width: hp("2.5%") }}
             source={selectedIcon === item.name ? item.altSource : item.source}
           />
           {selectedIcon === item.name && (

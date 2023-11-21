@@ -1,7 +1,10 @@
 import React, { useState } from "react";
 import { View, Image, Text, Pressable } from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
-import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import Background from "../background";
 import HeroMessage from "../heroMessage";
 import InputFields from "../input";
@@ -47,12 +50,12 @@ export default function SignupForm({ navigation }) {
         >
           <Pressable onPress={() => navigation.navigate("Homepage")}>
             <Image
-              style={{ height: 40, width: 40 }}
+              style={{ height: hp("4%"), width: hp("4%") }}
               source={require("../../../assets/back.png")}
             />
           </Pressable>
           <Image
-            style={{ height: 40, width: 40 }}
+            style={{ height: hp("4%"), width: hp("4%") }}
             source={require("../../../assets/logo.png")}
           />
         </View>

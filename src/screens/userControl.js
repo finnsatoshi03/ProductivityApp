@@ -73,6 +73,7 @@ export default function UserControl({ navigation }) {
           <Header
             title={"Account"}
             subTitle={"Verification"}
+            gap={true}
             marginBottom={true}
           />
         </View>

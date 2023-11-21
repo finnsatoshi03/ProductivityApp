@@ -47,7 +47,7 @@ export default function header({
           }}
         >
           <Image
-            style={{ width: 50, height: 50 }}
+            style={{ width: hp("5%"), height: hp("5%") }}
             source={
               icon === "back"
                 ? require("../../assets/back.png")
