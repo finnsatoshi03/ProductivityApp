@@ -37,7 +37,7 @@ export default function Navbar({ navigation, notifCounts, icon }) {
   const [selectedIcon, setSelectedIcon] = useState(icon);
 
   useEffect(() => {
-    setSelectedIcon("Calendar");
+    setSelectedIcon(icon || "Calendar");
   }, []);
 
   const centerIndex = navIcons.findIndex((item) => item.name === selectedIcon);
