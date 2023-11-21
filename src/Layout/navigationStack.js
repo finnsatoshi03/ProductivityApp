@@ -12,6 +12,7 @@ import ReportsScreen from "../screens/reports";
 import ChatScreen from "../screens/chats";
 import EditProfile from "../screens/editProfileModal";
 import UserControl from "../screens/userControl";
+import ViewEvent from "../components/viewEvent";
 
 const Stack = createNativeStackNavigator();
 
@@ -74,6 +75,11 @@ export default function App() {
         <Stack.Screen
           name="UserControl"
           component={UserControl}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="ViewEvent"
+          component={ViewEvent}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen

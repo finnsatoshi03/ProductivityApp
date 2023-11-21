@@ -116,7 +116,9 @@ export default function Calendar({ navigation }) {
             ) : (
               <ListView
                 data={data}
-                renderItem={({ item }) => <Events {...item} />}
+                renderItem={({ item }) => (
+                  <Events navigation={navigation} {...item} />
+                )}
               />
             )}
           </View>
