@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { View, Text, Image, Animated, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -8,7 +9,7 @@ import {
 import Button from "../components/button";
 import Avatar from "../components/avatar";
 
-export default function sideBar({ avatar, name, roleLabel }) {
+export default function sideBar({ avatar, name, roleLabel, navigation }) {
   const position = useRef(new Animated.Value(-wp("70%"))).current;
 
   const slideIn = () => {

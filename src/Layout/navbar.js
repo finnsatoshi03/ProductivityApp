@@ -1,10 +1,10 @@
+import React, { useState, useEffect } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import React, { useState, useEffect } from "react";
 
 const navIcons = [
   {

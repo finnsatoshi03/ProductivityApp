@@ -9,7 +9,7 @@ import Chats from "./screens/chats";
 import Calendar from "./screens/calendar";
 import Conversation from "./components/conversationComponent";
 import Searchbar from "./components/searchbar";
-import Sidebar from "./Layout/sidebar";
+import Navbar from "./Layout/navbar";
 import EditProfile from "./screens/editProfileModal";
 
 const getFonts = () =>
@@ -40,9 +40,9 @@ export default function App() {
           {/* <Chats /> */}
           {/* <Searchbar /> */}
           {/* <Conversation /> */}
-          <EditProfile />
+          {/* <EditProfile /> */}
+          <Navbar notifCounts={0} />
         </View>
-        <Sidebar />
         {/* <View style={globalStyles.container}></View> */}
         {/* <Navigator /> */}
       </>

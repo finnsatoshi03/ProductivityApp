@@ -13,7 +13,7 @@ import Label from "./../components/globalLabel";
 import Input from "./../components/input";
 import Button from "./../components/button";
 
-export default function EditProfile({ username, email, number }) {
+export default function EditProfile({ username, email, number, navigation }) {
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isModalVisible, setModalVisible] = useState(true);
 

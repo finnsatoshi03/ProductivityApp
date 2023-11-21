@@ -2,7 +2,7 @@ import React from "react";
 import { Text, View } from "react-native";
 import Login from "../../../components/Auth/LoginForm";
 
-export default function AdminLogin({ navigation }) {
+export default function UserLogin({ navigation }) {
   return (
     <Login
       header="Hello User!"
