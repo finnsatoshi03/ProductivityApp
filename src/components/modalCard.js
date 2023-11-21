@@ -18,7 +18,15 @@ const commonTextStyle = {
   lineHeight: 22,
 };
 
-export default function ModalCard({ avatar, name }) {
+export default function ModalCard({
+  avatar,
+  name,
+  email,
+  office,
+  username,
+  id,
+  contact_no,
+}) {
   const [isSecondaryModalVisible, setIsSecondaryModalVisible] = useState(false);
 
   return (
@@ -40,7 +48,7 @@ export default function ModalCard({ avatar, name }) {
           >
             <Avatar
               avatar={avatar}
-              firstName={"Name"}
+              firstName={name}
               customWidth={wp("30%")}
               customHeight={wp("30%")}
               size={15}
@@ -51,7 +59,7 @@ export default function ModalCard({ avatar, name }) {
                 fontSize: globalStyles.fontSize.largeDescription,
               }}
             >
-              Name
+              {name || "Name"}
             </Text>
             <Text
               style={{
@@ -60,7 +68,7 @@ export default function ModalCard({ avatar, name }) {
                 lineHeight: 15,
               }}
             >
-              Email
+              {email || "sample@email.com"}
             </Text>
           </View>
           <View>
@@ -70,22 +78,31 @@ export default function ModalCard({ avatar, name }) {
               fontFamily={globalStyles.fontStyle.semiBold}
               fontSize={globalStyles.fontSize.description}
             />
-            <Text style={commonTextStyle}>Designated Office</Text>
+            <Text style={commonTextStyle}>{office || "Designated Office"}</Text>
             <Label
-              text={"Designated Office"}
+              text={"Employment ID"}
               flexStart={true}
               fontFamily={globalStyles.fontStyle.semiBold}
               fontSize={globalStyles.fontSize.description}
             />
-            <Text style={commonTextStyle}>Employment ID</Text>
+            <Text style={commonTextStyle}>{id || "Employment ID"}</Text>
             <Label
-              text={"Designated Office"}
+              text={"Contact Number"}
+              flexStart={true}
+              fontFamily={globalStyles.fontStyle.semiBold}
+              fontSize={globalStyles.fontSize.description}
+            />
+            <Text style={commonTextStyle}>
+              {contact_no || "Contact Number"}
+            </Text>
+            <Label
+              text={"Username"}
               flexStart={true}
               fontFamily={globalStyles.fontStyle.semiBold}
               fontSize={globalStyles.fontSize.description}
             />
             <Text style={[commonTextStyle, { marginBottom: 30 }]}>
-              Username
+              {username || "Username"}
             </Text>
           </View>
           <View

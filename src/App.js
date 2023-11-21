@@ -4,7 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import Calendar from "./screens/calendar";
+import Modal from "./components/modalCard";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -31,7 +31,7 @@ export default function App() {
     return (
       <>
         <View style={globalStyles.container}>
-          <Calendar />
+          <Modal />
         </View>
         {/* <Calendar /> */}
         {/*<Sidebar />*/}
