@@ -16,6 +16,13 @@ export default function header({
   gap,
   marginBottom,
 }) {
+  let titleArray = title.split(" ");
+
+  if (chat && titleArray.length >= 2) {
+    title = titleArray[0];
+    subTitle = titleArray.slice(1).join(" ");
+  }
+
   return (
     <View
       style={{
