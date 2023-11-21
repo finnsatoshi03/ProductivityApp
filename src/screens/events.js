@@ -11,8 +11,10 @@ import ListView from "../components/listView";
 import Events from "../components/eventCard";
 import Navbar from "../Layout/navbar";
 import Sidebar from "./../Layout/sidebar";
+import { useData } from "./../DataContext";
 
-export default function Calendar({ navigation }) {
+export default function EventsScreen({ navigation, data }) {
+  const { eventData, setEventData } = useData();
   const [activeButtons, setActiveButtons] = useState({
     dropdown: false,
     recent: false,
@@ -69,56 +71,17 @@ export default function Calendar({ navigation }) {
       value: "December",
     },
   ];
-  const data = [
-    // {
-    //   date: "2022-01-01",
-    //   event: "New Year's Day",
-    //   time: "All day",
-    //   location: "Worldwide",
-    // },
-    // {
-    //   date: "2022-02-14",
-    //   event: "Valentine's Day",
-    //   time: "All day",
-    //   location: "Worldwide",
-    // },
-    // {
-    //   date: "2022-07-04",
-    //   event: "Independence Day",
-    //   time: "All day",
-    //   location: "United States",
-    // },
-    // {
-    //   date: "2022-10-31",
-    //   event: "Halloween",
-    //   time: "Evening",
-    //   location: "Worldwide",
-    // },
-    // {
-    //   date: "2022-11-25",
-    //   event: "Thanksgiving Day",
-    //   time: "All day",
-    //   location: "United States",
-    // },
-    // {
-    //   date: "2022-12-25",
-    //   event: "Christmas Day",
-    //   time: "All day",
-    //   location: "Worldwide",
-    // },
-    // {
-    //   date: "2022-12-25",
-    //   event: "Christmas Day",
-    //   time: "All day",
-    //   location: "Worldwide",
-    // },
-    // {
-    //   date: "2022-12-25",
-    //   event: "Christmas Day",
-    //   time: "All day",
-    //   location: "Worldwide",
-    // },
-  ];
+  const addEvent = () => {
+    // Assuming eventData is an array of events, you can modify this logic based on your actual data structure.
+    const newEvent = {
+      date: "2022-12-01",
+      time: "3:00 PM",
+      location: "Sample Location",
+      event: "Sample Event",
+    };
+
+    setEventData([...eventData, newEvent]);
+  };
 
   return (
     <>
@@ -223,7 +186,9 @@ export default function Calendar({ navigation }) {
               </Text>
             </Pressable>
           </View>
-          <View
+
+          <Pressable
+            onPress={addEvent}
             style={{
               backgroundColor: globalStyles.colors.darkGreen,
               paddingVertical: 20,
@@ -233,19 +198,17 @@ export default function Calendar({ navigation }) {
               height: hp("8%"),
             }}
           >
-            <Pressable>
-              <Image
-                style={{ height: 30, width: 30 }}
-                source={require("./../../assets/add.png")}
-              />
-            </Pressable>
-          </View>
+            <Image
+              style={{ height: 30, width: 30 }}
+              source={require("./../../assets/add.png")}
+            />
+          </Pressable>
           <View
             style={{
               height: hp("62%"),
             }}
           >
-            {data.length === 0 ? (
+            {eventData.length === 0 ? (
               <View style={{ flex: 1, justifyContent: "center" }}>
                 <Text
                   style={{ textAlign: "center", fontSize: 18, color: "gray" }}
@@ -255,7 +218,7 @@ export default function Calendar({ navigation }) {
               </View>
             ) : (
               <ListView
-                data={data}
+                data={eventData}
                 renderItem={({ item }) => <Events {...item} />}
               />
             )}

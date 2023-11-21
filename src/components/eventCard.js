@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import { View, Text, Image, Animated, Pressable } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -29,7 +30,6 @@ export default function eventCard({
   location,
   reason,
   description,
-  navigation,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
@@ -37,6 +37,7 @@ export default function eventCard({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+  const navigation = useNavigation();
 
   const viewEvent = () => {
     navigation.navigate("ViewEvent", {

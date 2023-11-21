@@ -83,7 +83,12 @@ export default function UserControl({ navigation }) {
           />
         </View>
         <View style={{ height: hp("13%") }}>
-          <Navbar notifCounts={2} icon="none" navigation={navigation} />
+          <Navbar
+            notifCounts={2}
+            icon="none"
+            navigation={navigation}
+            eventsData={data}
+          />
         </View>
       </View>
     </View>
