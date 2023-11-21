@@ -29,13 +29,14 @@ export default function Button({
           width: width,
         }}
         onPress={() => {
-          if (navigation) {
-            navigation.navigate(destination);
-          } else if (onPress) {
-            onPress();
-          } else {
-            console.error("Navigation prop and onPress prop are not defined");
-          }
+          onPress();
+          // if (navigation) {
+          //   navigation.navigate(destination);
+          // } else if (onPress) {
+          //   onPress();
+          // } else {
+          //   console.error("Navigation prop and onPress prop are not defined");
+          // }
         }}
       >
         <View

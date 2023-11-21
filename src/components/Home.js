@@ -9,7 +9,8 @@ import Background from "./background";
 import HeroMessage from "./heroMessage";
 
 export default function Home({ navigation }) {
-  console.log(navigation);
+  
+  
   return (
     <View style={globalStyles.container}>
       <Image
