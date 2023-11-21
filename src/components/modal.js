@@ -1,44 +1,43 @@
 import React, { useState } from "react";
-import { View, Text, Modal as RNModal, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  View,
+  Text,
+  Modal as RNModal,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
-import Icon from "react-native-vector-icons/FontAwesome"; 
+import Icon from "react-native-vector-icons/FontAwesome";
 
-export default Modal = ({ message, btnYES, btnNO}) => {    
-    const [visible, setVisible] = useState(true)
-    
-    const handleNoButtonPress = () => {                
-        setVisible(false)        
-    };
-    return (
-        <RNModal
-            transparent={true}
-            animationType="slide"
-            visible={visible}            
-        >
-            <View style={styles.modalContainer}>
-                <View style={styles.modalContent}>
-                    <Text style={styles.message}>{message}</Text>
-
-                    <View style={styles.buttonContainer}>
-                        <View style={styles.button}>
-                            <TouchableOpacity onPress={btnYES}>
-                                <Icon name="check" size={wp("4%")} color="#79AC78" />
-                            </TouchableOpacity>
-                            <Text style={styles.buttonText}> YES</Text>
-                        </View>
-                        <View style={styles.button}>
-                            <TouchableOpacity onPress={handleNoButtonPress}>
-                                <Icon name="times" size={wp("4%")} color="#79AC78" />
-                            </TouchableOpacity>
-                            <Text style={styles.buttonText}> NO</Text>
-                        </View>
-                    </View>
-                </View>
+export default Modal = ({ message, btnYES, btnNO, visible }) => {
+  const handleNoButtonPress = () => {
+    setVisible(false);
+  };
+  return (
+    <RNModal transparent={true} animationType="slide" visible={visible}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <Text style={styles.message}>{message}</Text>
+          <View style={styles.buttonContainer}>
+            <View style={styles.button}>
+              <TouchableOpacity onPress={btnYES}>
+                <Icon name="check" size={wp("4%")} color="#79AC78" />
+              </TouchableOpacity>
+              <Text style={styles.buttonText}> YES</Text>
             </View>
-        </RNModal>
-        );
-    };
+            <View style={styles.button}>
+              <TouchableOpacity onPress={handleNoButtonPress}>
+                <Icon name="times" size={wp("4%")} color="#79AC78" />
+              </TouchableOpacity>
+              <Text style={styles.buttonText}> NO</Text>
+            </View>
+          </View>
+        </View>
+      </View>
+    </RNModal>
+  );
+};
 
 const styles = StyleSheet.create({
   modalContainer: {
@@ -75,4 +74,3 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
-

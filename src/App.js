@@ -35,6 +35,8 @@ export default function App() {
           <Calendar />
         </View>
         {/* <Calendar /> */}
+        {/*<Sidebar />*/}
+        {/* <View style={globalStyles.container}></View> */}
         {/* <Navigator /> */}
       </>
     );

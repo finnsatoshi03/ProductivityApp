@@ -7,18 +7,22 @@ import {
 } from "react-native-responsive-screen";
 import Avatar from "./avatar";
 
-export default function header({ title, subTitle, icon, avatar, chat }) {
+
+export default function header({ title, subTitle, icon, avatar, chat, gap }) {
+
   return (
     <View
       style={{
         flexDirection: "row",
         alignItems: "center",
         justifyContent: icon === "back" ? "space-between" : "flex-start",
-        gap: icon === "back" ? 0 : 15,
+        gap: icon === "back" ? 0 : 15 && gap ? 15 : 0,
+        marginBottom: marginBottom ? 20 : undefined,
+
       }}
     >
       <Image
-        style={{ width: 55, height: 55 }}
+        style={{ width: 50, height: 50 }}
         source={
           icon === "back"
             ? require("../../assets/back.png")
@@ -28,6 +32,7 @@ export default function header({ title, subTitle, icon, avatar, chat }) {
       <View>
         <View
           style={{
+            flex: 1,
             flexDirection: "row",
             justifyContent: "center",
             alignItems: "center",
@@ -73,7 +78,7 @@ export default function header({ title, subTitle, icon, avatar, chat }) {
         {subTitle && (
           <Text
             style={{
-              fonQtFamily: globalStyles.fontStyle.semiBold,
+              fontFamily: globalStyles.fontStyle.semiBold,
               fontSize: globalStyles.fontSize.mediumDescription,
               lineHeight: 15,
             }}
