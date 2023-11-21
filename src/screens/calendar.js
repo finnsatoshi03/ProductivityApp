@@ -62,11 +62,7 @@ export default function Calendar({ navigation }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar
-              notifCounts={{}}
-              current="Calendar"
-              navigation={navigation}
-            />
+            <Navbar notifCounts={6} icon={"Calendar"} navigation={navigation} />
           </View>
           {/* <Text>Tite</Text> */}
         </View>

@@ -100,7 +100,6 @@ export default function EventsScreen({ navigation, data }) {
               gap: 15,
               height: hp("5%"),
               alignItems: "center",
-              marginBottom: 20,
             }}
           >
             <View style={{ width: "38%" }}>
@@ -193,7 +192,7 @@ export default function EventsScreen({ navigation, data }) {
               backgroundColor: globalStyles.colors.darkGreen,
               paddingVertical: 20,
               borderRadius: 30,
-              marginBottom: 10,
+              marginVertical: hp("1.5%"),
               alignItems: "center",
               height: hp("8%"),
             }}
@@ -223,8 +222,8 @@ export default function EventsScreen({ navigation, data }) {
               />
             )}
           </View>
-          <View style={{ height: hp("13%") }}>
-            <Navbar notifCounts={2} icon={"Events"} navigation={navigation} />
+          <View style={{ height: hp("14%") }}>
+            <Navbar notifCounts={6} icon={"Events"} navigation={navigation} />
           </View>
           {/* <Text>Events Screen</Text> */}
         </View>

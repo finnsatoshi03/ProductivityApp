@@ -58,13 +58,8 @@ export default function Reports({ navigation }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar
-              notifCounts={{}}
-              current="Reports"
-              navigation={navigation}
-            />
+            <Navbar notifCounts={6} icon={"Reports"} navigation={navigation} />
           </View>
-          {/* <Text>Tite</Text> */}
         </View>
       </View>
       {isSidebarVisible && (

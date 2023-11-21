@@ -92,7 +92,7 @@ export default function Chats({ navigation }) {
               height: hp("3%"),
               flexDirection: "row",
               alignItems: "center",
-              marginBottom: 10,
+              marginBottom: hp("1%"),
             }}
           >
             <Searchbar
@@ -110,7 +110,7 @@ export default function Chats({ navigation }) {
               renderItem={({ item }) => <ChatCard {...item} />}
             />
           </View>
-          <View style={{ height: hp("13%") }}>
+          <View style={{ height: hp("14%") }}>
             <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} />
           </View>
           {/* <Text>Chats Screen</Text> */}

@@ -23,7 +23,12 @@ export default function App() {
   return (
     <DataProvider>
       <NavigationContainer>
-        <Stack.Navigator initialRouteName="Homepage">
+        <Stack.Navigator
+          initialRouteName="Homepage"
+          screenOptions={{
+            animation: "none",
+          }}
+        >
           <Stack.Screen
             name="Homepage"
             component={Homepage}
