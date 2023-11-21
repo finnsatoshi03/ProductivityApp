@@ -8,6 +8,7 @@ import SignUp from "./components/Auth/SignupForm";
 import Chats from "./screens/chats";
 import Calendar from "./screens/calendar";
 import Conversation from "./components/conversationComponent";
+import Searchbar from "./components/searchbar";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -35,7 +36,8 @@ export default function App() {
       <>
         <View style={globalStyles.container}>
           <Chats />
-          <Conversation />
+          <Searchbar />
+          {/* <Conversation /> */}
         </View>
         {/*<Sidebar />*/}
         {/* <View style={globalStyles.container}></View> */}
