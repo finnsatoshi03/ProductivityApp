@@ -4,17 +4,6 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 
-const lightGreen = "#d6efc3";
-//fonts
-const bold = "montserrat-bold";
-const semiBold = "montserrat-semiBold";
-const regular = "montserrat-regular";
-
-// font sizes
-const header = hp("5%");
-const subHeader = hp("2.5%");
-const description = hp("1.5%");
-
 export const globalStyles = StyleSheet.create({
   container: {
     flex: 1,

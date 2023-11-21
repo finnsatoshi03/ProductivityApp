@@ -249,7 +249,7 @@ export default function Calendar() {
         )}
       </View>
       <View style={{ height: hp("13%") }}>
-        <Navbar notifCounts={2} />
+        <Navbar notifCounts={2} icon={"Event"} />
       </View>
       {/* <Text>Events Screen</Text> */}
     </View>

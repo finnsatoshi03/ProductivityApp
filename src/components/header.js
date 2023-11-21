@@ -7,9 +7,15 @@ import {
 } from "react-native-responsive-screen";
 import Avatar from "./avatar";
 
-
-export default function header({ title, subTitle, icon, avatar, chat, gap }) {
-
+export default function header({
+  title,
+  subTitle,
+  icon,
+  avatar,
+  chat,
+  gap,
+  marginBottom,
+}) {
   return (
     <View
       style={{
@@ -18,7 +24,6 @@ export default function header({ title, subTitle, icon, avatar, chat, gap }) {
         justifyContent: icon === "back" ? "space-between" : "flex-start",
         gap: icon === "back" ? 0 : 15 && gap ? 15 : 0,
         marginBottom: marginBottom ? 20 : undefined,
-
       }}
     >
       <Image
