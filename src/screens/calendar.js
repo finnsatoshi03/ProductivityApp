@@ -21,6 +21,7 @@ export default function Calendar({ navigation }) {
           <View style={{ height: hp("8%") }}>
             <Header
               title={"Calendar"}
+              gap={true}
               onPressMenu={() => setSidebarVisible(true)}
             />
           </View>
