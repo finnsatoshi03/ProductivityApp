@@ -1,13 +1,18 @@
-import { Text, View } from "react-native";
+import React, { useState } from "react";
+import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
+import Sidebar from "./../Layout/sidebar";
 import CalendarWidget from "./../components/calendarComponent";
 import ListView from "./../components/listView";
 import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 
 export default function Calendar({ navigation }) {
+  console.log(navigation);
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+
   const data = [
     {
       date: "2022-09-01",
@@ -72,43 +77,71 @@ export default function Calendar({ navigation }) {
   ];
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ height: hp("8%") }}>
-        <Header title={"Calendar"} />
-      </View>
-      <View style={{ height: hp("40%") }}>
-        <CalendarWidget />
-      </View>
-      <View
-        style={{
-          height: hp("38%"),
-        }}
-      >
-        {data.length === 0 ? (
-          <View
-            style={{ flex: 1, justifyContent: "center", alignSelf: "center" }}
-          >
-            <Text
-              style={{
-                textAlign: "center",
-                fontSize: 18,
-                color: "gray",
-              }}
-            >
-              Embracing Tranquility 🎉 {"\n"} No Current Events at the Moment
-            </Text>
+    <>
+      <View style={globalStyles.container}>
+        <View style={{ flex: 1 }}>
+          <View style={{ height: hp("8%") }}>
+            <Header
+              title={"Calendar"}
+              onPressMenu={() => setSidebarVisible(true)}
+            />
           </View>
-        ) : (
-          <ListView
-            data={data}
-            renderItem={({ item }) => <Events {...item} />}
+          <View style={{ height: hp("40%") }}>
+            <CalendarWidget />
+          </View>
+          <View
+            style={{
+              height: hp("38%"),
+            }}
+          >
+            {data.length === 0 ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <Text
+                  style={{
+                    textAlign: "center",
+                    fontSize: 18,
+                    color: "gray",
+                  }}
+                >
+                  Embracing Tranquility 🎉 {"\n"} No Current Events at the
+                  Moment
+                </Text>
+              </View>
+            ) : (
+              <ListView
+                data={data}
+                renderItem={({ item }) => <Events {...item} />}
+              />
+            )}
+          </View>
+          <View style={{ height: hp("14%") }}>
+            <Navbar
+              notifCounts={{}}
+              current="Calendar"
+              navigation={navigation}
+            />
+          </View>
+          {/* <Text>Tite</Text> */}
+        </View>
+      </View>
+      {isSidebarVisible && (
+        <>
+          <TouchableOpacity
+            style={globalStyles.overlay}
+            onPress={() => setSidebarVisible(false)}
           />
-        )}
-      </View>
-      <View style={{ height: hp("14%") }}>
-        <Navbar notifCounts={{}} current="Calendar" />
-      </View>
-      {/* <Text>Tite</Text> */}
-    </View>
+          <Sidebar
+            isVisible={isSidebarVisible}
+            onHide={() => setSidebarVisible(false)}
+          />
+        </>
+      )}
+    </>
   );
 }

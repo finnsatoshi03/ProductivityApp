@@ -7,6 +7,11 @@ import AdminScreen from "../screens/admin/Auth/adminLogin";
 import UserScreen from "../screens/user/Auth/userLogin";
 import AccountVerification from "../components/Auth/SignupForm";
 import CalendarScreen from "../screens/calendar";
+import EventsScreen from "../screens/events";
+import ReportsScreen from "../screens/reports";
+import ChatScreen from "../screens/chats";
+import EditProfile from "../screens/editProfileModal";
+import UserControl from "../screens/userControl";
 
 const Stack = createNativeStackNavigator();
 
@@ -44,6 +49,31 @@ export default function App() {
         <Stack.Screen
           name="Calendar"
           component={CalendarScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Events"
+          component={EventsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Reports"
+          component={ReportsScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Chat"
+          component={ChatScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="EditProfile"
+          component={ChatScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="UserControl"
+          component={ChatScreen}
           options={{ headerShown: false }}
         />
         {/* <Stack.Screen

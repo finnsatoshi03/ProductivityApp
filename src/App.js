@@ -4,13 +4,6 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
-import SignUp from "./components/Auth/SignupForm";
-import Chats from "./screens/chats";
-import Calendar from "./screens/calendar";
-import Conversation from "./components/conversationComponent";
-import Searchbar from "./components/searchbar";
-import Navbar from "./Layout/navbar";
-import EditProfile from "./screens/editProfileModal";
 
 const getFonts = () =>
   Font.loadAsync({
@@ -36,15 +29,17 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <View style={globalStyles.container}>
-          {/* <Chats /> */}
-          {/* <Searchbar /> */}
-          <Conversation />
-          {/* <EditProfile /> */}
-          {/* <Navbar notifCounts={0} /> */}
-        </View>
+        {/* <View style={globalStyles.container}> */}
+        {/* <Chats /> */}
+        {/* <Searchbar /> */}
+        {/* <Header title="Title" /> */}
+        {/* <EditProfile /> */}
+        {/* <Navbar notifCounts={0} /> */}
+        {/* <Sidebar isVisible={true} /> */}
+        {/* </View> */}
+        {/* <Event /> */}
         {/* <View style={globalStyles.container}></View> */}
-        {/* <Navigator /> */}
+        <Navigator />
       </>
     );
   } else {

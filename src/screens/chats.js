@@ -1,4 +1,5 @@
-import { View, Image } from "react-native";
+import { useState } from "react";
+import { View, Image, TouchableOpacity } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
@@ -6,8 +7,11 @@ import Searchbar from "../components/searchbar";
 import ListView from "../components/listView";
 import ChatCard from "../components/chatCard";
 import Navbar from "../Layout/navbar";
+import Sidebar from "./../Layout/sidebar";
 
-export default function Calendar() {
+export default function Chats({ navigation }) {
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+
   const data = [
     {
       avatar: undefined,
@@ -72,34 +76,58 @@ export default function Calendar() {
   ]; // Sample
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ height: hp("8%") }}>
-        <Header title={"Chats"} subTitle={"Communities"} gap={true} />
+    <>
+      <View style={globalStyles.container}>
+        <View style={{ flex: 1 }}>
+          <View style={{ height: hp("8%") }}>
+            <Header
+              title={"Chats"}
+              subTitle={"Communities"}
+              gap={true}
+              onPressMenu={() => setSidebarVisible(true)}
+            />
+          </View>
+          <View
+            style={{
+              height: hp("3%"),
+              flexDirection: "row",
+              alignItems: "center",
+              marginBottom: 10,
+            }}
+          >
+            <Searchbar
+              placeholder={"Search Communities"}
+              bgColor={"transparent"}
+            />
+            <Image
+              style={{ height: 25, width: 25, marginLeft: 20 }}
+              source={require("./../../assets/add-alt.png")}
+            />
+          </View>
+          <View style={{ height: hp("74%") }}>
+            <ListView
+              data={data}
+              renderItem={({ item }) => <ChatCard {...item} />}
+            />
+          </View>
+          <View style={{ height: hp("13%") }}>
+            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} />
+          </View>
+          {/* <Text>Chats Screen</Text> */}
+        </View>
       </View>
-      <View
-        style={{
-          height: hp("3%"),
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: 10,
-        }}
-      >
-        <Searchbar placeholder={"Search Communities"} bgColor={"transparent"} />
-        <Image
-          style={{ height: 25, width: 25, marginLeft: 20 }}
-          source={require("./../../assets/add-alt.png")}
-        />
-      </View>
-      <View style={{ height: hp("74%") }}>
-        <ListView
-          data={data}
-          renderItem={({ item }) => <ChatCard {...item} />}
-        />
-      </View>
-      <View style={{ height: hp("13%") }}>
-        <Navbar notifCounts={6} icon={"Chat"} />
-      </View>
-      {/* <Text>Chats Screen</Text> */}
-    </View>
+      {isSidebarVisible && (
+        <>
+          <TouchableOpacity
+            style={globalStyles.overlay}
+            onPress={() => setSidebarVisible(false)}
+          />
+          <Sidebar
+            isVisible={isSidebarVisible}
+            onHide={() => setSidebarVisible(false)}
+          />
+        </>
+      )}
+    </>
   );
 }

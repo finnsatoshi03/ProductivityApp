@@ -8,6 +8,7 @@ export default function AdminLogin({ navigation }) {
     <Login
       header="Welcome, Admin!"
       description="Take control of efficiency with ProductivityApp. Your dashboard for seamless management awaits. Let's elevate productivity together!"
+      navigation={navigation}
     />
   );
 }

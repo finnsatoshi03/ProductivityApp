@@ -11,25 +11,25 @@ const navIcons = [
     name: "Calendar",
     source: require("../../assets/calendar.png"),
     altSource: require("../../assets/calendar-alt.png"),
-    // destination: "Homepage",
+    destination: "Calendar",
   },
   {
-    name: "Event",
+    name: "Events",
     source: require("../../assets/event-1.png"),
     altSource: require("../../assets/event-alt.png"),
-    // destination: "Homepage",
+    destination: "Events",
   },
   {
     name: "Reports",
     source: require("../../assets/reports.png"),
     altSource: require("../../assets/reports-alt.png"),
-    // destination: "Homepage",
+    destination: "Reports",
   },
   {
     name: "Chat",
     source: require("../../assets/chat.png"),
     altSource: require("../../assets/chat-alt.png"),
-    // destination: "Homepage",
+    destination: "Chat",
   },
 ];
 
@@ -79,7 +79,7 @@ export default function Navbar({ navigation, notifCounts, icon }) {
           }}
           onPress={() => {
             setSelectedIcon(item.name);
-            // navigation.navigate(item.destination);
+            navigation.navigate(item.destination);
           }}
         >
           <Image

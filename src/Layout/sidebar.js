@@ -9,8 +9,16 @@ import {
 import Button from "../components/button";
 import Avatar from "../components/avatar";
 
-export default function sideBar({ avatar, name, roleLabel, navigation }) {
-  const position = useRef(new Animated.Value(-wp("70%"))).current;
+export default function sideBar({
+  avatar,
+  name,
+  roleLabel,
+  isVisible,
+  onHide,
+}) {
+  const position = useRef(
+    new Animated.Value(isVisible ? 0 : -wp("70%"))
+  ).current;
 
   const slideIn = () => {
     Animated.timing(position, {
@@ -25,12 +33,16 @@ export default function sideBar({ avatar, name, roleLabel, navigation }) {
       toValue: -wp("70%"),
       duration: 500,
       useNativeDriver: true,
-    }).start();
+    }).start(onHide);
   };
 
   useEffect(() => {
-    slideIn();
-  }, []);
+    if (isVisible) {
+      slideIn();
+    } else {
+      slideOut();
+    }
+  }, [isVisible]);
 
   return (
     <Pressable
