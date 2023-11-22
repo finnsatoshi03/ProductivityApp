@@ -1,5 +1,6 @@
-import React, { useState } from "react";
-import { Text, View,TouchableOpacity } from "react-native";
+
+import { useState } from "react";
+import { Text, View, TouchableOpacity } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
@@ -69,6 +70,8 @@ export default function UserControl({ navigation }) {
     },
   ];
 
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
+
   return (
     <>
       <View style={globalStyles.container}>
@@ -113,6 +116,6 @@ export default function UserControl({ navigation }) {
         </>
       )}
     </>
-    
+
   );
 }

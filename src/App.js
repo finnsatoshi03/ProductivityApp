@@ -4,6 +4,7 @@ import * as Font from "expo-font";
 import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
+import Participants from "./screens/participants";
 import Homepage from "./screens/homepage";
 import ViewEvent from "./components/viewEvent";
 
@@ -33,7 +34,7 @@ export default function App() {
       <>
         {/* <View style={globalStyles.container}> */}
         {/* <Chats /> */}
-        {/* <Searchbar /> */}
+        {/* <Participants /> */}
         {/* <Header title="Title" /> */}
         {/* <EditProfile /> */}
         {/* <Navbar notifCounts={0} /> */}
@@ -41,7 +42,7 @@ export default function App() {
         {/* </View> */}
         {/* <ViewEvent event={event} isModalVisible={true} /> */}
         {/* <View style={globalStyles.container}></View> */}
-        
+
         <Navigator />
       </>
     );

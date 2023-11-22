@@ -7,6 +7,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Button from "./button";
+import Modal from "react-native-modal";
 
 const commonStyles = {
   container: {
@@ -30,6 +31,8 @@ export default function eventCard({
   location,
   reason,
   description,
+  onDelete,
+  onEdit,
 }) {
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
@@ -37,6 +40,26 @@ export default function eventCard({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+  const navigation = useNavigation();
+
+  const viewEvent = () => {
+    navigation.navigate("ViewEvent", {
+      title: event,
+      date: date,
+      time: time,
+      location: location,
+      description: description,
+      joinReasons: [reason],
+    });
+  };
+
+  const handleDelete = () => {
+    onDelete();
+    setTimeout(() => setShowModal(false), 1500);
+  };
+
+  const [showModal, setShowModal] = useState(false);
+
   const navigation = useNavigation();
 
   const viewEvent = () => {
@@ -159,10 +182,12 @@ export default function eventCard({
                   {location}
                 </Text>
               </View>
-              <Image
-                style={{ height: hp("4%"), width: hp("4%") }}
-                source={require("../../assets/edit.png")}
-              />
+              <Pressable onPress={onEdit}>
+                <Image
+                  style={{ height: hp("4%"), width: hp("4%") }}
+                  source={require("../../assets/edit.png")}
+                />
+              </Pressable>
             </View>
             <View
               style={{
@@ -186,7 +211,62 @@ export default function eventCard({
                 bgColor="#e2e6f0"
                 textColor="#9198bc"
                 width={wp("25%")}
+                onPress={() => setShowModal(true)}
               />
+              <Modal isVisible={showModal}>
+                <View
+                  style={{
+                    backgroundColor: "white",
+                    padding: 22,
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: 30,
+                  }}
+                >
+                  <Image source={require("./../../assets/warning.png")} />
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.bold,
+                      fontSize: globalStyles.fontSize.subHeader,
+                    }}
+                  >
+                    Delete Event
+                  </Text>
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                    }}
+                  >
+                    Are you sure you want to delete this event? Proceeding will
+                    permanently erase all associated details. Confirm to avoid
+                    unintended data loss.
+                  </Text>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      padding: 20,
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
+                    }}
+                  >
+                    <Button
+                      text="Cancel"
+                      onPress={() => setShowModal(false)}
+                      width={wp("45%")}
+                    />
+                    <Button
+                      text="Confirm"
+                      onPress={handleDelete}
+                      bgColor="#e2e6f0"
+                      textColor="#9198bc"
+                      width={wp("20%")}
+                    />
+                  </View>
+                </View>
+              </Modal>
             </View>
           </View>
         )}

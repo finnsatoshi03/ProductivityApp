@@ -5,13 +5,26 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 import Avatar from "./avatar";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-export default function chatCard({ avatar, name, time, lastMessage }) {
+export default function ChatCard({
+  avatar,
+  name,
+  time,
+  lastMessage,
+  onPress,
+  isReadProp,
+}) {
   const [isRead, setIsRead] = useState(false);
+
+  useEffect(() => {
+    // Fetch the isRead status from the conversation or use the prop if available
+    setIsRead(isReadProp !== undefined ? isReadProp : false);
+  }, [isReadProp]);
 
   const handlePress = () => {
     setIsRead(true);
+    onPress && onPress();
   };
 
   return (

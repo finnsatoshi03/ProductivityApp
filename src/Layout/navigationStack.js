@@ -13,6 +13,7 @@ import ChatScreen from "../screens/chats";
 import EditProfile from "../screens/editProfileModal";
 import UserControl from "../screens/userControl";
 import ViewEvent from "../components/viewEvent";
+import Conversation from "../components/conversationComponent";
 import { DataProvider } from "./../DataContext";
 
 const Stack = createNativeStackNavigator();
@@ -72,6 +73,11 @@ export default function App() {
           <Stack.Screen
             name="Chat"
             component={ChatScreen}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Conversation"
+            component={Conversation}
             options={{ headerShown: false }}
           />
           <Stack.Screen
