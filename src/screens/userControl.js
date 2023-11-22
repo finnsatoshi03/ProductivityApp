@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
@@ -9,6 +10,7 @@ import Navbar from "./../Layout/navbar";
 import Sidebar from "./../Layout/sidebar";
 
 export default function UserControl({ navigation }) {
+  const [isSidebarVisible, setSidebarVisible] = useState(false);
   //sample data
   const data = [
     {
@@ -98,6 +100,7 @@ export default function UserControl({ navigation }) {
             />
           </View>
         </View>
+        
       </View>
       {isSidebarVisible && (
         <>
@@ -113,5 +116,6 @@ export default function UserControl({ navigation }) {
         </>
       )}
     </>
+
   );
 }

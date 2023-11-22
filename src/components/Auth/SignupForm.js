@@ -11,7 +11,20 @@ import InputFields from "../input";
 import Label from "../globalLabel";
 import VerifyButton from "../button";
 
+import axios from "axios";
+
 export default function SignupForm({ navigation }) {
+  const [formdata, setData] = useState({
+      username: '',
+      password: '',
+      fullname: '',
+      employment_id: '',
+      office: '',
+      email: '',
+      contact: '',
+  });
+
+  
   const [selectedValue, setSelectedValue] = useState(null);
   const data = [
     { label: "Item 1", value: "1" },
@@ -35,7 +48,28 @@ export default function SignupForm({ navigation }) {
       style={{ marginBottom: 2 }}
     />
   );
+  const handleInputChange = (field, value) => {
+    // Update the corresponding field in formdata
+    setData((prevData) => ({
+      ...prevData,
+      [field]: value,
+    }));
+  };
+  const onSubmit = async () => {
+    console.log(formdata);
 
+    try {
+
+      const response = await axios.post("http://192.168.100.9:4000/register",formdata);
+
+      if (response.status === 200) {
+        console.log('success');
+      }
+
+    }catch (error) {
+      console.log(error);
+    }
+  }
   return (
     <View style={globalStyles.container}>
       <View style={{ flex: 1 }}>
@@ -44,7 +78,7 @@ export default function SignupForm({ navigation }) {
           style={{
             zIndex: 2,
             flexDirection: "row",
-            paddingVertical: 30,
+            // paddingVertical: 30,
             justifyContent: "space-between",
           }}
         >
@@ -70,7 +104,7 @@ export default function SignupForm({ navigation }) {
         </View>
         <View
           style={{
-            marginBottom: 40,
+            // marginBottom: 40,
             justifyContent: "center",
             alignItems: "center",
           }}
@@ -80,6 +114,8 @@ export default function SignupForm({ navigation }) {
             placeholder="Your chosen username"
             maxWidth={true}
             margin={true}
+            value={formdata.username}
+            onChangeText={(value) => handleInputChange('username', value)}
           />
           <SignUpLabel text="Password" />
           <InputFields
@@ -87,18 +123,24 @@ export default function SignupForm({ navigation }) {
             maxWidth={true}
             secureTextEntry={true}
             margin={true}
+            value={formdata.password}
+            onChangeText={(value) => handleInputChange('password', value)}
           />
           <SignUpLabel text="Fullname" />
           <InputFields
             placeholder="Your full name"
             maxWidth={true}
             margin={true}
+            value={formdata.fullname}
+            onChangeText={(value) => handleInputChange('fullname', value)}
           />
           <SignUpLabel text="Employment ID" />
           <InputFields
             placeholder="Your unique employee ID"
             maxWidth={true}
             margin={true}
+            value={formdata.employment_id}
+            onChangeText={(value) => handleInputChange('employment_id', value)}
           />
           <SignUpLabel text="Designated Office" />
           <InputFields
@@ -107,6 +149,8 @@ export default function SignupForm({ navigation }) {
             data={data}
             margin={true}
             placeholder={"Your office location"}
+            value={formdata.office}
+            onChangeText={(value) => handleInputChange('office', value)}
           />
           <View
             style={{
@@ -121,6 +165,8 @@ export default function SignupForm({ navigation }) {
               <InputFields
                 placeholder="Your email address"
                 noWidth={wp("43%")}
+                value={formdata.email}
+              onChangeText={(value) => handleInputChange('email', value)}
               />
             </View>
             <View style={{ flex: 1 }}>
@@ -128,12 +174,14 @@ export default function SignupForm({ navigation }) {
               <InputFields
                 placeholder="Your contact number"
                 noWidth={wp("43%")}
+                value={formdata.contact}
+              onChangeText={(value) => handleInputChange('contact', value)}
               />
             </View>
           </View>
         </View>
         <View style={{ zIndex: 4 }}>
-          <VerifyButton text="VERIFY ACCOUNT" />
+          <VerifyButton text="VERIFY ACCOUNT" onPress={onSubmit} fnc={'press'}/>
           <View
             style={{
               flexDirection: "row",

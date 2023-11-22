@@ -47,6 +47,7 @@ export default function EventsScreen({ navigation, data }) {
   const [description, setDescription] = useState("");
 
   const months = [
+
     { label: "January", value: "January" },
     { label: "February", value: "February" },
     { label: "March", value: "March" },
@@ -524,7 +525,7 @@ export default function EventsScreen({ navigation, data }) {
               </View>
             ) : (
               <ListView
-                data={eventData}
+                data={eventData} 
                 renderItem={({ item }) => (
                   <Events {...item} onDelete={() => deleteEvent(item.event)} />
                 )}

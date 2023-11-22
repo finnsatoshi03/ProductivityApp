@@ -40,6 +40,18 @@ export default function eventCard({
     inputRange: [0, 1],
     outputRange: ["0deg", "180deg"],
   });
+  const navigation = useNavigation();
+
+  const viewEvent = () => {
+    navigation.navigate("ViewEvent", {
+      title: event,
+      date: date,
+      time: time,
+      location: location,
+      description: description,
+      joinReasons: [reason],
+    });
+  };
 
   const handleDelete = () => {
     onDelete();
@@ -191,6 +203,7 @@ export default function eventCard({
                   text="VIEW"
                   bgColor={globalStyles.colors.green}
                   onPress={viewEvent}
+                  fnc={'press'}
                 />
               </View>
               <Button

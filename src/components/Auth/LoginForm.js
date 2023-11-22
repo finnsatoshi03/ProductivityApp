@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
+
 import {
   View,
   Animated,
@@ -17,11 +18,61 @@ import LoginButton from "../button";
 import HeroMessage from "../heroMessage";
 import InputFields from "../input";
 
-export default function AdminLogin({ navigation, header, description }) {
-  console.log(navigation);
+import axios from "axios";
+import { Authentication } from "../../Auth/Authentication";
+
+export default function AdminLogin({ navigation, header, description, userType }) {
+  
   const [isFocused, setIsFocused] = useState(false);
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  
   const logoSize = useRef(new Animated.Value(1)).current;
   const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
+
+  
+  const {login} = Authentication();
+
+  
+  const onSubmit = async (values) => {
+  
+    const credentials = {
+      username: username,
+      password: password,
+      checked: false, 
+    }
+    try {
+      let baseurl = "http://192.168.100.9:4000/adminlogin";
+      
+      if (userType === 'User') {
+          baseurl = "http://192.168.100.9:4000/userlogin"
+      } 
+      console.log(baseurl);
+      const response = await axios.post(baseurl, credentials);
+
+      if (response.status === 200) {
+        login({
+          user:response.data.username,
+          token:response.data.token,
+          user_id:response.data.user_id,
+          role:response.data.role,
+          fullname:response.data.fullname,
+        })
+        console.log(response.data);
+        navigation.navigate("Calendar");
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const handleUsernameChange = (text) => {
+    setUsername(text);   
+  };
+
+  const handlePasswordChange = (text) => {
+    setPassword(text);   
+  };
 
   const handleFocus = () => {
     Animated.parallel([
@@ -105,6 +156,8 @@ export default function AdminLogin({ navigation, header, description }) {
           handleFocus={handleFocus}
           handleBlur={handleBlur}
           placeholder="User ID"
+          value={username}
+          onChangeText={handleUsernameChange}
         />
         <View style={{ marginBottom: 20 }}></View>
         <InputFields
@@ -112,6 +165,8 @@ export default function AdminLogin({ navigation, header, description }) {
           handleBlur={handleBlur}
           placeholder="Password"
           secureTextEntry={true}
+          value={password}
+          onChangeText={handlePasswordChange}
         />
       </View>
       <View style={globalStyles.loginButtonContainer}>
@@ -119,6 +174,8 @@ export default function AdminLogin({ navigation, header, description }) {
           navigation={navigation}
           destination="Calendar"
           text="Login"
+          onPress={onSubmit}
+          fnc={'press'}
         />
       </View>
     </KeyboardAvoidingView>

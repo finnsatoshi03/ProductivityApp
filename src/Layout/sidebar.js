@@ -9,6 +9,9 @@ import {
 import Button from "../components/button";
 import Avatar from "../components/avatar";
 
+import { Authentication } from "../Auth/Authentication";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
 export default function sideBar({
   avatar,
   name,
@@ -17,6 +20,20 @@ export default function sideBar({
   onHide,
   navigation,
 }) {
+  const {logout, getUser} = Authentication()
+
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+    };
+
+    fetchUserData();
+  }, [getUser]); // Include getUser in the dependency array to trigger the effect when it changes
+
+
   const position = useRef(
     new Animated.Value(isVisible ? 0 : -wp("70%"))
   ).current;
@@ -45,6 +62,11 @@ export default function sideBar({
     }
   }, [isVisible]);
 
+  const handleLogout = () => {
+    logout()
+    console.log('yo');
+    navigation.navigate('Homepage')
+  }
   return (
     <Pressable
       onPress={slideOut}
@@ -95,7 +117,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.largeDescription,
                 }}
               >
-                {name || "User Name"}
+                {'NAME'}
               </Text>
               <Text
                 style={{
@@ -103,7 +125,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.description,
                 }}
               >
-                {roleLabel || "Role Label"}
+                {'ROLE'}
               </Text>
             </View>
             <View
@@ -124,6 +146,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/edit-user.png")}
                 navigation={navigation}
                 destination={"EditProfile"}
+                fnc='navigate'
               />
               <Button
                 text={"Verify Account"}
@@ -134,6 +157,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/verify.png")}
                 navigation={navigation}
                 destination={"UserControl"}
+                fnc='navigate'
               />
             </View>
             <View style={{ marginHorizontal: 30, marginTop: 20 }}>
@@ -146,6 +170,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/calendar.png")}
                 navigation={navigation}
                 destination={"Calendar"}
+                fnc='navigate'
               />
               <Button
                 text={"Events"}
@@ -156,6 +181,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/event-1.png")}
                 navigation={navigation}
                 destination={"Events"}
+                fnc='navigate'
               />
               <Button
                 text={"Reports"}
@@ -166,6 +192,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/reports.png")}
                 navigation={navigation}
                 destination={"Reports"}
+                fnc='navigate'
               />
               <Button
                 text={"Chats"}
@@ -176,6 +203,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/chat.png")}
                 navigation={navigation}
                 destination={"Chat"}
+                fnc='navigate'
               />
             </View>
           </View>
@@ -187,6 +215,8 @@ export default function sideBar({
               textColor={"black"}
               fontSize={globalStyles.fontSize.mediumDescription}
               iconSource={require("./../../assets/logout.png")}
+              onPress={handleLogout}
+              fnc={'press'}
             />
           </View>
         </Animated.View>

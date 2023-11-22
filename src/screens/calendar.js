@@ -11,7 +11,7 @@ import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
 
 export default function Calendar({ navigation }) {
-  // const { eventData } = useData();
+
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
 

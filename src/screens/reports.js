@@ -11,6 +11,7 @@ import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
 
 export default function Reports({ navigation }) {
+
   const { eventData, setEventData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
