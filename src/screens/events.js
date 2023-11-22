@@ -476,7 +476,15 @@ export default function EventsScreen({ navigation, data }) {
                 borderRadius: 30,
               }}
             >
-              <Participants />
+              <Participants
+                onParticipantsSelected={(selectedParticipants) => {
+                  console.log(
+                    "Selected Participants in EventsScreen: ",
+                    selectedParticipants
+                  );
+                  // Do something with the selected participants in the EventsScreen component
+                }}
+              />
             </View>
           </Modal>
           <View

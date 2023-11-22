@@ -19,7 +19,7 @@ import Profiles from "./../components/profileCard";
 import Navbar from "./../Layout/navbar";
 import Button from "./../components/button";
 
-export default function Participants({ navigation }) {
+export default function Participants({ navigation, onParticipantsSelected }) {
   const [data, setData] = useState([
     {
       name: "John Doe",
@@ -99,6 +99,12 @@ export default function Participants({ navigation }) {
   const addParticipants = () => {
     // Do something with the selected participants
     console.log("Selected Participants: ", participants);
+
+    // Call the callback function with the selected participants
+    onParticipantsSelected(participants);
+
+    // Reset the participants state if needed
+    setParticipants([]);
   };
 
   return (
