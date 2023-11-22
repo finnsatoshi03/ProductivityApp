@@ -17,6 +17,7 @@ import CalendarWidget from "./../components/calendarComponent";
 import ListView from "./../components/listView";
 import Profiles from "./../components/profileCard";
 import Navbar from "./../Layout/navbar";
+import Button from "./../components/button";
 
 export default function Participants({ navigation }) {
   const [data, setData] = useState([
@@ -67,6 +68,7 @@ export default function Participants({ navigation }) {
     },
   ]);
   const [searchTerm, setSearchTerm] = useState("");
+  const [participants, setParticipants] = useState([]);
 
   const rotate = useRef(new Animated.Value(0)).current;
   const rotateInterpolate = rotate.interpolate({
@@ -75,9 +77,11 @@ export default function Participants({ navigation }) {
   });
 
   const [isAddTriggered, setIsAddTriggered] = useState(false);
+  const [isPlusButtonTriggered, setIsPlusButtonTriggered] = useState(false);
 
   const handleAddButtonClick = () => {
     setIsAddTriggered(!isAddTriggered);
+    setIsPlusButtonTriggered(true);
 
     Animated.timing(rotate, {
       toValue: isAddTriggered ? 0 : 1,
@@ -85,7 +89,16 @@ export default function Participants({ navigation }) {
       useNativeDriver: true,
     }).start();
 
-    setData(data.map((item) => ({ ...item, showViewIcon: !isAddTriggered })));
+    setData(data.map((item) => ({ ...item, showViewIcon: isAddTriggered })));
+  };
+
+  const handleParticipantSelection = (participant) => {
+    setParticipants((prevParticipants) => [...prevParticipants, participant]);
+  };
+
+  const addParticipants = () => {
+    // Do something with the selected participants
+    console.log("Selected Participants: ", participants);
   };
 
   return (
@@ -125,16 +138,30 @@ export default function Participants({ navigation }) {
         </View>
         <View
           style={{
-            height: hp("48%"),
+            height: hp("43%"),
+            marginBottom: hp("1%"),
           }}
         >
           <ListView
             data={data.filter((item) =>
               item.name.toLowerCase().includes(searchTerm.toLowerCase())
             )}
-            renderItem={({ item }) => <Profiles {...item} />}
+            renderItem={({ item }) => (
+              <Profiles
+                {...item}
+                isPlusButtonTriggered={isPlusButtonTriggered}
+                onParticipantSelect={handleParticipantSelection}
+              />
+            )}
             keyExtractor={(item) => item.name}
           />
+        </View>
+        <View
+          style={{
+            height: hp("4%"),
+          }}
+        >
+          <Button text={"Add Participants"} onPress={addParticipants} />
         </View>
       </View>
     </View>
