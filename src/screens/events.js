@@ -483,6 +483,43 @@ export default function EventsScreen({ navigation, data }) {
                     selectedParticipants
                   );
                   // Do something with the selected participants in the EventsScreen component
+
+                  // Show an alert indicating participants are added
+                  if (selectedParticipants.length > 0) {
+                    const participantNames = selectedParticipants
+                      .map((participant) => participant.name)
+                      .join(", ");
+                    Alert.alert(
+                      "Participants Added",
+                      `Participants ${participantNames} added successfully!`,
+                      [
+                        {
+                          text: "OK",
+                          onPress: () => {
+                            console.log("OK Pressed");
+                            setNewModalVisible(false); // Close the modal
+                          },
+                        },
+                      ],
+                      { cancelable: false }
+                    );
+                  } else {
+                    // Handle the case where no participants are selected
+                    // You can customize this part based on your requirements
+                    Alert.alert(
+                      "No Participants Selected",
+                      "Please select participants before adding.",
+                      [
+                        {
+                          text: "OK",
+                          onPress: () => {
+                            console.log("OK Pressed");
+                          },
+                        },
+                      ],
+                      { cancelable: false }
+                    );
+                  }
                 }}
               />
             </View>
