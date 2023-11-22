@@ -89,51 +89,53 @@ export default function Participants({ navigation }) {
   };
 
   return (
-    <View>
-      <View
-        style={{
-          height: hp("6%"),
-        }}
-      >
-        <Header title={"Participants"} icon={"back"} />
-      </View>
-      <View
-        style={{
-          height: hp("5%"),
-          flexDirection: "row",
-          alignItems: "center",
-          marginBottom: hp("1%"),
-        }}
-      >
-        <Searchbar
-          placeholder={"Search Communities"}
-          bgColor={"transparent"}
-          onChangeText={(text) => setSearchTerm(text)}
-        />
-        <Pressable onPress={handleAddButtonClick}>
-          <Animated.Image
-            style={{
-              height: 25,
-              width: 25,
-              marginLeft: 20,
-              transform: [{ rotate: rotateInterpolate }],
-            }}
-            source={require("./../../assets/add-alt.png")}
+    <View styles={globalStyles.container}>
+      <View styles={{ flex: 1 }}>
+        <View
+          style={{
+            height: hp("6%"),
+          }}
+        >
+          <Header title={"Participants"} icon={"back"} />
+        </View>
+        <View
+          style={{
+            height: hp("5%"),
+            flexDirection: "row",
+            alignItems: "center",
+            marginBottom: hp("1%"),
+          }}
+        >
+          <Searchbar
+            placeholder={"Search Communities"}
+            bgColor={"transparent"}
+            onChangeText={(text) => setSearchTerm(text)}
           />
-        </Pressable>
-      </View>
-      <View
-        style={{
-          height: hp("82%"),
-        }}
-      >
-        <ListView
-          data={data.filter((item) =>
-            item.name.toLowerCase().includes(searchTerm.toLowerCase())
-          )}
-          renderItem={({ item }) => <Profiles {...item} />}
-          keyExtractor={(item) => item.name}
-        />
+          <Pressable onPress={handleAddButtonClick}>
+            <Animated.Image
+              style={{
+                height: 25,
+                width: 25,
+                marginLeft: 20,
+                transform: [{ rotate: rotateInterpolate }],
+              }}
+              source={require("./../../assets/add-alt.png")}
+            />
+          </Pressable>
+        </View>
+        <View
+          style={{
+            height: hp("48%"),
+          }}
+        >
+          <ListView
+            data={data.filter((item) =>
+              item.name.toLowerCase().includes(searchTerm.toLowerCase())
+            )}
+            renderItem={({ item }) => <Profiles {...item} />}
+            keyExtractor={(item) => item.name}
+          />
+        </View>
       </View>
     </View>
   );

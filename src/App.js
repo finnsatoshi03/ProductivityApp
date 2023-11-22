@@ -30,18 +30,18 @@ export default function App() {
   if (loadFonts) {
     return (
       <>
-        <View style={globalStyles.container}>
-          {/* <Chats /> */}
-          <Participants />
-          {/* <Header title="Title" /> */}
-          {/* <EditProfile /> */}
-          {/* <Navbar notifCounts={0} /> */}
-          {/* <Sidebar isVisible={true} /> */}
-        </View>
+        {/* <View style={globalStyles.container}> */}
+        {/* <Chats /> */}
+        {/* <Participants /> */}
+        {/* <Header title="Title" /> */}
+        {/* <EditProfile /> */}
+        {/* <Navbar notifCounts={0} /> */}
+        {/* <Sidebar isVisible={true} /> */}
+        {/* </View> */}
         {/* <ViewEvent event={event} isModalVisible={true} /> */}
         {/* <View style={globalStyles.container}></View> */}
         {/* <Sample /> */}
-        {/* <Navigator /> */}
+        <Navigator />
       </>
     );
   } else {

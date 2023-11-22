@@ -23,6 +23,7 @@ import Modal from "react-native-modal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
+import Participants from "./participants";
 
 export default function EventsScreen({ navigation, data }) {
   const { eventData, setEventData } = useData();
@@ -466,7 +467,17 @@ export default function EventsScreen({ navigation, data }) {
             isVisible={isNewModalVisible}
             onBackdropPress={() => setNewModalVisible(false)}
           >
-            {/* Content of the new modal */}
+            <View
+              style={{
+                backgroundColor: "#A1C983",
+                height: hp("70%"),
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 30,
+              }}
+            >
+              <Participants />
+            </View>
           </Modal>
           <View
             style={{
