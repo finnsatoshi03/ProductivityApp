@@ -28,6 +28,7 @@ export default function eventCard({
   date,
   time,
   event,
+  participants,
   location,
   reason,
   description,
@@ -47,6 +48,7 @@ export default function eventCard({
       title: event,
       date: date,
       time: time,
+      participants: participants,
       location: location,
       description: description,
       joinReasons: [reason],
@@ -60,18 +62,7 @@ export default function eventCard({
 
   const [showModal, setShowModal] = useState(false);
 
-  const navigation = useNavigation();
-
-  const viewEvent = () => {
-    navigation.navigate("ViewEvent", {
-      title: event,
-      date: date,
-      time: time,
-      location: location,
-      description: description,
-      joinReasons: [reason],
-    });
-  };
+  console.log(participants);
 
   const toggleExpand = () => {
     Animated.timing(animationRef, {

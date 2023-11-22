@@ -167,7 +167,7 @@ export default function Participants({ navigation, onParticipantsSelected }) {
             height: hp("4%"),
           }}
         >
-          <Button text={"Add Participants"} onPress={addParticipants} />
+          <Button text={"Add Participants"} onPress={addParticipants} fnc={'press'}/>
         </View>
       </View>
     </View>

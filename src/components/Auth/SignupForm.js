@@ -12,7 +12,7 @@ import Label from "../globalLabel";
 import VerifyButton from "../button";
 
 import axios from "axios";
-
+import '../../../global'
 export default function SignupForm({ navigation }) {
   const [formdata, setData] = useState({
       username: '',
@@ -58,9 +58,9 @@ export default function SignupForm({ navigation }) {
   const onSubmit = async () => {
     console.log(formdata);
 
+    let baseurl = `${global.baseurl}:4000/register`;
     try {
-
-      const response = await axios.post("http://192.168.100.9:4000/register",formdata);
+      const response = await axios.post(baseurl,formdata);
 
       if (response.status === 200) {
         console.log('success');

@@ -70,8 +70,6 @@ export default function UserControl({ navigation }) {
     },
   ];
 
-  const [isSidebarVisible, setSidebarVisible] = useState(false);
-
   return (
     <>
       <View style={globalStyles.container}>

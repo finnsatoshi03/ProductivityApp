@@ -17,11 +17,13 @@ import GlobalIconButton from "./globalIconButton";
 import Modal from "react-native-modal";
 
 const ViewEvent = ({ route, navigation }) => {
-  const { title, location, description, date, joinReasons, time } =
+  const { title, location, description, date, joinReasons, time, participants } =
     route.params;
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
-
+  const [isParticipantsModalVisible, setParticipantsModalVisible] = useState(false);
+  
+  console.log(participants);
   const hideModal = () => {
     setModalVisible(false);
     navigation.goBack();
@@ -39,7 +41,13 @@ const ViewEvent = ({ route, navigation }) => {
 
     fetchImage();
   }, [title]);
+  const showParticipantsModal = () => {
+    setParticipantsModalVisible(true);
+  };
 
+  const hideParticipantsModal = () => {
+    setParticipantsModalVisible(false);
+  };
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -98,13 +106,20 @@ const ViewEvent = ({ route, navigation }) => {
                     </Text>
                   ))}
                   {/* Attendees button */}
-                  <TouchableOpacity style={styles.attendeesButton}>
-                    <Text style={styles.attendeesButtonText}>Attendees</Text>
-                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.attendeesButton} onPress={showParticipantsModal}>
+                    <Text style={styles.attendeesButtonText}>View Participants</Text>
+                  </TouchableOpacity>                  
                 </View>
               </ScrollView>
             </View>
           </View>
+        </View>
+      </Modal>
+
+      <Modal isVisible={isParticipantsModalVisible} onBackdropPress={hideParticipantsModal}>
+        {/* Add your code to display participants here */}
+        <View style={styles.participantsModalContainer}>
+          <Text style={styles.participantsModalTitle}>{participants}</Text>                    
         </View>
       </Modal>
     </View>
@@ -232,6 +247,24 @@ const styles = StyleSheet.create({
     height: wp("12%"),
     alignItems: "center",
     justifyContent: "center",
+  },
+
+  participantsModalContainer: {
+    backgroundColor: "#FFFFFF",
+    borderRadius: wp("3%"),
+    padding: wp("4%"),
+  },
+  participantsModalTitle: {
+    fontFamily: "montserrat-bold",
+    fontSize: wp("6%"),
+    color: "#333333",
+    marginBottom: hp("2%"),
+  },
+  participantName: {
+    fontFamily: "montserrat-regular",
+    fontSize: wp("4%"),
+    color: "#333333",
+    marginBottom: hp("1%"),
   },
 });
 

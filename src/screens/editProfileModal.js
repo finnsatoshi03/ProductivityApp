@@ -16,6 +16,8 @@ import Button from "./../components/button";
 import axios from "axios";
 import { Authentication } from "../Auth/Authentication";
 
+import '../../global'
+
 export default function EditProfile({ username, email, number, navigation }) {
 
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
@@ -40,8 +42,8 @@ export default function EditProfile({ username, email, number, navigation }) {
       contact: contactfield, 
     }
     try {      
-      
-      const response = await axios.patch("http://192.168.100.9:4000/editUser", data);
+      let baseurl = `${global.baseurl}:4000/editUser`;
+      const response = await axios.patch(baseurl, data);
 
       if (response.status === 200) {        
         console.log('SUCCESS');        

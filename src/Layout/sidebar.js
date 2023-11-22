@@ -10,7 +10,7 @@ import Button from "../components/button";
 import Avatar from "../components/avatar";
 
 import { Authentication } from "../Auth/Authentication";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
 
 export default function sideBar({
   avatar,
@@ -22,7 +22,11 @@ export default function sideBar({
 }) {
   const {logout, getUser} = Authentication()
 
-  const [userData, setUserData] = useState(null);
+  const [userData, setUserData] = useState({
+    fullname: '',
+    role: '',
+    user_id: ''
+  });
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -31,8 +35,9 @@ export default function sideBar({
     };
 
     fetchUserData();
-  }, [getUser]); // Include getUser in the dependency array to trigger the effect when it changes
+  }, []); 
 
+  console.log(userData || " ");
 
   const position = useRef(
     new Animated.Value(isVisible ? 0 : -wp("70%"))
@@ -117,7 +122,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.largeDescription,
                 }}
               >
-                {'NAME'}
+                {userData.fullname}
               </Text>
               <Text
                 style={{
@@ -125,7 +130,7 @@ export default function sideBar({
                   fontSize: globalStyles.fontSize.description,
                 }}
               >
-                {'ROLE'}
+                {userData.role}
               </Text>
             </View>
             <View
@@ -148,17 +153,22 @@ export default function sideBar({
                 destination={"EditProfile"}
                 fnc='navigate'
               />
-              <Button
-                text={"Verify Account"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/verify.png")}
-                navigation={navigation}
-                destination={"UserControl"}
-                fnc='navigate'
-              />
+              {userData.role === 'admin' ? (
+                <Button
+                  text={"Verify Account"}
+                  flexStart={true}
+                  transparent={true}
+                  textColor={"black"}
+                  fontSize={globalStyles.fontSize.mediumDescription}
+                  iconSource={require("./../../assets/verify.png")}
+                  navigation={navigation}
+                  destination={"UserControl"}
+                  fnc='navigate'
+                />
+              ) : (
+                <></>
+              )}
+              
             </View>
             <View style={{ marginHorizontal: 30, marginTop: 20 }}>
               <Button
@@ -183,17 +193,21 @@ export default function sideBar({
                 destination={"Events"}
                 fnc='navigate'
               />
-              <Button
-                text={"Reports"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/reports.png")}
-                navigation={navigation}
-                destination={"Reports"}
-                fnc='navigate'
-              />
+              {userData.role === 'admin' ? (
+                <Button
+                  text={"Reports"}
+                  flexStart={true}
+                  transparent={true}
+                  textColor={"black"}
+                  fontSize={globalStyles.fontSize.mediumDescription}
+                  iconSource={require("./../../assets/reports.png")}
+                  navigation={navigation}
+                  destination={"Reports"}
+                  fnc='navigate'
+                />
+              ) : (
+                <></>
+              )}
               <Button
                 text={"Chats"}
                 flexStart={true}

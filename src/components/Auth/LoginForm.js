@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from "react";
-
 import {
   View,
   Animated,
@@ -21,6 +20,7 @@ import InputFields from "../input";
 import axios from "axios";
 import { Authentication } from "../../Auth/Authentication";
 
+import '../../../global' // holds the url
 export default function AdminLogin({ navigation, header, description, userType }) {
   
   const [isFocused, setIsFocused] = useState(false);
@@ -41,13 +41,16 @@ export default function AdminLogin({ navigation, header, description, userType }
       password: password,
       checked: false, 
     }
+     
     try {
-      let baseurl = "http://192.168.100.9:4000/adminlogin";
+      let baseurl = `${global.baseurl}:4000/adminlogin`;
       
       if (userType === 'User') {
-          baseurl = "http://192.168.100.9:4000/userlogin"
+          baseurl = `${global.baseurl}:4000/userlogin`;
       } 
-      console.log(baseurl);
+      // console.log(`${global.baseurl}:4000/adminlogin`);
+      // console.log(baseurl);
+
       const response = await axios.post(baseurl, credentials);
 
       if (response.status === 200) {

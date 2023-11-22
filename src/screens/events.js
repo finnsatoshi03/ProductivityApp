@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -25,8 +25,21 @@ import Button from "./../components/button";
 import { useData } from "./../DataContext";
 import Participants from "./participants";
 
+import { Authentication } from "../Auth/Authentication";
+
 export default function EventsScreen({ navigation, data }) {
+ 
   const { eventData, setEventData } = useData();
+
+  const {getUser} = Authentication()
+
+  const [userData, setUserData] = useState({
+    fullname: '',
+    role: '',
+    user_id: ''
+  });
+
+    
   const [activeButtons, setActiveButtons] = useState({
     recent: false,
     starred: false,
@@ -45,6 +58,15 @@ export default function EventsScreen({ navigation, data }) {
   const [participantNames, setParticipantNames] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+    };
+
+    fetchUserData();
+  }, []); 
 
   const months = [
 
@@ -249,23 +271,35 @@ export default function EventsScreen({ navigation, data }) {
               </Text>
             </Pressable>
           </View>
-
-          <Pressable
-            onPress={() => setBottomSheetVisible(true)}
-            style={{
-              backgroundColor: globalStyles.colors.darkGreen,
-              paddingVertical: 20,
-              borderRadius: 30,
-              marginVertical: hp("1.5%"),
-              alignItems: "center",
-              height: hp("8%"),
-            }}
-          >
-            <Image
-              style={{ height: 30, width: 30 }}
-              source={require("./../../assets/add.png")}
-            />
-          </Pressable>
+          {userData.role === 'admin' ? (
+            <Pressable
+              onPress={() => setBottomSheetVisible(true)}
+              style={{
+                backgroundColor: globalStyles.colors.darkGreen,
+                paddingVertical: 20,
+                borderRadius: 30,
+                marginVertical: hp("1.5%"),
+                alignItems: "center",
+                height: hp("8%"),
+              }}
+            >
+              <Image
+                style={{ height: 30, width: 30 }}
+                source={require("./../../assets/add.png")}
+              />
+            </Pressable>
+          ) : (
+              <>
+              {/* DAHIL NASISISRA ANG LAYOUT NILAGYAN KO NETO, PARANG PRESSABLE LANG TO NA ADD BUTTON 
+              PERO NIREPLICATE LANG YUNG SIZE NYA */}
+              <View style={{
+                paddingVertical: 20,
+                marginVertical: hp("1.5%"),
+                height: hp("8%"),
+              }}/>
+              </>
+          )}
+          
           {/* BOTTOM SHEET */}
           <Modal
             isVisible={isBottomSheetVisible}
@@ -451,9 +485,11 @@ export default function EventsScreen({ navigation, data }) {
                   width: "100%",
                 }}
               >
+                
                 <Button
                   text={"Create Event"}
                   width={wp("55%")}
+                  fnc={'press'}
                   onPress={() =>
                     addEvent(
                       eventTitle,
@@ -471,6 +507,7 @@ export default function EventsScreen({ navigation, data }) {
                   bgColor="rgba(0,0,0,0.3)"
                   textColor="#9198bc"
                   onPress={closeBottomSheet}
+                  fnc={'press'}
                 />
               </View>
             </View>
@@ -500,6 +537,7 @@ export default function EventsScreen({ navigation, data }) {
                       .map((participant) => participant.name)
                       .join(", ");
                     setParticipantNames(names); // Update the participantNames state
+                    setParticipants(names);                    
                     setNewModalVisible(false); // Close the modal
                   } else {
                     // Handle the case where no participants are selected
