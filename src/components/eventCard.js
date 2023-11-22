@@ -41,6 +41,11 @@ export default function eventCard({
     outputRange: ["0deg", "180deg"],
   });
 
+  const handleDelete = () => {
+    onDelete();
+    setTimeout(() => setShowModal(false), 1500);
+  };
+
   const [showModal, setShowModal] = useState(false);
 
   const navigation = useNavigation();
@@ -241,7 +246,7 @@ export default function eventCard({
                     />
                     <Button
                       text="Confirm"
-                      onPress={onDelete}
+                      onPress={handleDelete}
                       bgColor="#e2e6f0"
                       textColor="#9198bc"
                       width={wp("20%")}
