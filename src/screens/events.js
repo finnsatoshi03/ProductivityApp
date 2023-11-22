@@ -24,6 +24,8 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
 
+// TODO: Fix edit event
+
 export default function EventsScreen({ navigation, data }) {
   const { eventData, setEventData } = useData();
   const [activeButtons, setActiveButtons] = useState({
@@ -66,7 +68,8 @@ export default function EventsScreen({ navigation, data }) {
     startDate,
     endDate,
     location,
-    description
+    description,
+    index
   ) => {
     const newEvent = {
       date: startDate.toLocaleDateString("en-GB", {
@@ -85,13 +88,12 @@ export default function EventsScreen({ navigation, data }) {
       description: description,
     };
 
-    if (editingEvent) {
+    if (editingEvent !== null) {
       console.log("Before edit:", eventData);
       setEventData(
-        eventData.map((event, i) =>
-          i === editingEvent.index ? newEvent : event
-        )
+        eventData.map((event, i) => (i === index ? newEvent : event))
       );
+      console.log("After edit:", eventData);
     } else {
       setEventData([...eventData, newEvent]);
     }
