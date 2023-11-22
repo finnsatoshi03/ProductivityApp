@@ -42,6 +42,7 @@ export default function EventsScreen({ navigation, data }) {
 
   const [eventTitle, setEventTitle] = useState("");
   const [participants, setParticipants] = useState([]);
+  const [participantNames, setParticipantNames] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
@@ -317,6 +318,16 @@ export default function EventsScreen({ navigation, data }) {
                     source={require("./../../assets/add-dotted.png")}
                   />
                 </Pressable>
+                <View>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.semiBold,
+                      fontSize: globalStyles.fontSize.description,
+                    }}
+                  >
+                    {participantNames}
+                  </Text>
+                </View>
               </View>
 
               <View style={{ paddingVertical: 10 }}>
@@ -482,43 +493,17 @@ export default function EventsScreen({ navigation, data }) {
                     "Selected Participants in EventsScreen: ",
                     selectedParticipants
                   );
-                  // Do something with the selected participants in the EventsScreen component
 
-                  // Show an alert indicating participants are added
                   if (selectedParticipants.length > 0) {
-                    const participantNames = selectedParticipants
+                    const names = selectedParticipants
                       .map((participant) => participant.name)
                       .join(", ");
-                    Alert.alert(
-                      "Participants Added",
-                      `Participants ${participantNames} added successfully!`,
-                      [
-                        {
-                          text: "OK",
-                          onPress: () => {
-                            console.log("OK Pressed");
-                            setNewModalVisible(false); // Close the modal
-                          },
-                        },
-                      ],
-                      { cancelable: false }
-                    );
+                    setParticipantNames(names); // Update the participantNames state
+                    setNewModalVisible(false); // Close the modal
                   } else {
                     // Handle the case where no participants are selected
                     // You can customize this part based on your requirements
-                    Alert.alert(
-                      "No Participants Selected",
-                      "Please select participants before adding.",
-                      [
-                        {
-                          text: "OK",
-                          onPress: () => {
-                            console.log("OK Pressed");
-                          },
-                        },
-                      ],
-                      { cancelable: false }
-                    );
+                    console.log("No Participants Selected");
                   }
                 }}
               />
