@@ -3,7 +3,12 @@ import { TextInput, View, Image, Pressable } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
-export default function Searchbar({ placeholder, bgColor, padding }) {
+export default function Searchbar({
+  placeholder,
+  bgColor,
+  padding,
+  onChangeText,
+}) {
   const inputRef = React.useRef();
 
   return (
@@ -30,6 +35,7 @@ export default function Searchbar({ placeholder, bgColor, padding }) {
           style={{ fontFamily: globalStyles.fontStyle.regular }}
           placeholder={placeholder || "Search"}
           width={"100%"}
+          onChangeText={onChangeText} // Add this line
         />
       </View>
     </View>

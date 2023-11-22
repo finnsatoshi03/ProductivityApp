@@ -29,6 +29,7 @@ import { useNavigation } from "@react-navigation/native";
 export default function Chats() {
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [communityName, setCommunityName] = useState("");
   const [communityAvatar, setCommunityAvatar] = useState(null);
@@ -172,6 +173,7 @@ export default function Chats() {
             <Searchbar
               placeholder={"Search Communities"}
               bgColor={"transparent"}
+              onChangeText={(text) => setSearchTerm(text)}
             />
             <Pressable onPress={() => setModalVisible(true)}>
               <Image
@@ -279,7 +281,9 @@ export default function Chats() {
           </Modal>
           <View style={{ height: hp("74%") }}>
             <ListView
-              data={data}
+              data={data.filter((item) =>
+                item.name.toLowerCase().includes(searchTerm.toLowerCase())
+              )}
               renderItem={({ item }) => (
                 <ChatCard
                   {...item}

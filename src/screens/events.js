@@ -32,6 +32,7 @@ export default function EventsScreen({ navigation, data }) {
   });
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isBottomSheetVisible, setBottomSheetVisible] = useState(false);
+  const [isNewModalVisible, setNewModalVisible] = useState(false);
 
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -304,16 +305,19 @@ export default function EventsScreen({ navigation, data }) {
                 >
                   Invite Participants
                 </Text>
-                <Image
-                  style={{
-                    height: hp("3.5%"),
-                    width: hp("3.5%"),
-                    borderRadius: hp("3.5%") / 2,
-                    opacity: 0.5,
-                  }}
-                  source={require("./../../assets/add-dotted.png")}
-                />
+                <Pressable onPress={() => setNewModalVisible(true)}>
+                  <Image
+                    style={{
+                      height: hp("3.5%"),
+                      width: hp("3.5%"),
+                      borderRadius: hp("3.5%") / 2,
+                      opacity: 0.5,
+                    }}
+                    source={require("./../../assets/add-dotted.png")}
+                  />
+                </Pressable>
               </View>
+
               <View style={{ paddingVertical: 10 }}>
                 <Text
                   style={{
@@ -457,6 +461,12 @@ export default function EventsScreen({ navigation, data }) {
                 />
               </View>
             </View>
+          </Modal>
+          <Modal
+            isVisible={isNewModalVisible}
+            onBackdropPress={() => setNewModalVisible(false)}
+          >
+            {/* Content of the new modal */}
           </Modal>
           <View
             style={{

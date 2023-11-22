@@ -1,10 +1,44 @@
-import React from "react";
-import { Text, View, Image, Pressable } from "react-native";
+import React, { useState, useRef } from "react";
+import {
+  Text,
+  View,
+  Image,
+  Pressable,
+  TouchableOpacity,
+  Animated,
+} from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Avatar from "./avatar";
+import LottieView from "lottie-react-native";
 
 export default function profileCard({ avatar, name, date, showViewIcon }) {
+  const progress = useRef(new Animated.Value(0)).current;
+  const [clickCount, setClickCount] = useState(0);
+
+  const handlePress = () => {
+    setClickCount((prevCount) => prevCount + 1);
+
+    let endValue;
+    switch (clickCount % 3) {
+      case 0:
+        endValue = 0.5;
+        break;
+      case 1:
+        endValue = 0;
+        break;
+      default:
+        endValue = progress._value;
+        break;
+    }
+
+    Animated.timing(progress, {
+      toValue: endValue,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+
   return (
     <View
       style={{
@@ -44,15 +78,14 @@ export default function profileCard({ avatar, name, date, showViewIcon }) {
         </View>
       </View>
       {showViewIcon && (
-        <Pressable>
-          <Image
-            style={{
-              height: hp("2%"),
-              width: hp("2%"),
-            }}
-            source={require("./../../assets/view.png")}
+        <TouchableOpacity onPress={handlePress}>
+          <LottieView
+            progress={progress}
+            source={require("./../../assets/checkbox.json")}
+            loop={false}
+            style={{ width: 50, height: 50 }}
           />
-        </Pressable>
+        </TouchableOpacity>
       )}
     </View>
   );
