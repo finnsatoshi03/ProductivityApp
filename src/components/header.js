@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { View, Text, Image, TouchableOpacity } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -18,6 +19,8 @@ export default function header({
   marginBottom,
   onPressMenu,
 }) {
+  const navigation = useNavigation();
+
   let titleArray = title.split(" ");
 
   if (chat && titleArray.length >= 2) {
@@ -40,7 +43,9 @@ export default function header({
       >
         <TouchableOpacity
           onPress={() => {
-            if (onPressMenu) {
+            if (icon === "back") {
+              navigation.goBack();
+            } else if (onPressMenu) {
               onPressMenu();
               console.log("pressed");
             }
