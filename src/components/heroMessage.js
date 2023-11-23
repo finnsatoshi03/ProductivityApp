@@ -9,6 +9,7 @@ export default function HeroMessage({
   textAlign,
   noPadding,
   width,
+  style,
 }) {
   const headerParts = header.split(" ");
 
@@ -63,6 +64,7 @@ export default function HeroMessage({
           fontSize: globalStyles.fontSize.description,
           textAlign: textAlign ? "left" : "center",
           width: width ? "65%" : undefined,
+          ...style,
         }}
       >
         {description}

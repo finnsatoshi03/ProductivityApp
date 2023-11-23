@@ -6,6 +6,7 @@ import {
   Platform,
   Keyboard,
   Easing,
+  Text,
 } from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
 import Background from "../background";
@@ -34,6 +35,10 @@ export default function AdminLogin({
   const logoSize = useRef(new Animated.Value(1)).current;
   const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
 
+  const [usernameError, setUsernameError] = useState(null);
+  const [passwordError, setPasswordError] = useState(null);
+  const [errorMessage, setErrorMessage] = useState(null);
+
   const { login } = Authentication();
 
   const onSubmit = async (values) => {
@@ -42,6 +47,10 @@ export default function AdminLogin({
       password: password,
       checked: false,
     };
+
+    // Clear previous errors prints
+    setUsernameError(null);
+    setPasswordError(null);
 
     try {
       let baseurl = `${global.baseurl}:4000/adminlogin`;
@@ -71,14 +80,43 @@ export default function AdminLogin({
         "An error occurred while making the request:",
         error.message
       );
+
+      if (
+        error.response &&
+        error.response.data.message === "Credentials Incorrect"
+      ) {
+        setErrorMessage("Credentials Incorrect");
+      } else {
+        console.error(
+          "An error occurred while making the request:",
+          error.message,
+          error.response.data,
+          error.response
+        );
+      }
+    }
+
+    if (!username) {
+      setUsernameError("Username is required");
+      return;
+    }
+
+    if (!password) {
+      setPasswordError("Password is required");
+      return;
     }
   };
+
   const handleUsernameChange = (text) => {
     setUsername(text);
+    setUsernameError(null); // Clear the error message
+    setErrorMessage(null);
   };
 
   const handlePasswordChange = (text) => {
     setPassword(text);
+    setPasswordError(null); // Clear the error message
+    setErrorMessage(null);
   };
 
   const handleFocus = () => {
@@ -157,8 +195,15 @@ export default function AdminLogin({
         ]}
         source={require("../../../assets/logo.png")}
       />
-      <HeroMessage header={header} description={description} />
+      <HeroMessage
+        header={header}
+        description={errorMessage || description}
+        style={{ color: errorMessage ? "red" : "black" }}
+      />
       <View style={{ marginBottom: 20 }}>
+        {usernameError && (
+          <Text style={{ color: "red", zIndex: 4 }}>{usernameError}</Text>
+        )}
         <InputFields
           handleFocus={handleFocus}
           handleBlur={handleBlur}
@@ -167,6 +212,9 @@ export default function AdminLogin({
           onChangeText={handleUsernameChange}
         />
         <View style={{ marginBottom: 20 }}></View>
+        {passwordError && (
+          <Text style={{ color: "red", zIndex: 4 }}>{passwordError}</Text>
+        )}
         <InputFields
           handleFocus={handleFocus}
           handleBlur={handleBlur}
