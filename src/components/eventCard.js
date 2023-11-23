@@ -56,7 +56,9 @@ export default function eventCard({
   };
 
   const handleDelete = () => {
-    onDelete();
+    if (onDelete) {
+      onDelete();
+    }
     setTimeout(() => setShowModal(false), 1500);
   };
 
@@ -194,7 +196,7 @@ export default function eventCard({
                   text="VIEW"
                   bgColor={globalStyles.colors.green}
                   onPress={viewEvent}
-                  fnc={'press'}
+                  fnc={"press"}
                 />
               </View>
               <Button

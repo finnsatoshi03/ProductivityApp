@@ -34,11 +34,15 @@ export default function Button({
           width: width,
         }}
         onPress={() => {
-          if (fnc == 'navigate') {
+          if (fnc == "navigate") {
             navigation.navigate(destination);
-          }else if (fnc == 'press') {
+          } else if (fnc == "press") {
             onPress();
-          } else console.error("Navigation prop and onPress prop are not defined");         
+            console.log("pressed");
+          } else if (onPress) {
+            onPress();
+          } else
+            console.error("Navigation prop and onPress prop are not defined");
         }}
       >
         <View

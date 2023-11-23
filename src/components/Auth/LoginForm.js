@@ -20,34 +20,35 @@ import InputFields from "../input";
 import axios from "axios";
 import { Authentication } from "../../Auth/Authentication";
 
-import '../../../global' // holds the url
-export default function AdminLogin({ navigation, header, description, userType }) {
-  
+import "../../../global"; // holds the url
+export default function AdminLogin({
+  navigation,
+  header,
+  description,
+  userType,
+}) {
   const [isFocused, setIsFocused] = useState(false);
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
-  
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+
   const logoSize = useRef(new Animated.Value(1)).current;
   const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
 
-  
-  const {login} = Authentication();
+  const { login } = Authentication();
 
-  
   const onSubmit = async (values) => {
-  
     const credentials = {
       username: username,
       password: password,
-      checked: false, 
-    }
-     
+      checked: false,
+    };
+
     try {
       let baseurl = `${global.baseurl}:4000/adminlogin`;
-      
-      if (userType === 'User') {
-          baseurl = `${global.baseurl}:4000/userlogin`;
-      } 
+
+      if (userType === "User") {
+        baseurl = `${global.baseurl}:4000/userlogin`;
+      }
       // console.log(`${global.baseurl}:4000/adminlogin`);
       // console.log(baseurl);
 
@@ -55,26 +56,29 @@ export default function AdminLogin({ navigation, header, description, userType }
 
       if (response.status === 200) {
         login({
-          user:response.data.username,
-          token:response.data.token,
-          user_id:response.data.user_id,
-          role:response.data.role,
-          fullname:response.data.fullname,
-        })
+          user: response.data.username,
+          token: response.data.token,
+          user_id: response.data.user_id,
+          role: response.data.role,
+          fullname: response.data.fullname,
+        });
         console.log(response.data);
         navigation.navigate("Calendar");
       }
-
     } catch (error) {
       console.log(error);
+      console.error(
+        "An error occurred while making the request:",
+        error.message
+      );
     }
-  }
+  };
   const handleUsernameChange = (text) => {
-    setUsername(text);   
+    setUsername(text);
   };
 
   const handlePasswordChange = (text) => {
-    setPassword(text);   
+    setPassword(text);
   };
 
   const handleFocus = () => {
@@ -178,7 +182,7 @@ export default function AdminLogin({ navigation, header, description, userType }
           destination="Calendar"
           text="Login"
           onPress={onSubmit}
-          fnc={'press'}
+          fnc={"press"}
         />
       </View>
     </KeyboardAvoidingView>

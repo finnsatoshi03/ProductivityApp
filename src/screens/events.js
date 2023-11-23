@@ -28,18 +28,16 @@ import Participants from "./participants";
 import { Authentication } from "../Auth/Authentication";
 
 export default function EventsScreen({ navigation, data }) {
- 
   const { eventData, setEventData } = useData();
 
-  const {getUser} = Authentication()
+  const { getUser } = Authentication();
 
   const [userData, setUserData] = useState({
-    fullname: '',
-    role: '',
-    user_id: ''
+    fullname: "",
+    role: "",
+    user_id: "",
   });
 
-    
   const [activeButtons, setActiveButtons] = useState({
     recent: false,
     starred: false,
@@ -66,10 +64,9 @@ export default function EventsScreen({ navigation, data }) {
     };
 
     fetchUserData();
-  }, []); 
+  }, []);
 
   const months = [
-
     { label: "January", value: "January" },
     { label: "February", value: "February" },
     { label: "March", value: "March" },
@@ -271,7 +268,7 @@ export default function EventsScreen({ navigation, data }) {
               </Text>
             </Pressable>
           </View>
-          {userData.role === 'admin' ? (
+          {userData.role === "admin" ? (
             <Pressable
               onPress={() => setBottomSheetVisible(true)}
               style={{
@@ -289,17 +286,19 @@ export default function EventsScreen({ navigation, data }) {
               />
             </Pressable>
           ) : (
-              <>
+            <>
               {/* DAHIL NASISISRA ANG LAYOUT NILAGYAN KO NETO, PARANG PRESSABLE LANG TO NA ADD BUTTON 
               PERO NIREPLICATE LANG YUNG SIZE NYA */}
-              <View style={{
-                paddingVertical: 20,
-                marginVertical: hp("1.5%"),
-                height: hp("8%"),
-              }}/>
-              </>
+              <View
+                style={{
+                  paddingVertical: 20,
+                  marginVertical: hp("1.5%"),
+                  height: hp("8%"),
+                }}
+              />
+            </>
           )}
-          
+
           {/* BOTTOM SHEET */}
           <Modal
             isVisible={isBottomSheetVisible}
@@ -485,11 +484,10 @@ export default function EventsScreen({ navigation, data }) {
                   width: "100%",
                 }}
               >
-                
                 <Button
                   text={"Create Event"}
                   width={wp("55%")}
-                  fnc={'press'}
+                  fnc={"press"}
                   onPress={() =>
                     addEvent(
                       eventTitle,
@@ -507,7 +505,7 @@ export default function EventsScreen({ navigation, data }) {
                   bgColor="rgba(0,0,0,0.3)"
                   textColor="#9198bc"
                   onPress={closeBottomSheet}
-                  fnc={'press'}
+                  fnc={"press"}
                 />
               </View>
             </View>
@@ -537,7 +535,7 @@ export default function EventsScreen({ navigation, data }) {
                       .map((participant) => participant.name)
                       .join(", ");
                     setParticipantNames(names); // Update the participantNames state
-                    setParticipants(names);                    
+                    setParticipants(names);
                     setNewModalVisible(false); // Close the modal
                   } else {
                     // Handle the case where no participants are selected
@@ -563,7 +561,7 @@ export default function EventsScreen({ navigation, data }) {
               </View>
             ) : (
               <ListView
-                data={eventData} 
+                data={eventData}
                 renderItem={({ item }) => (
                   <Events {...item} onDelete={() => deleteEvent(item.event)} />
                 )}
