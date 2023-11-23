@@ -3,7 +3,13 @@ import React, { createContext, useContext, useState } from "react";
 const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
-  const [eventData, setEventData] = useState([]);
+  const [eventData, setEventData] = useState({
+    datetime: "", 
+    description: "", 
+    event: "", 
+    location: "",
+    id:"",     
+  });
 
   const value = {
     eventData,

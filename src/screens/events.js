@@ -26,8 +26,11 @@ import { useData } from "./../DataContext";
 import Participants from "./participants";
 
 import { Authentication } from "../Auth/Authentication";
+import axios from "axios";
+import '../../global'
 
 export default function EventsScreen({ navigation, data }) {
+
   const { eventData, setEventData } = useData();
 
   const { getUser } = Authentication();
@@ -62,10 +65,24 @@ export default function EventsScreen({ navigation, data }) {
       const user = await getUser();
       setUserData(user);
     };
+    const fetchEventsData = async () => {
+      try {
+        const response = await axios.get(`${global.baseurl}:4000/getEvents`)
 
+        if (response.status === 200) {
+          const { data } = response;
+          const events = data.events;          
+          setEventData(events)
+        }
+      } catch (error) {
+        console.log(error);
+      }
+      
+    }
+    fetchEventsData()
     fetchUserData();
   }, []);
-
+  
   const months = [
     { label: "January", value: "January" },
     { label: "February", value: "February" },
@@ -80,8 +97,8 @@ export default function EventsScreen({ navigation, data }) {
     { label: "November", value: "November" },
     { label: "December", value: "December" },
   ];
-
-  const addEvent = (
+  
+  const addEvent = async (
     eventTitle,
     participants,
     startDate,
@@ -90,47 +107,72 @@ export default function EventsScreen({ navigation, data }) {
     description
   ) => {
     const newEvent = {
-      date: startDate.toLocaleDateString("en-GB", {
+      dateTime: `${startDate.toLocaleDateString("en-GB", {
         day: "numeric",
         month: "long",
         year: "numeric",
-      }),
-      time: endDate.toLocaleTimeString("en-US", {
+      })} ${endDate.toLocaleTimeString("en-US", {
         hour: "2-digit",
         minute: "2-digit",
         hour12: true,
-      }),
+      })}`,
       event: eventTitle,
       location: location,
       participants: participants,
       description: description,
     };
 
-    console.log("New Event: ", newEvent);
+    
+    try {
+      
+      const response = await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
+      
+      if (response.status === 200) {
+        const { data } = response
+        const user_ids = participants
+        const event_id = data.id        
+        const userEvent = {
+          user_ids,
+          event_id
+        }
 
-    setEventData([...eventData, newEvent]);
-    setBottomSheetVisible(true);
+        const request = await axios.post(`${global.baseurl}:4000/addParticipant`, userEvent)
 
-    // Clear participants state after creating a new event
-    setParticipants([]);
-    setParticipantNames("");
+        if (request.status === 200) {
+          console.log('SUCCSESESE');
+        } else {
+          console.log('NOT SUCESESES');
+        }        
+      } else {
+        console.log("NOOOO");
+      }
 
-    Alert.alert(
-      "Event Created",
-      "Your event has been successfully created!",
-      [
-        {
-          text: "OK",
-          onPress: () => {
-            console.log("OK Pressed");
-            setBottomSheetVisible(false);
+      setEventData([...eventData, newEvent]);
+      setBottomSheetVisible(true);
+
+      // Clear participants state after creating a new event
+      setParticipants([]);
+      setParticipantNames("");
+
+      Alert.alert(
+        "Event Created",
+        "Your event has been successfully created!",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              setBottomSheetVisible(false);
+            },
           },
-        },
-      ],
-      { cancelable: false }
-    );
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      console.log(error);
+    } 
   };
-
+  
   const deleteEvent = (eventTitleToDelete) => {
     setEventData((prevEvents) =>
       prevEvents.filter((event) => event.event !== eventTitleToDelete)
@@ -169,6 +211,7 @@ export default function EventsScreen({ navigation, data }) {
       hideTimePicker();
     }
   };
+  
 
   return (
     <>
@@ -330,8 +373,7 @@ export default function EventsScreen({ navigation, data }) {
                 }}
                 placeholderTextColor="rgba(0,0,0,0.5)"
                 paddingVertical={10}
-                onChangeText={(text) => {
-                  console.log("Event Name: ", text);
+                onChangeText={(text) => {                  
                   setEventTitle(text);
                 }}
               />
@@ -451,8 +493,7 @@ export default function EventsScreen({ navigation, data }) {
                     color: "black",
                   }}
                   placeholderTextColor={"rgba(0,0,0,0.5)"}
-                  onChangeText={(text) => {
-                    console.log("Location: ", text);
+                  onChangeText={(text) => {                    
                     setLocation(text);
                   }}
                 />
@@ -476,8 +517,7 @@ export default function EventsScreen({ navigation, data }) {
                     color: "black",
                   }}
                   placeholderTextColor={"rgba(0,0,0,0.5)"}
-                  onChangeText={(text) => {
-                    console.log("Description: ", text);
+                  onChangeText={(text) => {                    
                     setDescription(text);
                   }}
                 />
@@ -531,17 +571,22 @@ export default function EventsScreen({ navigation, data }) {
             >
               <Participants
                 onParticipantsSelected={(selectedParticipants) => {
-                  console.log(
-                    "Selected Participants in EventsScreen: ",
-                    selectedParticipants
-                  );
+                  
 
-                  if (selectedParticipants.length > 0) {
-                    const names = selectedParticipants
-                      .map((participant) => participant.name)
-                      .join(", ");
+                  if (selectedParticipants.length > 0) {                    
+                    const { idString, names } = selectedParticipants.reduce((acc, participant, index) => {
+                      acc.idString += participant.id;
+                      acc.names += participant.fullname;
+
+                      if (index < selectedParticipants.length - 1) {
+                        acc.idString += ', ';
+                        acc.names += ', ';
+                      }
+
+                      return acc;
+                    }, { idString: '', names: '' });
                     setParticipantNames(names); // Update the participantNames state
-                    setParticipants(names);
+                    setParticipants(idString);
                     setNewModalVisible(false); // Close the modal
                   } else {
                     // Handle the case where no participants are selected

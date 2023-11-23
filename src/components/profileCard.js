@@ -14,7 +14,8 @@ import LottieView from "lottie-react-native";
 
 export default function profileCard({
   avatar,
-  name,
+  fullname,
+  id,
   date,
   showViewIcon,
   isPlusButtonTriggered,
@@ -52,8 +53,8 @@ export default function profileCard({
     }).start();
 
     if (isPlusButtonTriggered) {
-      // Call the callback with participant information
-      onParticipantSelect({ avatar, name, date });
+      // Call the callback with participant information      
+      onParticipantSelect({ avatar, fullname, id });
     }
   };
 
@@ -70,7 +71,7 @@ export default function profileCard({
       }}
     >
       <View style={{ flexDirection: "row", alignItems: "center", gap: 30 }}>
-        <Avatar avatar={avatar} firstName={name} />
+        <Avatar avatar={avatar} firstName={fullname} />
         <View>
           <Text
             style={{
@@ -79,7 +80,7 @@ export default function profileCard({
               color: "white",
             }}
           >
-            {name}
+            {fullname}
           </Text>
           {date && (
             <Text

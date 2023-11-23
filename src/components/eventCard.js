@@ -25,8 +25,7 @@ const commonStyles = {
 };
 
 export default function eventCard({
-  date,
-  time,
+  datetime,
   event,
   participants,
   location,
@@ -34,7 +33,9 @@ export default function eventCard({
   description,
   onDelete,
   onEdit,
+  id,
 }) {
+    
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
   const rotateInterpolation = animationRef.interpolate({
@@ -43,12 +44,32 @@ export default function eventCard({
   });
   const navigation = useNavigation();
 
+  function formatDateTime(datetimeString) {
+    const optionsDate = { 
+      day: 'numeric', 
+      month: 'long', 
+      year: 'numeric', 
+    };
+  
+    const optionsTime = {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: true,
+    };
+  
+    const datePart = new Date(datetimeString).toLocaleDateString('en-GB', optionsDate);
+    const timePart = new Date(datetimeString).toLocaleTimeString('en-US', optionsTime);
+  
+    return `${datePart} ${timePart}`;
+  }
+
+  datetime =  formatDateTime(datetime);
+  
   const viewEvent = () => {
     navigation.navigate("ViewEvent", {
       title: event,
-      date: date,
-      time: time,
-      participants: participants,
+      dateTime: datetime,      
+      id: id,
       location: location,
       description: description,
       joinReasons: [reason],
@@ -63,8 +84,7 @@ export default function eventCard({
   };
 
   const [showModal, setShowModal] = useState(false);
-
-  console.log(participants);
+  
 
   const toggleExpand = () => {
     Animated.timing(animationRef, {
@@ -137,7 +157,7 @@ export default function eventCard({
                 fontFamily: globalStyles.fontStyle.regular,
               }}
             >
-              {isExpanded ? `${date}, ${time}` : event}
+              {isExpanded ? `${datetime}` : event}
             </Text>
           </View>
         </View>

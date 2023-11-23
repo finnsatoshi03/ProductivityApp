@@ -19,58 +19,39 @@ import Profiles from "./../components/profileCard";
 import Navbar from "./../Layout/navbar";
 import Button from "./../components/button";
 
+
+import axios from "axios";
+import { Authentication } from "../Auth/Authentication";
+import '../../global'
+
 export default function Participants({
   navigation,
   onParticipantsSelected,
   onBack,
 }) {
-  const [data, setData] = useState([
-    {
-      name: "John Doe",
-      avatar: undefined,
-      date: "Joined on 12/12/2020",
-    },
-    {
-      name: "Jane Smith",
-      avatar: undefined,
-      date: "Joined on 01/15/2021",
-    },
-    {
-      name: "Bob Johnson",
-      avatar: undefined,
-      date: "Joined on 02/20/2021",
-    },
-    {
-      name: "Alice Williams",
-      avatar: undefined,
-      date: "Joined on 03/25/2021",
-    },
-    {
-      name: "Charlie Brown",
-      avatar: undefined,
-      date: "Joined on 04/30/2021",
-    },
-    {
-      name: "David Jones",
-      avatar: undefined,
-      date: "Joined on 05/05/2021",
-    },
-    {
-      name: "Emily Davis",
-      avatar: undefined,
-      date: "Joined on 06/10/2021",
-    },
-    {
-      name: "Frank Miller",
-      avatar: undefined,
-      date: "Joined on 07/15/2021",
-    },
-    {
-      name: "Grace Wilson",
-      avatar: undefined,
-      date: "Joined on 08/20/2021",
-    },
-  ]);
+  const [data, setData] = useState([]);
+  
+  const retrieveUsers = async () => {
+    
+    try {
+      const response = await axios.get(`${global.baseurl}:4000/getUsers`)
+      
+      if (response.status === 200) {
+       // Assuming your server responds with the 'users' data in the response
+        const { data } = response;
+        const users = data.users;
+        
+        setData(users)
+      } else {
+        console.log('error');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  retrieveUsers()
+
   const [searchTerm, setSearchTerm] = useState("");
   const [participants, setParticipants] = useState([]);
 
@@ -96,13 +77,11 @@ export default function Participants({
     setData(data.map((item) => ({ ...item, showViewIcon: isAddTriggered })));
   };
 
-  const handleParticipantSelection = (participant) => {
+  const handleParticipantSelection = (participant) => {    
     setParticipants((prevParticipants) => [...prevParticipants, participant]);
   };
 
   const addParticipants = () => {
-    // Do something with the selected participants
-    console.log("Selected Participants: ", participants);
 
     // Call the callback function with the selected participants
     onParticipantsSelected(participants);
@@ -154,7 +133,7 @@ export default function Participants({
         >
           <ListView
             data={data.filter((item) =>
-              item.name.toLowerCase().includes(searchTerm.toLowerCase())
+              item.fullname.toLowerCase().includes(searchTerm.toLowerCase())
             )}
             renderItem={({ item }) => (
               <Profiles
@@ -163,7 +142,7 @@ export default function Participants({
                 onParticipantSelect={handleParticipantSelection}
               />
             )}
-            keyExtractor={(item) => item.name}
+            keyExtractor={(item) => item.fullname}
           />
         </View>
         <View

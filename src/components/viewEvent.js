@@ -17,13 +17,11 @@ import GlobalIconButton from "./globalIconButton";
 import Modal from "react-native-modal";
 
 const ViewEvent = ({ route, navigation }) => {
-  const { title, location, description, date, joinReasons, time, participants } =
-    route.params;
+  const { title, location, description, dateTime, joinReasons, id } = route.params;
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
   const [isParticipantsModalVisible, setParticipantsModalVisible] = useState(false);
-  
-  console.log(participants);
+    
   const hideModal = () => {
     setModalVisible(false);
     navigation.goBack();
@@ -48,6 +46,12 @@ const ViewEvent = ({ route, navigation }) => {
   const hideParticipantsModal = () => {
     setParticipantsModalVisible(false);
   };
+  const dateTimeArray = dateTime.split(' ');
+  const date = dateTimeArray.slice(0, 3).join(' ');
+  const time = dateTimeArray.slice(3).join(' ');
+  
+  
+
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -119,7 +123,7 @@ const ViewEvent = ({ route, navigation }) => {
       <Modal isVisible={isParticipantsModalVisible} onBackdropPress={hideParticipantsModal}>
         {/* Add your code to display participants here */}
         <View style={styles.participantsModalContainer}>
-          <Text style={styles.participantsModalTitle}>{participants}</Text>                    
+          <Text style={styles.participantsModalTitle}>{id}</Text>                    
         </View>
       </Modal>
     </View>
