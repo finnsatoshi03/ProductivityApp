@@ -543,6 +543,7 @@ export default function EventsScreen({ navigation, data }) {
                     console.log("No Participants Selected");
                   }
                 }}
+                onBack={() => setNewModalVisible(false)}
               />
             </View>
           </Modal>

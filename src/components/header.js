@@ -17,6 +17,7 @@ export default function header({
   chat,
   gap,
   marginBottom,
+  onBack,
   onPressMenu,
 }) {
   const navigation = useNavigation();
@@ -44,7 +45,12 @@ export default function header({
         <TouchableOpacity
           onPress={() => {
             if (icon === "back") {
-              navigation.goBack();
+              if (onBack) {
+                // for back button in participants page
+                onBack();
+              } else {
+                navigation.goBack();
+              }
             } else if (onPressMenu) {
               onPressMenu();
               console.log("pressed");

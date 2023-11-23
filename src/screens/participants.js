@@ -19,7 +19,11 @@ import Profiles from "./../components/profileCard";
 import Navbar from "./../Layout/navbar";
 import Button from "./../components/button";
 
-export default function Participants({ navigation, onParticipantsSelected }) {
+export default function Participants({
+  navigation,
+  onParticipantsSelected,
+  onBack,
+}) {
   const [data, setData] = useState([
     {
       name: "John Doe",
@@ -115,7 +119,7 @@ export default function Participants({ navigation, onParticipantsSelected }) {
             height: hp("6%"),
           }}
         >
-          <Header title={"Participants"} icon={"back"} />
+          <Header title={"Participants"} icon={"back"} onBack={onBack} />
         </View>
         <View
           style={{
@@ -167,7 +171,11 @@ export default function Participants({ navigation, onParticipantsSelected }) {
             height: hp("4%"),
           }}
         >
-          <Button text={"Add Participants"} onPress={addParticipants} fnc={'press'}/>
+          <Button
+            text={"Add Participants"}
+            onPress={addParticipants}
+            fnc={"press"}
+          />
         </View>
       </View>
     </View>
