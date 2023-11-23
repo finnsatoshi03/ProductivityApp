@@ -149,7 +149,7 @@ export default function Participants({
         <View
           style={{
             height: hp("43%"),
-            marginBottom: hp("1%"),
+            marginBottom: hp("2%"),
           }}
         >
           <ListView
@@ -168,7 +168,7 @@ export default function Participants({
         </View>
         <View
           style={{
-            height: hp("4%"),
+            height: hp("5%"),
           }}
         >
           <Button
