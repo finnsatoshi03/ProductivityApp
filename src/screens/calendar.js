@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -9,6 +9,12 @@ import ListView from "./../components/listView";
 import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
+
+
+import { Authentication } from "../Auth/Authentication";
+import axios from "axios";
+import '../../global'
+
 
 export default function Calendar({ navigation }) {
 
@@ -22,6 +28,22 @@ export default function Calendar({ navigation }) {
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
 
+  useEffect(() => {
+    const fetchEventsData = async () => {
+      try {
+        const response = await axios.get(`${global.baseurl}:4000/getEvents`)
+
+        if (response.status === 200) {
+          const { data } = response;
+          const events = data.events;          
+          setEventData(events)
+        }
+      } catch (error) {
+        console.log(error);
+      }      
+    }
+    fetchEventsData()
+  }, []);
   return (
     <>
       <View style={globalStyles.container}>

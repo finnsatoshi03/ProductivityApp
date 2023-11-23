@@ -20,6 +20,7 @@ export default function profileCard({
   showViewIcon,
   isPlusButtonTriggered,
   onParticipantSelect,
+  verify,
 }) {
   const progress = useRef(new Animated.Value(0)).current;
   const [clickCount, setClickCount] = useState(0);
@@ -105,7 +106,7 @@ export default function profileCard({
             style={{ width: 50, height: 50 }}
           />
         </TouchableOpacity>
-      ) : showViewIcon ? (
+      ) : !verify ? (
         <Image
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}

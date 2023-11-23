@@ -14,7 +14,9 @@ import {
 } from "react-native-responsive-screen";
 import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import GlobalIconButton from "./globalIconButton";
+import { LinearGradient } from "expo-linear-gradient";
 import Modal from "react-native-modal";
+import { globalStyles } from "../styles/globalStyles";
 
 const ViewEvent = ({ route, navigation }) => {
   const { title, location, description, dateTime, joinReasons, id } = route.params;
@@ -39,6 +41,7 @@ const ViewEvent = ({ route, navigation }) => {
 
     fetchImage();
   }, [title]);
+
   const showParticipantsModal = () => {
     setParticipantsModalVisible(true);
   };
@@ -78,54 +81,183 @@ const ViewEvent = ({ route, navigation }) => {
                 />
               </View>
             </View>
-            <View style={styles.dateTimeContainer}>
-              <FontAwesomeIcon name="calendar" style={styles.dateIcon} />
-              <Text style={styles.dateTimeText}>{date}</Text>
-              <FontAwesomeIcon name="clock-o" style={styles.timeIcon} />
-              <Text style={styles.dateTimeText}>{time}</Text>
-            </View>
+            <LinearGradient
+              colors={["rgba(247,249,248,0)", "rgba(125,156,101,1)"]}
+              start={{ x: 0.5, y: 0 }}
+              end={{ x: 0.5, y: 1 }}
+              style={styles.dateTimeContainer}
+            >
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.bold,
+                  fontSize: globalStyles.fontSize.header,
+                  color: "white",
+                }}
+              >
+                {title || "Sample Title"}
+              </Text>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: hp("5%"),
+                  // marginTop: hp("1%"),
+                }}
+              >
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 5,
+                    // marginTop: hp("1%"),
+                  }}
+                >
+                  <FontAwesomeIcon name="calendar" style={styles.dateIcon} />
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "white",
+                    }}
+                  >
+                    {date}
+                  </Text>
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 5,
+                    // marginTop: hp("1%"),
+                  }}
+                >
+                  <FontAwesomeIcon name="clock-o" style={styles.timeIcon} />
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "white",
+                    }}
+                  >
+                    {time}
+                  </Text>
+                </View>
+              </View>
+            </LinearGradient>
             <View style={styles.bottomContent}>
-              <ScrollView>
-                <Text style={styles.eventTitle}>{title || "Sample Title"}</Text>
-                <View style={styles.locationContainer}>
-                  <FontAwesomeIcon
-                    name="map-marker"
-                    style={styles.locationIcon}
-                  />
-                  <Text style={styles.locationText}>
-                    {location || "No description provided"}
-                  </Text>
-                </View>
-                <Text style={styles.eventDescription}>
-                  {description || "No description provided"}
-                </Text>
-                <View style={styles.joinUsContainer}>
-                  <Text style={styles.joinUsTitle}>
-                    Why you should join us:
-                  </Text>
-                  {/* Render bullet points for reasons */}
-                  {joinReasons.map((reason, index) => (
-                    <Text key={index} style={styles.bullet}>
-                      - {reason || "No reasons provided"}
+              <View style={{ maxHeight: hp("55%") }}>
+                <ScrollView>
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: hp("1.7%"),
+                        color: "white",
+                      }}
+                    >
+                      Description
                     </Text>
-                  ))}
-                  {/* Attendees button */}
-                  <TouchableOpacity style={styles.attendeesButton} onPress={showParticipantsModal}>
-                    <Text style={styles.attendeesButtonText}>View Participants</Text>
-                  </TouchableOpacity>                  
-                </View>
-              </ScrollView>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: hp("1.5%"),
+                        color: "white",
+                      }}
+                    >
+                      {description || "No description provided"}
+                    </Text>
+                  </View>
+                  <View style={{ marginTop: hp("1.5%") }}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: hp("1.7%"),
+                        color: "white",
+                      }}
+                    >
+                      Why you should join us:
+                    </Text>
+                    {/* Render bullet points for reasons */}
+                    {joinReasons.map((reason, index) => (
+                      <Text
+                        key={index}
+                        style={{
+                          fontFamily: globalStyles.fontStyle.regular,
+                          fontSize: hp("1.5%"),
+                          color: "white",
+                        }}
+                      >
+                        - {reason || "No reasons provided"}
+                      </Text>
+                    ))}
+                  </View>
+                </ScrollView>
+              </View>
+              <View
+                style={{
+                  marginTop: hp("1.5%"),
+                  flexDirection: "row",
+                  gap: 5,
+                }}
+              >
+                <FontAwesomeIcon
+                  name="map-marker"
+                  style={styles.locationIcon}
+                />
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: hp("1.7%"),
+                    color: "white",
+                  }}
+                >
+                  {location || "No location provided"}
+                </Text>
+              </View>
+
+              {/* Attendees button */}
+              <View style={{ marginTop: hp("1.5%") }}>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: hp("1.7%"),
+                    color: "white",
+                  }}
+                >
+                  Invited Participants
+                </Text>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: hp("1.5%"),
+                    color: "white",
+                  }}
+                >
+                  {id}
+                </Text>
+                <TouchableOpacity
+                  style={styles.attendeesButton}
+                  onPress={showParticipantsModal}
+                >
+                  <Text style={styles.attendeesButtonText}>
+                    View Participants
+                  </Text>
+                </TouchableOpacity>
+              </View>
             </View>
           </View>
         </View>
       </Modal>
 
-      <Modal isVisible={isParticipantsModalVisible} onBackdropPress={hideParticipantsModal}>
-        {/* Add your code to display participants here */}
+      {/* <Modal
+        isVisible={isParticipantsModalVisible}
+        onBackdropPress={hideParticipantsModal}
+      >
+        Add your code to display participants here
         <View style={styles.participantsModalContainer}>
-          <Text style={styles.participantsModalTitle}>{id}</Text>                    
+          <Text style={styles.participantsModalTitle}>{participants}</Text>
         </View>
-      </Modal>
+      </Modal> */}
     </View>
   );
 };
@@ -147,6 +279,7 @@ const styles = StyleSheet.create({
     resizeMode: "cover",
     justifyContent: "flex-start",
     alignItems: "center",
+    padding: 20,
   },
   bottomContent: {
     position: "absolute",
@@ -155,19 +288,7 @@ const styles = StyleSheet.create({
     right: 0,
     backgroundColor: "#7D9C65",
     height: "55%", // Set the height to 55% of the image container
-    padding: wp("4%"),
-  },
-  eventTitle: {
-    fontFamily: "montserrat-bold",
-    fontSize: wp("8%"),
-    color: "#FFFFFF",
-    marginBottom: hp("2%"),
-  },
-  eventDescription: {
-    fontFamily: "montserrat-regular",
-    marginBottom: hp("2%"),
-    fontSize: wp("4%"),
-    color: "#333333",
+    padding: wp("5%"),
   },
   joinUsContainer: {},
   joinUsTitle: {
@@ -185,21 +306,15 @@ const styles = StyleSheet.create({
   dateTimeContainer: {
     position: "absolute",
     bottom: wp("99%"),
+    height: hp("12%"),
     left: 0,
     right: 0,
-    flexDirection: "row",
-    justifyContent: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.8)",
-    alignItems: "center",
-    padding: wp("2%"),
+    // flexDirection: "row",
+    // justifyContent: "",
+    // backgroundColor: "rgba(255, 255, 255, 0.8)",
+    // alignItems: "center",
+    padding: wp("5%"),
   },
-  locationContainer: {
-    flexDirection: "row",
-    justifyContent: "left",
-    alignItems: "left",
-    padding: wp("2%"),
-  },
-
   attendeesButton: {
     backgroundColor: "#FFFFFF",
     borderRadius: 20,
@@ -215,30 +330,30 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   dateIcon: {
-    fontSize: wp("8%"),
-    color: "#7D9C65",
+    fontSize: wp("3.5%"),
+    color: "white",
   },
   timeIcon: {
     marginLeft: wp("2%"),
-    fontSize: wp("8%"),
-    color: "#7D9C65",
+    fontSize: wp("3.5%"),
+    color: "white",
   },
   locationIcon: {
     fontSize: wp("5%"),
     color: "#Ffffff",
   },
-  locationText: {
-    fontFamily: "montserrat-bold",
-    fontSize: wp("4%"),
-    marginLeft: wp("1%"),
-    color: "#Ffffff",
-  },
-  dateTimeText: {
-    fontFamily: "montserrat-bold",
-    fontSize: wp("4%"),
-    marginLeft: wp("1%"),
-    color: "#7D9C65",
-  },
+  // locationText: {
+  //   fontFamily: "montserrat-bold",
+  //   fontSize: wp("4%"),
+  //   marginLeft: wp("1%"),
+  //   color: "#Ffffff",
+  // },
+  // dateTimeText: {
+  //   fontFamily: "montserrat-bold",
+  //   fontSize: wp("4%"),
+  //   marginLeft: wp("1%"),
+  //   color: "white",
+  // },
   trashIconContainer: {
     position: "absolute",
     top: wp("6%"), // Adjust the top position as needed

@@ -2,7 +2,13 @@ import React, { useState } from "react";
 import { Dropdown } from "react-native-element-dropdown";
 import { globalStyles } from "../styles/globalStyles";
 
-const DropdownComponent = ({ data, value: initialValue, style, ...props }) => {
+const DropdownComponent = ({
+  data,
+  value: initialValue,
+  style,
+  onChange,
+  ...props
+}) => {
   const [value, setValue] = useState(initialValue);
   const [isFocus, setIsFocus] = useState(false);
 
@@ -35,12 +41,19 @@ const DropdownComponent = ({ data, value: initialValue, style, ...props }) => {
       labelField={props.labelField}
       valueField={props.valueField}
       value={value}
-      onChange={(item) => {
-        setValue(item.value);
-      }}
+      // onChange={(item) => {
+      //   setValue(item.value);
+      // }}
       maxHeight={"60%"}
       onFocus={() => setIsFocus(true)}
       onBlur={() => setIsFocus(false)}
+      onChange={(item) => {
+        setValue(item.value);
+        // Call the onChange prop with the selected item
+        if (onChange) {
+          onChange(item.value);
+        }
+      }}
     />
   );
 };

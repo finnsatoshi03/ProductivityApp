@@ -65,7 +65,7 @@ export default function sideBar({
     } else {
       slideOut();
     }
-  }, [isVisible]);
+  }, []);
 
   const handleLogout = () => {
     logout()

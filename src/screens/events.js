@@ -65,21 +65,7 @@ export default function EventsScreen({ navigation, data }) {
       const user = await getUser();
       setUserData(user);
     };
-    const fetchEventsData = async () => {
-      try {
-        const response = await axios.get(`${global.baseurl}:4000/getEvents`)
-
-        if (response.status === 200) {
-          const { data } = response;
-          const events = data.events;          
-          setEventData(events)
-        }
-      } catch (error) {
-        console.log(error);
-      }
-      
-    }
-    fetchEventsData()
+    
     fetchUserData();
   }, []);
   
@@ -174,8 +160,8 @@ export default function EventsScreen({ navigation, data }) {
   };
   
   const deleteEvent = (eventTitleToDelete) => {
-    setEventData((prevEvents) =>
-      prevEvents.filter((event) => event.event !== eventTitleToDelete)
+    setEventData(
+      eventData.filter((event) => event.event !== eventTitleToDelete)
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
@@ -399,16 +385,14 @@ export default function EventsScreen({ navigation, data }) {
                   />
                 </Pressable>
                 <View>
-                  {participantNames.length > 0 && (
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.semiBold,
-                        fontSize: globalStyles.fontSize.description,
-                      }}
-                    >
-                      {participantNames}
-                    </Text>
-                  )}
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.semiBold,
+                      fontSize: globalStyles.fontSize.description,
+                    }}
+                  >
+                    {participantNames}
+                  </Text>
                 </View>
               </View>
 
@@ -572,7 +556,6 @@ export default function EventsScreen({ navigation, data }) {
               <Participants
                 onParticipantsSelected={(selectedParticipants) => {
                   
-
                   if (selectedParticipants.length > 0) {                    
                     const { idString, names } = selectedParticipants.reduce((acc, participant, index) => {
                       acc.idString += participant.id;
@@ -582,7 +565,6 @@ export default function EventsScreen({ navigation, data }) {
                         acc.idString += ', ';
                         acc.names += ', ';
                       }
-
                       return acc;
                     }, { idString: '', names: '' });
                     setParticipantNames(names); // Update the participantNames state
@@ -594,7 +576,6 @@ export default function EventsScreen({ navigation, data }) {
                     console.log("No Participants Selected");
                   }
                 }}
-                onBack={() => setNewModalVisible(false)}
               />
             </View>
           </Modal>

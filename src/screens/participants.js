@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Text,
   View,
@@ -31,27 +31,27 @@ export default function Participants({
 }) {
   const [data, setData] = useState([]);
   
-  const retrieveUsers = async () => {
-    
-    try {
-      const response = await axios.get(`${global.baseurl}:4000/getUsers`)
+  useEffect(() => {
+    const retrieveUsers = async () => {
       
-      if (response.status === 200) {
-       // Assuming your server responds with the 'users' data in the response
-        const { data } = response;
-        const users = data.users;
+      try {
+        const response = await axios.get(`${global.baseurl}:4000/retrieveVUsers`)
         
-        setData(users)
-      } else {
-        console.log('error');
+        if (response.status === 200) {
+        // Assuming your server responds with the 'users' data in the response
+          const { data } = response;
+          const users = data.users;
+          
+          setData(users)
+        } else {
+          console.log('error');
+        }
+      } catch (error) {
+        console.log(error);
       }
-    } catch (error) {
-      console.log(error);
     }
-  }
-
-  retrieveUsers()
-
+    retrieveUsers()
+  }, []);
   const [searchTerm, setSearchTerm] = useState("");
   const [participants, setParticipants] = useState([]);
 

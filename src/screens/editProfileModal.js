@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Pressable, Platform } from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
@@ -18,8 +18,14 @@ import { Authentication } from "../Auth/Authentication";
 
 import '../../global'
 
-export default function EditProfile({ username, email, number, navigation }) {
+export default function EditProfile({ username, email, number, navigation }) {  
 
+  const {getUser} = Authentication()
+  const [userData, setUserData] = useState({
+    fullname: '',
+    role: '',
+    user_id: ''
+  });
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isModalVisible, setModalVisible] = useState(true);
   const [usernamefield, setUsername] = useState('')
@@ -27,12 +33,20 @@ export default function EditProfile({ username, email, number, navigation }) {
   const [contactfield, setContact] = useState('')
   const [img, setImg] = useState('')
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+    };
+
+    fetchUserData();
+  }, []); 
+
   const hideModal = () => {
-    setModalVisible(false);
-    onSubmit();
+    setModalVisible(false);    
     navigation.goBack();
   };
-
+  console.log(userData.user_id);
   const onSubmit = async (values) => {
   
     const data = {
@@ -40,9 +54,12 @@ export default function EditProfile({ username, email, number, navigation }) {
       username: usernamefield,
       email: emailfield,
       contact: contactfield, 
+      user_id: userData.user_id
     }
+    
     try {      
-      let baseurl = `${global.baseurl}:4000/editUser`;
+      let baseurl = userData.role === 'admin' ? `${global.baseurl}:4000/editAdmin` : `${global.baseurl}:4000/editUser`;
+      console.log(baseurl);
       const response = await axios.patch(baseurl, data);
 
       if (response.status === 200) {        
@@ -166,7 +183,7 @@ export default function EditProfile({ username, email, number, navigation }) {
               marginTop: 30,
             }}
           >
-            <Button width={wp("50%")} text={"Update"} />
+            <Button width={wp("50%")} text={"Update"} onPress={onSubmit}/>
             <Button
               width={wp("22%")}
               text={"Discard"}
