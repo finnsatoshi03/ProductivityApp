@@ -111,6 +111,10 @@ export default function EventsScreen({ navigation, data }) {
     setEventData([...eventData, newEvent]);
     setBottomSheetVisible(true);
 
+    // Clear participants state after creating a new event
+    setParticipants([]);
+    setParticipantNames("");
+
     Alert.alert(
       "Event Created",
       "Your event has been successfully created!",
@@ -128,8 +132,8 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   const deleteEvent = (eventTitleToDelete) => {
-    setEventData(
-      eventData.filter((event) => event.event !== eventTitleToDelete)
+    setEventData((prevEvents) =>
+      prevEvents.filter((event) => event.event !== eventTitleToDelete)
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
@@ -353,14 +357,16 @@ export default function EventsScreen({ navigation, data }) {
                   />
                 </Pressable>
                 <View>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.description,
-                    }}
-                  >
-                    {participantNames}
-                  </Text>
+                  {participantNames.length > 0 && (
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.description,
+                      }}
+                    >
+                      {participantNames}
+                    </Text>
+                  )}
                 </View>
               </View>
 
