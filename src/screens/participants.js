@@ -105,7 +105,6 @@ export default function Participants({
   };
 
   useEffect(() => {
-    // NEW: Remove participants already added to the event
     const filteredData = data.filter(
       (participant) =>
         !addedParticipants.some((added) => added.name === participant.name)
@@ -178,7 +177,7 @@ export default function Participants({
             onPress={addParticipants}
             fnc={"press"}
           />
-          <Button text={"Remove"} />
+          {/* <Button text={"Remove"} /> */}
         </View>
       </View>
     </View>

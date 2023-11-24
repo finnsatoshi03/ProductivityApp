@@ -119,6 +119,7 @@ export default function EventsScreen({ navigation, data }) {
     setParticipantNames("");
     setLocation("");
     setDescription("");
+    setAddedParticipants([]);
 
     Alert.alert(
       "Event Created",
