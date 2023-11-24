@@ -101,7 +101,7 @@ export default function profileCard({
                 color: "white",
               }}
             >
-              {name}
+              {fullname}
             </Text>
           ) : (
             <>
