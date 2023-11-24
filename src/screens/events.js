@@ -57,6 +57,8 @@ export default function EventsScreen({ navigation, data }) {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
+  const [addedParticipants, setAddedParticipants] = useState([]);
+
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getUser();
@@ -117,6 +119,7 @@ export default function EventsScreen({ navigation, data }) {
     setParticipantNames("");
     setLocation("");
     setDescription("");
+    setAddedParticipants([]);
 
     Alert.alert(
       "Event Created",
@@ -521,7 +524,10 @@ export default function EventsScreen({ navigation, data }) {
           </Modal>
           <Modal
             isVisible={isNewModalVisible}
-            onBackdropPress={() => setNewModalVisible(false)}
+            onBackdropPress={() => {
+              setNewModalVisible(false);
+              setAddedParticipants([]);
+            }}
           >
             <View
               style={{
@@ -539,6 +545,12 @@ export default function EventsScreen({ navigation, data }) {
                     selectedParticipants
                   );
 
+                  // NEW: Update added participants
+                  setAddedParticipants([
+                    ...addedParticipants,
+                    ...selectedParticipants,
+                  ]);
+
                   if (selectedParticipants.length > 0) {
                     const names = selectedParticipants
                       .map((participant) => participant.name)
@@ -552,6 +564,7 @@ export default function EventsScreen({ navigation, data }) {
                     console.log("No Participants Selected");
                   }
                 }}
+                addedParticipants={addedParticipants} // NEW: Pass added participants
               />
             </View>
           </Modal>

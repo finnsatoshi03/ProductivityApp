@@ -1,28 +1,18 @@
-import React, { useState, useRef } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-  Image,
-  Animated,
-} from "react-native";
-import LottieView from "lottie-react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { Text, View, Pressable, Animated } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
 import Searchbar from "./../components/searchbar";
-import CalendarWidget from "./../components/calendarComponent";
 import ListView from "./../components/listView";
 import Profiles from "./../components/profileCard";
-import Navbar from "./../Layout/navbar";
 import Button from "./../components/button";
 
 export default function Participants({
   navigation,
   onParticipantsSelected,
   onBack,
+  addedParticipants,
 }) {
   const [data, setData] = useState([
     {
@@ -101,15 +91,26 @@ export default function Participants({
   };
 
   const addParticipants = () => {
-    // Do something with the selected participants
-    console.log("Selected Participants: ", participants);
+    // Merge the past added participants with the newly added participants
+    const mergedParticipants = [...participants, ...addedParticipants];
 
-    // Call the callback function with the selected participants
-    onParticipantsSelected(participants);
+    // Do something with the merged participants
+    console.log("All Participants: ", mergedParticipants);
+
+    // Call the callback function with the merged participants
+    onParticipantsSelected(mergedParticipants);
 
     // Reset the participants state if needed
     setParticipants([]);
   };
+
+  useEffect(() => {
+    const filteredData = data.filter(
+      (participant) =>
+        !addedParticipants.some((added) => added.name === participant.name)
+    );
+    setData(filteredData);
+  }, [addedParticipants]);
 
   return (
     <View styles={globalStyles.container}>
@@ -176,7 +177,7 @@ export default function Participants({
             onPress={addParticipants}
             fnc={"press"}
           />
-          <Button text={"Remove"} />
+          {/* <Button text={"Remove"} /> */}
         </View>
       </View>
     </View>
