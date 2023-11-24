@@ -111,6 +111,9 @@ export default function EventsScreen({ navigation, data }) {
     setEventData([...eventData, newEvent]);
     setBottomSheetVisible(true);
 
+    setParticipants([]);
+    setParticipantNames("");
+
     Alert.alert(
       "Event Created",
       "Your event has been successfully created!",
@@ -128,8 +131,8 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   const deleteEvent = (eventTitleToDelete) => {
-    setEventData(
-      eventData.filter((event) => event.event !== eventTitleToDelete)
+    setEventData((prevEvents) =>
+      prevEvents.filter((event) => event.event !== eventTitleToDelete)
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
