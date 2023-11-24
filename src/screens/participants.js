@@ -91,11 +91,14 @@ export default function Participants({
   };
 
   const addParticipants = () => {
-    // Do something with the selected participants
-    console.log("Selected Participants: ", participants);
+    // Merge the past added participants with the newly added participants
+    const mergedParticipants = [...participants, ...addedParticipants];
 
-    // Call the callback function with the selected participants
-    onParticipantsSelected(participants);
+    // Do something with the merged participants
+    console.log("All Participants: ", mergedParticipants);
+
+    // Call the callback function with the merged participants
+    onParticipantsSelected(mergedParticipants);
 
     // Reset the participants state if needed
     setParticipants([]);
