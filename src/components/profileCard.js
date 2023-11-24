@@ -23,6 +23,8 @@ export default function profileCard({
   const progress = useRef(new Animated.Value(0)).current;
   const [clickCount, setClickCount] = useState(0);
 
+  const nameParts = name.split(" ");
+
   // useEffect(() => {
   //   if (!isPlusButtonTriggered) {
   //     setClickCount(0);
@@ -96,8 +98,20 @@ export default function profileCard({
               color: "white",
             }}
           >
-            {name}
+            {nameParts[0]}
           </Text>
+          {nameParts[1] && (
+            <Text
+              style={{
+                fontFamily: globalStyles.fontStyle.regular,
+                fontSize: globalStyles.fontSize.description,
+                color: "white",
+                lineHeight: 15,
+              }}
+            >
+              {nameParts[1]}
+            </Text>
+          )}
           {date && (
             <Text
               style={{
