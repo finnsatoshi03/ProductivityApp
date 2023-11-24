@@ -65,7 +65,8 @@ const ViewEvent = ({ route, navigation }) => {
   };
 
   const removeParticipant = () => {
-    console.log(selectedParticipant);
+    
+    console.log(selectedParticipant.id);
     // if (selectedParticipant) {
     //   const updatedParticipants = participants
     //     .split(", ")
