@@ -99,7 +99,7 @@ export default function SignupForm({ navigation }) {
                 justifyContent: "space-between",
               }}
             >
-              <Pressable onPress={() => navigation.navigate("Homepage")}>
+              <Pressable onPress={() => navigation.goBack()}>
                 <Image
                   style={{ height: hp("4%"), width: hp("4%") }}
                   source={require("../../../assets/back.png")}
