@@ -524,7 +524,10 @@ export default function EventsScreen({ navigation, data }) {
           </Modal>
           <Modal
             isVisible={isNewModalVisible}
-            onBackdropPress={() => setNewModalVisible(false)}
+            onBackdropPress={() => {
+              setNewModalVisible(false);
+              setAddedParticipants([]);
+            }}
           >
             <View
               style={{
