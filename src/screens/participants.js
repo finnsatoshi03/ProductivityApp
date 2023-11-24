@@ -161,7 +161,6 @@ export default function Participants({
                 {...item}
                 // isPlusButtonTriggered={isPlusButtonTriggered}
                 onParticipantSelect={handleParticipantSelection}
-                onRemoveParticipant={handleRemoveParticipant}
               />
             )}
             keyExtractor={(item) => item.name}
@@ -177,6 +176,7 @@ export default function Participants({
             onPress={addParticipants}
             fnc={"press"}
           />
+          <Button text={"Remove"} />
         </View>
       </View>
     </View>
