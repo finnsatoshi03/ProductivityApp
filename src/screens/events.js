@@ -61,7 +61,9 @@ export default function EventsScreen({ navigation, data }) {
   const [description, setDescription] = useState("");
 
   const [addedParticipants, setAddedParticipants] = useState([]);
-
+  const [btnFnc, setBtnFnc] = useState('create')
+  const [selectedEvent, setSelectedEvent] = useState('')
+  
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getUser();
@@ -94,6 +96,7 @@ export default function EventsScreen({ navigation, data }) {
     location,
     description
   ) => {
+    
     const newEvent = {
       dateTime: `${startDate.toLocaleDateString("en-GB", {
         day: "numeric",
@@ -108,12 +111,12 @@ export default function EventsScreen({ navigation, data }) {
       location: location,
       participants: participants,
       description: description,
+      event_id: selectedEvent === '' ? null : selectedEvent
     };
-
     
-    try {
-      
-      const response = await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
+            
+    try {      
+      const response = btnFnc === 'create' ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent) : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent)
       
       if (response.status === 200) {
         const { data } = response
@@ -122,15 +125,15 @@ export default function EventsScreen({ navigation, data }) {
         const userEvent = {
           user_ids,
           event_id
-        }
-
-        const request = await axios.post(`${global.baseurl}:4000/addParticipant`, userEvent)
+        }                   
+        const request = btnFnc === 'create' ? await axios.post(`${global.baseurl}:4000/addParticipant`, userEvent) : await axios.put(`${global.baseurl}:4000/updateParticipants`, userEvent)
 
         if (request.status === 200) {
           console.log('SUCCSESESE');
         } else {
           console.log('NOT SUCESESES');
-        }        
+        }  
+
       } else {
         console.log("NOOOO");
       }
@@ -145,6 +148,8 @@ export default function EventsScreen({ navigation, data }) {
     setLocation("");
     setDescription("");
     setAddedParticipants([]);
+    setLocation("");
+    setDescription("");
 
       Alert.alert(
         "Event Created",
@@ -164,6 +169,11 @@ export default function EventsScreen({ navigation, data }) {
       console.log(error);
     } 
   };
+
+  const handleCreateEvent = () => {    
+    setBottomSheetVisible(true)
+    setBtnFnc('create')
+  }
   
   const deleteEvent = (eventTitleToDelete) => {
     setEventData((prevEvents) =>
@@ -171,6 +181,59 @@ export default function EventsScreen({ navigation, data }) {
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
+
+  const getParticipants = async (event_id) => {
+
+    try {
+    
+      const response = await axios.get(`${global.baseurl}:4000/getParticipant`, {
+        params: {
+          event_id: event_id,
+        },
+      });
+
+      if (response.status === 200) {
+        const { data } = response
+        const users = data.users
+        
+        // clear it first
+        setParticipantNames("")
+        setParticipants([]);
+
+        // Extract names and IDs from users
+        const participantNames = users.map(user => user.fullname);
+        const participantIds = users.map(user => user.id);
+
+        // Set the participant data in the state
+        setParticipantNames(participantNames.join(', '));
+        setParticipants(participantIds);
+
+        console.log('sucess');
+
+      } else {
+        console.log('no');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+  }
+  
+  const handleEditEvent = (event) => {
+    setBottomSheetVisible(true)
+    setBtnFnc('edit')
+    setSelectedEvent(event.id)    
+    
+    getParticipants(event.id)    
+    // setParticipantNames(event.)
+    const dateTime =  new Date(event.datetime);
+    
+    handleDateTimeConfirm(dateTime,'date')
+    setEventTitle(event.event)
+    setLocation(event.location)
+    setDescription(event.description)
+    
+  }
 
   const closeBottomSheet = () => {
     setBottomSheetVisible(false);
@@ -195,6 +258,7 @@ export default function EventsScreen({ navigation, data }) {
 
   // Update the handleDateTimeConfirm function
   const handleDateTimeConfirm = (date, type) => {
+    console.log(date);
     if (type === "date") {
       setStartDate(date);
       hideDatePicker();
@@ -309,7 +373,7 @@ export default function EventsScreen({ navigation, data }) {
           </View>
           {userData.role === "admin" ? (
             <Pressable
-              onPress={() => setBottomSheetVisible(true)}
+              onPress={handleCreateEvent}
               style={{
                 backgroundColor: globalStyles.colors.darkGreen,
                 paddingVertical: 20,
@@ -338,7 +402,7 @@ export default function EventsScreen({ navigation, data }) {
             </>
           )}
 
-          {/* BOTTOM SHEET */}
+          {/* BOTTOM SHEET*/}
           <Modal
             isVisible={isBottomSheetVisible}
             onBackdropPress={closeBottomSheet}
@@ -348,7 +412,210 @@ export default function EventsScreen({ navigation, data }) {
             }}
           >
             {/* Content of the bottom sheet */}
-            <View
+            {btnFnc === 'create' ? (
+              <View
+                style={{
+                  backgroundColor: globalStyles.colors.green,
+                  padding: 40,
+                  borderTopLeftRadius: 20,
+                  borderTopRightRadius: 20,
+                }}
+              >
+                <TextInput
+                  placeholder="Name of the event"
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: globalStyles.fontSize.subHeader,
+                    color: "black",
+                  }}
+                  placeholderTextColor="rgba(0,0,0,0.5)"
+                  paddingVertical={10}
+                  onChangeText={(text) => {                  
+                    setEventTitle(text);
+                  }}
+                />
+                <View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    Invite Participants
+                  </Text>
+                  <Pressable onPress={() => setNewModalVisible(true)}>
+                    <Image
+                      style={{
+                        height: hp("3.5%"),
+                        width: hp("3.5%"),
+                        borderRadius: hp("3.5%") / 2,
+                        opacity: 0.5,
+                      }}
+                      source={require("./../../assets/add-dotted.png")}
+                    />
+                  </Pressable>
+                  {participantNames.length > 0 && (
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: globalStyles.fontStyle.semiBold,
+                          fontSize: globalStyles.fontSize.description,
+                        }}
+                      >
+                        {participantNames}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+
+                <View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    Select Date & Time
+                  </Text>
+                  <Pressable onPress={showDatePicker}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.bold,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`Date: `}</Text>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`${startDate.toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}`}</Text>
+                  </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="date"
+                    onConfirm={(date) => handleDateTimeConfirm(date, "date")}
+                    onCancel={hideDatePicker}
+                  />
+                  <Pressable onPress={showTimePicker}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.bold,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`Time: `}</Text>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`${endDate.toLocaleTimeString("en-GB", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}`}</Text>
+                  </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isTimePickerVisible}
+                    mode="time"
+                    onConfirm={(date) => handleDateTimeConfirm(date, "time")}
+                    onCancel={hideTimePicker}
+                  />
+                </View>
+                <View View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                      marginBottom: -7,
+                    }}
+                  >
+                    Choose Location
+                  </Text>
+                  <TextInput
+                    placeholder="Where is the event?"
+                    style={{
+                      fontFamily: globalStyles.fontStyle.semiBold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                    placeholderTextColor={"rgba(0,0,0,0.5)"}
+                    onChangeText={(text) => {                    
+                      setLocation(text);
+                    }}
+                  />
+                </View>
+                <View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                      marginBottom: -7,
+                    }}
+                  >
+                    Write a description
+                  </Text>
+                  <TextInput
+                    placeholder="Message.."
+                    style={{
+                      fontFamily: globalStyles.fontStyle.semiBold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                    placeholderTextColor={"rgba(0,0,0,0.5)"}
+                    onChangeText={(text) => {                    
+                      setDescription(text);
+                    }}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginVertical: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  
+                  <Button
+                    text={"Create Event"}
+                    width={wp("55%")}
+                    fnc={"press"}
+                    onPress={() =>
+                      addEvent(
+                        eventTitle,
+                        participants,
+                        startDate,
+                        endDate,
+                        location,
+                        description
+                      )
+                    }
+                  />
+                                                                 
+                  <Button
+                    text={"Cancel"}
+                    width={wp("23%")}
+                    bgColor="rgba(0,0,0,0.3)"
+                    textColor="#9198bc"
+                    onPress={closeBottomSheet}
+                    fnc={"press"}
+                  />
+                </View>
+              </View>
+            ) : (
+              <View
               style={{
                 backgroundColor: globalStyles.colors.green,
                 padding: 40,
@@ -368,6 +635,7 @@ export default function EventsScreen({ navigation, data }) {
                 onChangeText={(text) => {                  
                   setEventTitle(text);
                 }}
+                value={eventTitle}
               />
               <View style={{ paddingVertical: 10 }}>
                 <Text
@@ -488,6 +756,7 @@ export default function EventsScreen({ navigation, data }) {
                   onChangeText={(text) => {                    
                     setLocation(text);
                   }}
+                  value={location}
                 />
               </View>
               <View style={{ paddingVertical: 10 }}>
@@ -512,6 +781,7 @@ export default function EventsScreen({ navigation, data }) {
                   onChangeText={(text) => {                    
                     setDescription(text);
                   }}
+                  value={description}
                 />
               </View>
               <View
@@ -523,7 +793,7 @@ export default function EventsScreen({ navigation, data }) {
                 }}
               >
                 <Button
-                  text={"Create Event"}
+                  text={"Edit Event"}
                   width={wp("55%")}
                   fnc={"press"}
                   onPress={() =>
@@ -536,7 +806,7 @@ export default function EventsScreen({ navigation, data }) {
                       description
                     )
                   }
-                />
+                />               
                 <Button
                   text={"Cancel"}
                   width={wp("23%")}
@@ -546,7 +816,8 @@ export default function EventsScreen({ navigation, data }) {
                   fnc={"press"}
                 />
               </View>
-            </View>
+              </View>
+            )}
           </Modal>
           <Modal
             isVisible={isNewModalVisible}
@@ -613,7 +884,7 @@ export default function EventsScreen({ navigation, data }) {
               <ListView
                 data={eventData}
                 renderItem={({ item }) => (
-                  <Events {...item} onDelete={() => deleteEvent(item.event)} />
+                  <Events {...item} onDelete={() => deleteEvent(item.event)} onEdit={() => handleEditEvent(item)}/>
                 )}
               />
             )}
