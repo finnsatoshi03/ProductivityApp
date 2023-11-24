@@ -62,7 +62,7 @@ export default function eventCard({
   
     return `${datePart} ${timePart}`;
   }
-
+  
   datetime =  formatDateTime(datetime);
   
   const viewEvent = () => {

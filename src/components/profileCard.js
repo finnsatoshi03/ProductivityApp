@@ -52,7 +52,7 @@ export default function profileCard({
       useNativeDriver: true,
     }).start();
 
-    onParticipantSelect({ avatar, name, date });
+    onParticipantSelect({ avatar, fullname, id });
     // if (isPlusButtonTriggered) {
     //   // Call the callback with participant information
     // }
@@ -104,7 +104,7 @@ export default function profileCard({
           style={{ width: 50, height: 50 }}
         />
       </TouchableOpacity>
-      {showViewIcon ? (
+      { !verify ? (
         <Image
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
