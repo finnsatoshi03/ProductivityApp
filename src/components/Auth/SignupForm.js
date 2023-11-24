@@ -12,29 +12,28 @@ import Label from "../globalLabel";
 import VerifyButton from "../button";
 
 import axios from "axios";
-import '../../../global'
+import "../../../global";
 export default function SignupForm({ navigation }) {
   const [formdata, setData] = useState({
-      username: '',
-      password: '',
-      fullname: '',
-      employment_id: '',
-      office: '',
-      email: '',
-      contact: '',
+    username: "",
+    password: "",
+    fullname: "",
+    employment_id: "",
+    office: "",
+    email: "",
+    contact: "",
   });
 
-  
   const [selectedValue, setSelectedValue] = useState(null);
   const data = [
-    { label: "Item 1", value: "1" },
-    { label: "Item 2", value: "2" },
-    { label: "Item 3", value: "3" },
-    { label: "Item 4", value: "4" },
-    { label: "Item 5", value: "5" },
-    { label: "Item 6", value: "6" },
-    { label: "Item 7", value: "7" },
-    { label: "Item 8", value: "8" },
+    { label: "Department of Health", value: "health" },
+    { label: "Department of Education", value: "education" },
+    { label: "Department of Defense", value: "defense" },
+    { label: "Department of Justice", value: "justice" },
+    { label: "Department of Agriculture", value: "agriculture" },
+    { label: "Department of Commerce", value: "commerce" },
+    { label: "Department of Labor", value: "labor" },
+    { label: "Department of Homeland Security", value: "homeland_security" },
   ];
 
   const SignUpLabel = ({ text }) => (
@@ -60,16 +59,15 @@ export default function SignupForm({ navigation }) {
 
     let baseurl = `${global.baseurl}:4000/register`;
     try {
-      const response = await axios.post(baseurl,formdata);
+      const response = await axios.post(baseurl, formdata);
 
       if (response.status === 200) {
-        console.log('success');
+        console.log("success");
       }
-
-    }catch (error) {
+    } catch (error) {
       console.log(error);
     }
-  }
+  };
   return (
     <View style={globalStyles.container}>
       <View style={{ flex: 1 }}>
@@ -78,7 +76,7 @@ export default function SignupForm({ navigation }) {
           style={{
             zIndex: 2,
             flexDirection: "row",
-            // paddingVertical: 30,
+            paddingVertical: 30,
             justifyContent: "space-between",
           }}
         >
@@ -115,7 +113,7 @@ export default function SignupForm({ navigation }) {
             maxWidth={true}
             margin={true}
             value={formdata.username}
-            onChangeText={(value) => handleInputChange('username', value)}
+            onChangeText={(value) => handleInputChange("username", value)}
           />
           <SignUpLabel text="Password" />
           <InputFields
@@ -124,7 +122,7 @@ export default function SignupForm({ navigation }) {
             secureTextEntry={true}
             margin={true}
             value={formdata.password}
-            onChangeText={(value) => handleInputChange('password', value)}
+            onChangeText={(value) => handleInputChange("password", value)}
           />
           <SignUpLabel text="Fullname" />
           <InputFields
@@ -132,7 +130,7 @@ export default function SignupForm({ navigation }) {
             maxWidth={true}
             margin={true}
             value={formdata.fullname}
-            onChangeText={(value) => handleInputChange('fullname', value)}
+            onChangeText={(value) => handleInputChange("fullname", value)}
           />
           <SignUpLabel text="Employment ID" />
           <InputFields
@@ -140,7 +138,7 @@ export default function SignupForm({ navigation }) {
             maxWidth={true}
             margin={true}
             value={formdata.employment_id}
-            onChangeText={(value) => handleInputChange('employment_id', value)}
+            onChangeText={(value) => handleInputChange("employment_id", value)}
           />
           <SignUpLabel text="Designated Office" />
           <InputFields
@@ -150,7 +148,7 @@ export default function SignupForm({ navigation }) {
             margin={true}
             placeholder={"Your office location"}
             value={formdata.office}
-            onChangeText={(value) => handleInputChange('office', value)}
+            onChangeText={(value) => handleInputChange("office", value)}
           />
           <View
             style={{
@@ -166,7 +164,7 @@ export default function SignupForm({ navigation }) {
                 placeholder="Your email address"
                 noWidth={wp("43%")}
                 value={formdata.email}
-              onChangeText={(value) => handleInputChange('email', value)}
+                onChangeText={(value) => handleInputChange("email", value)}
               />
             </View>
             <View style={{ flex: 1 }}>
@@ -175,13 +173,17 @@ export default function SignupForm({ navigation }) {
                 placeholder="Your contact number"
                 noWidth={wp("43%")}
                 value={formdata.contact}
-              onChangeText={(value) => handleInputChange('contact', value)}
+                onChangeText={(value) => handleInputChange("contact", value)}
               />
             </View>
           </View>
         </View>
-        <View style={{ zIndex: 4 }}>
-          <VerifyButton text="VERIFY ACCOUNT" onPress={onSubmit} fnc={'press'}/>
+        <View style={{ zIndex: 4, marginTop: 30 }}>
+          <VerifyButton
+            text="VERIFY ACCOUNT"
+            onPress={onSubmit}
+            fnc={"press"}
+          />
           <View
             style={{
               flexDirection: "row",
