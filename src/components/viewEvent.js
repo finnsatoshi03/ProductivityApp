@@ -23,7 +23,7 @@ import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 
 const ViewEvent = ({ route, navigation }) => {
-  const { title, location, description, dateTime, joinReasons, id } = route.params;
+  const { title, location, description, dateTime, joinReasons, id, participants } = route.params;
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
   const [isParticipantsModalVisible, setParticipantsModalVisible] = useState(false);
@@ -53,6 +53,7 @@ const ViewEvent = ({ route, navigation }) => {
   const hideParticipantsModal = () => {
     setParticipantsModalVisible(false);
   };
+  console.log(dateTime);
   const dateTimeArray = dateTime.split(' ');
   const date = dateTimeArray.slice(0, 3).join(' ');
   const time = dateTimeArray.slice(3).join(' ');
@@ -293,7 +294,7 @@ const ViewEvent = ({ route, navigation }) => {
           </View>
           <View style={{ height: hp("59%"), marginBottom: hp("1%") }}>
             <ListView
-              data={participants.split(", ")}
+              data={participants}
               renderItem={({ item }) => (
                 <ProfileCard
                   name={item}

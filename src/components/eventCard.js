@@ -64,7 +64,7 @@ export default function eventCard({
   }
 
   datetime =  formatDateTime(datetime);
-  
+  console.log(datetime);
   const viewEvent = () => {
     navigation.navigate("ViewEvent", {
       title: event,
