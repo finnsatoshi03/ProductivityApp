@@ -81,11 +81,11 @@ export default function Participants({
   });
 
   const [isAddTriggered, setIsAddTriggered] = useState(false);
-  const [isPlusButtonTriggered, setIsPlusButtonTriggered] = useState(false);
+  // const [isPlusButtonTriggered, setIsPlusButtonTriggered] = useState(false);
 
   const handleAddButtonClick = () => {
     setIsAddTriggered(!isAddTriggered);
-    setIsPlusButtonTriggered(true);
+    // setIsPlusButtonTriggered(true);
 
     Animated.timing(rotate, {
       toValue: isAddTriggered ? 0 : 1,
@@ -159,7 +159,7 @@ export default function Participants({
             renderItem={({ item }) => (
               <Profiles
                 {...item}
-                isPlusButtonTriggered={isPlusButtonTriggered}
+                // isPlusButtonTriggered={isPlusButtonTriggered}
                 onParticipantSelect={handleParticipantSelection}
               />
             )}

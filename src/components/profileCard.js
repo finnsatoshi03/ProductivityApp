@@ -17,17 +17,16 @@ export default function profileCard({
   name,
   date,
   showViewIcon,
-  isPlusButtonTriggered,
   onParticipantSelect,
 }) {
   const progress = useRef(new Animated.Value(0)).current;
   const [clickCount, setClickCount] = useState(0);
 
-  useEffect(() => {
-    if (!isPlusButtonTriggered) {
-      setClickCount(0);
-    }
-  }, [isPlusButtonTriggered]);
+  // useEffect(() => {
+  //   if (!isPlusButtonTriggered) {
+  //     setClickCount(0);
+  //   }
+  // }, [isPlusButtonTriggered]);
 
   const handlePress = () => {
     setClickCount((prevCount) => prevCount + 1);
@@ -51,10 +50,10 @@ export default function profileCard({
       useNativeDriver: true,
     }).start();
 
-    if (isPlusButtonTriggered) {
-      // Call the callback with participant information
-      onParticipantSelect({ avatar, name, date });
-    }
+    onParticipantSelect({ avatar, name, date });
+    // if (isPlusButtonTriggered) {
+    //   // Call the callback with participant information
+    // }
   };
 
   return (
@@ -95,16 +94,15 @@ export default function profileCard({
           )}
         </View>
       </View>
-      {isPlusButtonTriggered ? (
-        <TouchableOpacity onPress={handlePress}>
-          <LottieView
-            progress={progress}
-            source={require("./../../assets/checkbox.json")}
-            loop={false}
-            style={{ width: 50, height: 50 }}
-          />
-        </TouchableOpacity>
-      ) : showViewIcon ? (
+      <TouchableOpacity onPress={handlePress}>
+        <LottieView
+          progress={progress}
+          source={require("./../../assets/checkbox.json")}
+          loop={false}
+          style={{ width: 50, height: 50 }}
+        />
+      </TouchableOpacity>
+      {showViewIcon ? (
         <Image
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
