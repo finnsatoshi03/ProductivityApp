@@ -31,8 +31,7 @@ export default function UserControl({ navigation }) {
     office:"",
     password:"",
     username:"",
-    contact:"",
-
+    contact:"",    
   })
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);

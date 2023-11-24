@@ -59,6 +59,8 @@ export default function EventsScreen({ navigation, data }) {
   const [participantNames, setParticipantNames] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+
+  const [addedParticipants, setAddedParticipants] = useState([]);
   const [btnFnc, setBtnFnc] = useState('create')
   const [selectedEvent, setSelectedEvent] = useState('')
   
@@ -136,31 +138,33 @@ export default function EventsScreen({ navigation, data }) {
         console.log("NOOOO");
       }
 
-      setEventData([...eventData, newEvent]);
-      setBottomSheetVisible(true);
+    setEventData([...eventData, newEvent]);
+    setBottomSheetVisible(true);
 
-      // Reset the states
-      setEventTitle("");
-      setParticipants([]);
-      setParticipantNames("");
-      setLocation("");
-      setDescription("");
+    // Reset the states
+    setEventTitle("");
+    setParticipants([]);
+    setParticipantNames("");
+    setLocation("");
+    setDescription("");
+    setAddedParticipants([]);
+    setLocation("");
+    setDescription("");
 
-   
-      // Alert.alert(
-      //   "Event Created",
-      //   "Your event has been successfully created!",
-      //   [
-      //     {
-      //       text: "OK",
-      //       onPress: () => {
-      //         console.log("OK Pressed");
-      //         setBottomSheetVisible(false);
-      //       },
-      //     },
-      //   ],
-      //   { cancelable: false }
-      // );
+      Alert.alert(
+        "Event Created",
+        "Your event has been successfully created!",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+              setBottomSheetVisible(false);
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     } catch (error) {
       console.log(error);
     } 
@@ -817,7 +821,10 @@ export default function EventsScreen({ navigation, data }) {
           </Modal>
           <Modal
             isVisible={isNewModalVisible}
-            onBackdropPress={() => setNewModalVisible(false)}
+            onBackdropPress={() => {
+              setNewModalVisible(false);
+              setAddedParticipants([]);
+            }}
           >
             <View
               style={{
@@ -830,6 +837,11 @@ export default function EventsScreen({ navigation, data }) {
             >
               <Participants
                 onParticipantsSelected={(selectedParticipants) => {
+                  // NEW: Update added participants
+                  setAddedParticipants([
+                    ...addedParticipants,
+                    ...selectedParticipants,
+                  ]);
                   
                   if (selectedParticipants.length > 0) {                    
                     const { idString, names } = selectedParticipants.reduce((acc, participant, index) => {
@@ -851,6 +863,7 @@ export default function EventsScreen({ navigation, data }) {
                     console.log("No Participants Selected");
                   }
                 }}
+                addedParticipants={addedParticipants} // NEW: Pass added participants
               />
             </View>
           </Modal>

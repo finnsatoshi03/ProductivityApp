@@ -16,10 +16,14 @@ import FontAwesomeIcon from "react-native-vector-icons/FontAwesome";
 import GlobalIconButton from "./globalIconButton";
 import { LinearGradient } from "expo-linear-gradient";
 import Modal from "react-native-modal";
+import Header from "./header";
+import ListView from "./listView";
+import ProfileCard from "./profileCard";
 import { globalStyles } from "../styles/globalStyles";
+import Button from "./button";
 
 const ViewEvent = ({ route, navigation }) => {
-  const { title, location, description, dateTime, joinReasons, id } = route.params;
+  const { title, location, description, dateTime, joinReasons, id, participants } = route.params;
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
   const [isParticipantsModalVisible, setParticipantsModalVisible] = useState(false);
@@ -55,6 +59,22 @@ const ViewEvent = ({ route, navigation }) => {
   
   
 
+  const [selectedParticipant, setSelectedParticipant] = useState(null);
+
+  const handleParticipantSelect = (participant) => {
+    setSelectedParticipant(participant);
+  };
+
+  // const removeParticipant = () => {
+  //   if (selectedParticipant) {
+  //     const updatedParticipants = participants
+  //       .split(", ")
+  //       .filter((participant) => participant !== selectedParticipant);
+  //     navigation.setParams({ participants: updatedParticipants.join(", ") });
+  //     setSelectedParticipant(null); // Clear the selection
+  //   }
+  // };
+  console.log(participants);
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -249,15 +269,48 @@ const ViewEvent = ({ route, navigation }) => {
         </View>
       </Modal>
 
-      {/* <Modal
+      <Modal
         isVisible={isParticipantsModalVisible}
         onBackdropPress={hideParticipantsModal}
       >
-        Add your code to display participants here
-        <View style={styles.participantsModalContainer}>
-          <Text style={styles.participantsModalTitle}>{participants}</Text>
+        {/* Add your code to display participants here */}
+        {/* <View style={styles.participantsModalContainer}>
+        </View> */}
+        <View
+          style={{
+            backgroundColor: globalStyles.colors.green200,
+            padding: 20,
+            height: hp("75%"),
+            borderRadius: wp("4%"),
+          }}
+        >
+          <View style={{ height: hp("5%"), marginBottom: hp("1%") }}>
+            <Header
+              title={"Participants"}
+              icon={"back"}
+              onBack={hideParticipantsModal}
+            />
+          </View>
+          <View style={{ height: hp("59%"), marginBottom: hp("1%") }}>
+            <ListView
+              data={participants}
+              renderItem={({ item }) => (
+                <ProfileCard
+                  fullname={item.fullname}
+                  id={item.id}
+                  verify={true}
+                  onParticipantSelect={handleParticipantSelect}
+                />
+              )}
+            />
+          </View>
+          <View style={{ height: hp("5%") }}>
+            <Button text={"Remove"} />
+            {/* onPress={removeParticipant} put this to button if bug is fixed*/}
+          </View>
         </View>
-      </Modal> */}
+        {/* <Text style={styles.participantsModalTitle}>{participants}</Text> */}
+      </Modal>
     </View>
   );
 };
