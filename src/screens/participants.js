@@ -1,28 +1,18 @@
-import React, { useState, useRef } from "react";
-import {
-  Text,
-  View,
-  StyleSheet,
-  TouchableOpacity,
-  Pressable,
-  Image,
-  Animated,
-} from "react-native";
-import LottieView from "lottie-react-native";
+import React, { useState, useRef, useEffect } from "react";
+import { Text, View, Pressable, Animated } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
 import Searchbar from "./../components/searchbar";
-import CalendarWidget from "./../components/calendarComponent";
 import ListView from "./../components/listView";
 import Profiles from "./../components/profileCard";
-import Navbar from "./../Layout/navbar";
 import Button from "./../components/button";
 
 export default function Participants({
   navigation,
   onParticipantsSelected,
   onBack,
+  addedParticipants,
 }) {
   const [data, setData] = useState([
     {
@@ -110,6 +100,15 @@ export default function Participants({
     // Reset the participants state if needed
     setParticipants([]);
   };
+
+  useEffect(() => {
+    // NEW: Remove participants already added to the event
+    const filteredData = data.filter(
+      (participant) =>
+        !addedParticipants.some((added) => added.name === participant.name)
+    );
+    setData(filteredData);
+  }, [addedParticipants]);
 
   return (
     <View styles={globalStyles.container}>
