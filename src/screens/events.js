@@ -111,8 +111,12 @@ export default function EventsScreen({ navigation, data }) {
     setEventData([...eventData, newEvent]);
     setBottomSheetVisible(true);
 
+    // Reset the states
+    setEventTitle("");
     setParticipants([]);
     setParticipantNames("");
+    setLocation("");
+    setDescription("");
 
     Alert.alert(
       "Event Created",
