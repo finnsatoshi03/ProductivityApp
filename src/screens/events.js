@@ -170,8 +170,8 @@ export default function EventsScreen({ navigation, data }) {
     } 
   };
 
-  const handleCreateEvent = () => {        
-    setParticipantNames('')
+  const handleCreateEvent = () => {  
+    setParticipantNames('')  
     setBottomSheetVisible(true)
     setBtnFnc('create')
   }
@@ -278,7 +278,7 @@ export default function EventsScreen({ navigation, data }) {
 
   // Update the handleDateTimeConfirm function
   const handleDateTimeConfirm = (date, type) => {
-    console.log(date);
+  
     if (type === "date") {
       setStartDate(date);
       hideDatePicker();
@@ -667,7 +667,10 @@ export default function EventsScreen({ navigation, data }) {
                 >
                   Invite Participants
                 </Text>
-                <Pressable onPress={() => setNewModalVisible(true)}>
+                <Pressable onPress={() => {
+                  setParticipantNames('');
+                 setNewModalVisible(true);                
+                }}>
                   <Image
                     style={{
                       height: hp("3.5%"),
@@ -858,6 +861,7 @@ export default function EventsScreen({ navigation, data }) {
               <Participants
                 onParticipantsSelected={(selectedParticipants) => {
                   // NEW: Update added participants
+                  
                   setAddedParticipants([
                     ...addedParticipants,
                     ...selectedParticipants,

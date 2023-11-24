@@ -53,6 +53,7 @@ const ViewEvent = ({ route, navigation }) => {
   const hideParticipantsModal = () => {
     setParticipantsModalVisible(false);
   };
+  console.log(dateTime);
   const dateTimeArray = dateTime.split(' ');
   const date = dateTimeArray.slice(0, 3).join(' ');
   const time = dateTimeArray.slice(3).join(' ');

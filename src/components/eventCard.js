@@ -65,7 +65,7 @@ export default function eventCard({
   
     return `${datePart} ${timePart}`;
   }
-  
+  console.log(id,datetime);
   datetime =  formatDateTime(datetime);
   
   const viewEvent = async() => {
