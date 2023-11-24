@@ -8,7 +8,7 @@ export const DataProvider = ({ children }) => {
     description: "", 
     event: "", 
     location: "",
-    id:"",     
+    id:"",        
   });
 
   const value = {

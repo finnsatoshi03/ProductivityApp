@@ -24,10 +24,13 @@ const commonStyles = {
   },
 };
 
+import { Authentication } from "../Auth/Authentication";
+import axios from "axios";
+import '../../global'
+
 export default function eventCard({
   datetime,
-  event,
-  participants,
+  event,  
   location,
   reason,
   description,
@@ -62,20 +65,42 @@ export default function eventCard({
   
     return `${datePart} ${timePart}`;
   }
-
+  
   datetime =  formatDateTime(datetime);
-  console.log(datetime);
-  const viewEvent = () => {
-    navigation.navigate("ViewEvent", {
-      title: event,
-      dateTime: datetime,      
-      id: id,
-      location: location,
-      description: description,
-      joinReasons: [reason],
+  
+  const viewEvent = async() => {
+    
+    const response = await axios.get(`${global.baseurl}:4000/getParticipant`, {
+      params: {
+        event_id: id,
+      },
     });
-  };
 
+    if (response.status === 200) {
+      const {data} = response
+      const users = data.users
+      
+      const participants = users.map(user => ({
+        fullname: user.fullname,
+        id: user.id
+      }));
+      
+      navigation.navigate("ViewEvent", {
+        title: event,
+        dateTime: datetime,      
+        id: id,
+        location: location,
+        description: description,
+        joinReasons: [reason],
+        participants:participants
+      });
+
+    } else {
+      console.log('error');
+    }
+    
+  };
+  
   const handleDelete = () => {
     if (onDelete) {
       onDelete();

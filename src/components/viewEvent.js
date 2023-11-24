@@ -75,7 +75,7 @@ const ViewEvent = ({ route, navigation }) => {
   //     setSelectedParticipant(null); // Clear the selection
   //   }
   // };
-
+  console.log(participants);
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -297,7 +297,9 @@ const ViewEvent = ({ route, navigation }) => {
               data={participants}
               renderItem={({ item }) => (
                 <ProfileCard
-                  name={item}
+                  fullname={item.fullname}
+                  id={item.id}
+                  verify={true}
                   onParticipantSelect={handleParticipantSelect}
                 />
               )}
