@@ -5,8 +5,6 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import Participants from "./screens/participants";
-import Homepage from "./screens/homepage";
-import ViewEvent from "./components/viewEvent";
 
 const getFonts = () =>
   Font.loadAsync({

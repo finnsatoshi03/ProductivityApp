@@ -60,6 +60,8 @@ export default function EventsScreen({ navigation, data }) {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
 
+  const [addedParticipants, setAddedParticipants] = useState([]);
+
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getUser();
@@ -133,12 +135,16 @@ export default function EventsScreen({ navigation, data }) {
         console.log("NOOOO");
       }
 
-      setEventData([...eventData, newEvent]);
-      setBottomSheetVisible(true);
+    setEventData([...eventData, newEvent]);
+    setBottomSheetVisible(true);
 
-      // Clear participants state after creating a new event
-      setParticipants([]);
-      setParticipantNames("");
+    // Reset the states
+    setEventTitle("");
+    setParticipants([]);
+    setParticipantNames("");
+    setLocation("");
+    setDescription("");
+    setAddedParticipants([]);
 
       Alert.alert(
         "Event Created",
@@ -160,8 +166,8 @@ export default function EventsScreen({ navigation, data }) {
   };
   
   const deleteEvent = (eventTitleToDelete) => {
-    setEventData(
-      eventData.filter((event) => event.event !== eventTitleToDelete)
+    setEventData((prevEvents) =>
+      prevEvents.filter((event) => event.event !== eventTitleToDelete)
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
@@ -384,16 +390,18 @@ export default function EventsScreen({ navigation, data }) {
                     source={require("./../../assets/add-dotted.png")}
                   />
                 </Pressable>
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.description,
-                    }}
-                  >
-                    {participantNames}
-                  </Text>
-                </View>
+                {participantNames.length > 0 && (
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.description,
+                      }}
+                    >
+                      {participantNames}
+                    </Text>
+                  </View>
+                )}
               </View>
 
               <View style={{ paddingVertical: 10 }}>
@@ -542,7 +550,10 @@ export default function EventsScreen({ navigation, data }) {
           </Modal>
           <Modal
             isVisible={isNewModalVisible}
-            onBackdropPress={() => setNewModalVisible(false)}
+            onBackdropPress={() => {
+              setNewModalVisible(false);
+              setAddedParticipants([]);
+            }}
           >
             <View
               style={{
@@ -555,6 +566,11 @@ export default function EventsScreen({ navigation, data }) {
             >
               <Participants
                 onParticipantsSelected={(selectedParticipants) => {
+                  // NEW: Update added participants
+                  setAddedParticipants([
+                    ...addedParticipants,
+                    ...selectedParticipants,
+                  ]);
                   
                   if (selectedParticipants.length > 0) {                    
                     const { idString, names } = selectedParticipants.reduce((acc, participant, index) => {
@@ -576,6 +592,7 @@ export default function EventsScreen({ navigation, data }) {
                     console.log("No Participants Selected");
                   }
                 }}
+                addedParticipants={addedParticipants} // NEW: Pass added participants
               />
             </View>
           </Modal>

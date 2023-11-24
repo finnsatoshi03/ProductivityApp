@@ -18,46 +18,65 @@ export default function profileCard({
   id,
   date,
   showViewIcon,
-  isPlusButtonTriggered,
   onParticipantSelect,
+  selectAll,
   verify,
 }) {
   const progress = useRef(new Animated.Value(0)).current;
   const [clickCount, setClickCount] = useState(0);
 
-  useEffect(() => {
-    if (!isPlusButtonTriggered) {
-      setClickCount(0);
-    }
-  }, [isPlusButtonTriggered]);
+  const nameParts = fullname.split(" ");
+
+  // useEffect(() => {
+  //   if (!isPlusButtonTriggered) {
+  //     setClickCount(0);
+  //   }
+  // }, [isPlusButtonTriggered]);
 
   const handlePress = () => {
-    setClickCount((prevCount) => prevCount + 1);
+    if (selectAll) {
+      Animated.timing(progress, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setClickCount((prevCount) => prevCount + 1);
 
-    let endValue;
-    switch (clickCount % 3) {
-      case 0:
-        endValue = 0.5;
-        break;
-      case 1:
-        endValue = 0;
-        break;
-      default:
-        endValue = progress._value;
-        break;
+      let endValue;
+      switch (clickCount % 3) {
+        case 0:
+          endValue = 0.5;
+          break;
+        case 1:
+          endValue = 0;
+          break;
+        default:
+          endValue = progress._value;
+          break;
+      }
+
+      Animated.timing(progress, {
+        toValue: endValue,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
     }
 
+    onParticipantSelect({ avatar, fullname, id });
+    // if (isPlusButtonTriggered) {
+    //   // Call the callback with participant information
+    // }
+  };
+
+  useEffect(() => {
+    // Update the progress value based on the selectAll state
     Animated.timing(progress, {
-      toValue: endValue,
+      toValue: selectAll ? 0.5 : 0,
       duration: 500,
       useNativeDriver: true,
     }).start();
-
-    if (isPlusButtonTriggered) {
-      // Call the callback with participant information      
-      onParticipantSelect({ avatar, fullname, id });
-    }
-  };
+  }, [selectAll]);
 
   return (
     <View
@@ -81,8 +100,20 @@ export default function profileCard({
               color: "white",
             }}
           >
-            {fullname}
+            {nameParts[0]}
           </Text>
+          {nameParts[1] && (
+            <Text
+              style={{
+                fontFamily: globalStyles.fontStyle.regular,
+                fontSize: globalStyles.fontSize.description,
+                color: "white",
+                lineHeight: 15,
+              }}
+            >
+              {nameParts[1]}
+            </Text>
+          )}
           {date && (
             <Text
               style={{
@@ -97,16 +128,15 @@ export default function profileCard({
           )}
         </View>
       </View>
-      {isPlusButtonTriggered ? (
-        <TouchableOpacity onPress={handlePress}>
-          <LottieView
-            progress={progress}
-            source={require("./../../assets/checkbox.json")}
-            loop={false}
-            style={{ width: 50, height: 50 }}
-          />
-        </TouchableOpacity>
-      ) : !verify ? (
+      <TouchableOpacity onPress={handlePress}>
+        <LottieView
+          progress={progress}
+          source={require("./../../assets/checkbox.json")}
+          loop={false}
+          style={{ width: 50, height: 50 }}
+        />
+      </TouchableOpacity>
+      {showViewIcon ? (
         <Image
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
