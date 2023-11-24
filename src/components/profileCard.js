@@ -18,6 +18,7 @@ export default function profileCard({
   date,
   showViewIcon,
   onParticipantSelect,
+  selectAll,
 }) {
   const progress = useRef(new Animated.Value(0)).current;
   const [clickCount, setClickCount] = useState(0);
@@ -29,32 +30,49 @@ export default function profileCard({
   // }, [isPlusButtonTriggered]);
 
   const handlePress = () => {
-    setClickCount((prevCount) => prevCount + 1);
+    if (selectAll) {
+      Animated.timing(progress, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+    } else {
+      setClickCount((prevCount) => prevCount + 1);
 
-    let endValue;
-    switch (clickCount % 3) {
-      case 0:
-        endValue = 0.5;
-        break;
-      case 1:
-        endValue = 0;
-        break;
-      default:
-        endValue = progress._value;
-        break;
+      let endValue;
+      switch (clickCount % 3) {
+        case 0:
+          endValue = 0.5;
+          break;
+        case 1:
+          endValue = 0;
+          break;
+        default:
+          endValue = progress._value;
+          break;
+      }
+
+      Animated.timing(progress, {
+        toValue: endValue,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
     }
-
-    Animated.timing(progress, {
-      toValue: endValue,
-      duration: 500,
-      useNativeDriver: true,
-    }).start();
 
     onParticipantSelect({ avatar, name, date });
     // if (isPlusButtonTriggered) {
     //   // Call the callback with participant information
     // }
   };
+
+  useEffect(() => {
+    // Update the progress value based on the selectAll state
+    Animated.timing(progress, {
+      toValue: selectAll ? 0.5 : 0,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  }, [selectAll]);
 
   return (
     <View
