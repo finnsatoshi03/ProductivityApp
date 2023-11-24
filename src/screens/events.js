@@ -136,6 +136,13 @@ export default function EventsScreen({ navigation, data }) {
       setEventData([...eventData, newEvent]);
       setBottomSheetVisible(true);
 
+    // Reset the states
+    setEventTitle("");
+    setParticipants([]);
+    setParticipantNames("");
+    setLocation("");
+    setDescription("");
+
       // Clear participants state after creating a new event
       setParticipants([]);
       setParticipantNames("");
@@ -160,8 +167,8 @@ export default function EventsScreen({ navigation, data }) {
   };
   
   const deleteEvent = (eventTitleToDelete) => {
-    setEventData(
-      eventData.filter((event) => event.event !== eventTitleToDelete)
+    setEventData((prevEvents) =>
+      prevEvents.filter((event) => event.event !== eventTitleToDelete)
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
@@ -384,16 +391,18 @@ export default function EventsScreen({ navigation, data }) {
                     source={require("./../../assets/add-dotted.png")}
                   />
                 </Pressable>
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.description,
-                    }}
-                  >
-                    {participantNames}
-                  </Text>
-                </View>
+                {participantNames.length > 0 && (
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.description,
+                      }}
+                    >
+                      {participantNames}
+                    </Text>
+                  </View>
+                )}
               </View>
 
               <View style={{ paddingVertical: 10 }}>
