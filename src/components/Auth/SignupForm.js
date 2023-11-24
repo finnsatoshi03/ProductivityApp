@@ -13,6 +13,7 @@ import VerifyButton from "../button";
 
 import axios from "axios";
 import "../../../global";
+
 export default function SignupForm({ navigation }) {
   const [formdata, setData] = useState({
     username: "",
