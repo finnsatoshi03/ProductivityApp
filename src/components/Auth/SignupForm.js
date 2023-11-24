@@ -1,5 +1,12 @@
 import React, { useState } from "react";
-import { View, Image, Text, Pressable } from "react-native";
+import {
+  View,
+  Image,
+  Text,
+  Pressable,
+  KeyboardAvoidingView,
+  ScrollView,
+} from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -70,138 +77,155 @@ export default function SignupForm({ navigation }) {
     }
   };
   return (
-    <View style={globalStyles.container}>
-      <View style={{ flex: 1 }}>
-        <Background topProperty={"0%"} />
-        <View
-          style={{
-            zIndex: 2,
-            flexDirection: "row",
-            paddingVertical: 30,
-            justifyContent: "space-between",
-          }}
-        >
-          <Pressable onPress={() => navigation.navigate("Homepage")}>
-            <Image
-              style={{ height: hp("4%"), width: hp("4%") }}
-              source={require("../../../assets/back.png")}
-            />
-          </Pressable>
-          <Image
-            style={{ height: hp("4%"), width: hp("4%") }}
-            source={require("../../../assets/logo.png")}
-          />
-        </View>
-        <View style={{ marginBottom: 20 }}>
-          <HeroMessage
-            header={"Account Verification"}
-            description={"Join us and make your agenda more productive!"}
-            textAlign={true}
-            noPadding={true}
-            width={true}
-          />
-        </View>
-        <View
-          style={{
-            // marginBottom: 40,
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          <SignUpLabel text="Username" />
-          <InputFields
-            placeholder="Your chosen username"
-            maxWidth={true}
-            margin={true}
-            value={formdata.username}
-            onChangeText={(value) => handleInputChange("username", value)}
-          />
-          <SignUpLabel text="Password" />
-          <InputFields
-            placeholder="Your secure password"
-            maxWidth={true}
-            secureTextEntry={true}
-            margin={true}
-            value={formdata.password}
-            onChangeText={(value) => handleInputChange("password", value)}
-          />
-          <SignUpLabel text="Fullname" />
-          <InputFields
-            placeholder="Your full name"
-            maxWidth={true}
-            margin={true}
-            value={formdata.fullname}
-            onChangeText={(value) => handleInputChange("fullname", value)}
-          />
-          <SignUpLabel text="Employment ID" />
-          <InputFields
-            placeholder="Your unique employee ID"
-            maxWidth={true}
-            margin={true}
-            value={formdata.employment_id}
-            onChangeText={(value) => handleInputChange("employment_id", value)}
-          />
-          <SignUpLabel text="Designated Office" />
-          <InputFields
-            maxWidth={true}
-            isDropdown={true}
-            data={data}
-            margin={true}
-            placeholder={"Your office location"}
-            value={formdata.office}
-            onChangeText={(value) => handleInputChange("office", value)}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "space-between",
-              alignItems: "center",
-              gap: 15,
-            }}
-          >
-            <View style={{ flex: 1 }}>
-              <SignUpLabel text="Email Account" />
-              <InputFields
-                placeholder="Your email address"
-                noWidth={wp("43%")}
-                value={formdata.email}
-                onChangeText={(value) => handleInputChange("email", value)}
-              />
-            </View>
-            <View style={{ flex: 1 }}>
-              <SignUpLabel text="Contact Number" />
-              <InputFields
-                placeholder="Your contact number"
-                noWidth={wp("43%")}
-                value={formdata.contact}
-                onChangeText={(value) => handleInputChange("contact", value)}
-              />
-            </View>
-          </View>
-        </View>
-        <View style={{ zIndex: 4, marginTop: 30 }}>
-          <VerifyButton
-            text="VERIFY ACCOUNT"
-            onPress={onSubmit}
-            fnc={"press"}
-          />
-          <View
-            style={{
-              flexDirection: "row",
-              justifyContent: "center",
-              marginTop: 5,
-            }}
-          >
-            <Text>Already verified your account?</Text>
-            <Pressable
-              style={{ alignItems: "center" }}
-              onPress={() => navigation.goBack()}
+    <KeyboardAvoidingView
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={{ flex: 1 }}
+    >
+      <ScrollView
+        contentContainerStyle={{
+          flexGrow: 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <View style={globalStyles.container}>
+          <View style={{ flex: 1 }}>
+            <Background topProperty={"0%"} />
+            <View
+              style={{
+                zIndex: 2,
+                flexDirection: "row",
+                paddingVertical: 30,
+                justifyContent: "space-between",
+              }}
             >
-              <Text style={{ fontWeight: "bold" }}> Login</Text>
-            </Pressable>
+              <Pressable onPress={() => navigation.navigate("Homepage")}>
+                <Image
+                  style={{ height: hp("4%"), width: hp("4%") }}
+                  source={require("../../../assets/back.png")}
+                />
+              </Pressable>
+              <Image
+                style={{ height: hp("4%"), width: hp("4%") }}
+                source={require("../../../assets/logo.png")}
+              />
+            </View>
+            <View style={{ marginBottom: 20 }}>
+              <HeroMessage
+                header={"Account Verification"}
+                description={"Join us and make your agenda more productive!"}
+                textAlign={true}
+                noPadding={true}
+                width={true}
+              />
+            </View>
+            <View
+              style={{
+                // marginBottom: 40,
+                justifyContent: "center",
+                alignItems: "center",
+              }}
+            >
+              <SignUpLabel text="Username" />
+              <InputFields
+                placeholder="Your chosen username"
+                maxWidth={true}
+                margin={true}
+                value={formdata.username}
+                onChangeText={(value) => handleInputChange("username", value)}
+              />
+              <SignUpLabel text="Password" />
+              <InputFields
+                placeholder="Your secure password"
+                maxWidth={true}
+                secureTextEntry={true}
+                margin={true}
+                value={formdata.password}
+                onChangeText={(value) => handleInputChange("password", value)}
+              />
+              <SignUpLabel text="Fullname" />
+              <InputFields
+                placeholder="Your full name"
+                maxWidth={true}
+                margin={true}
+                value={formdata.fullname}
+                onChangeText={(value) => handleInputChange("fullname", value)}
+              />
+              <SignUpLabel text="Employment ID" />
+              <InputFields
+                placeholder="Your unique employee ID"
+                maxWidth={true}
+                margin={true}
+                value={formdata.employment_id}
+                onChangeText={(value) =>
+                  handleInputChange("employment_id", value)
+                }
+              />
+              <SignUpLabel text="Designated Office" />
+              <InputFields
+                maxWidth={true}
+                isDropdown={true}
+                data={data}
+                margin={true}
+                placeholder={"Your office location"}
+                value={formdata.office}
+                onChangeText={(value) => handleInputChange("office", value)}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 15,
+                }}
+              >
+                <View style={{ flex: 1 }}>
+                  <SignUpLabel text="Email Account" />
+                  <InputFields
+                    placeholder="Your email address"
+                    noWidth={wp("43%")}
+                    value={formdata.email}
+                    onChangeText={(value) => handleInputChange("email", value)}
+                  />
+                </View>
+                <View style={{ flex: 1 }}>
+                  <SignUpLabel text="Contact Number" />
+                  <InputFields
+                    placeholder="Your contact number"
+                    noWidth={wp("43%")}
+                    value={formdata.contact}
+                    onChangeText={(value) =>
+                      handleInputChange("contact", value)
+                    }
+                  />
+                </View>
+              </View>
+            </View>
+            <View style={{ zIndex: 4, marginTop: 30 }}>
+              <VerifyButton
+                text="VERIFY ACCOUNT"
+                onPress={onSubmit}
+                fnc={"press"}
+              />
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "center",
+                  marginTop: 5,
+                }}
+              >
+                <Text>Already verified your account?</Text>
+                <Pressable
+                  style={{ alignItems: "center" }}
+                  onPress={() => navigation.goBack()}
+                >
+                  <Text style={{ fontWeight: "bold" }}> Login</Text>
+                </Pressable>
+              </View>
+            </View>
           </View>
         </View>
-      </View>
-    </View>
+      </ScrollView>
+    </KeyboardAvoidingView>
   );
 }
