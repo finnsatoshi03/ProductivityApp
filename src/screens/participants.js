@@ -63,44 +63,30 @@ export default function Participants({
   ]);
   const [searchTerm, setSearchTerm] = useState("");
   const [participants, setParticipants] = useState([]);
-
-  const rotate = useRef(new Animated.Value(0)).current;
-  const rotateInterpolate = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: ["0deg", "45deg"],
-  });
-
-  const [isAddTriggered, setIsAddTriggered] = useState(false);
-  // const [isPlusButtonTriggered, setIsPlusButtonTriggered] = useState(false);
-
-  const handleAddButtonClick = () => {
-    setIsAddTriggered(!isAddTriggered);
-    // setIsPlusButtonTriggered(true);
-
-    Animated.timing(rotate, {
-      toValue: isAddTriggered ? 0 : 1,
-      duration: 300,
-      useNativeDriver: true,
-    }).start();
-
-    setData(data.map((item) => ({ ...item, showViewIcon: isAddTriggered })));
-  };
+  const [selectAll, setSelectAll] = useState(false);
 
   const handleParticipantSelection = (participant) => {
     setParticipants((prevParticipants) => [...prevParticipants, participant]);
+  };
+
+  const handleSelectAll = () => {
+    if (selectAll) {
+      // Deselect all participants visually
+      setParticipants([]);
+    } else {
+      // Select all participants visually
+      setParticipants([...data]);
+    }
+    setSelectAll(!selectAll);
   };
 
   const addParticipants = () => {
     // Merge the past added participants with the newly added participants
     const mergedParticipants = [...participants, ...addedParticipants];
 
-    // Do something with the merged participants
     console.log("All Participants: ", mergedParticipants);
 
-    // Call the callback function with the merged participants
     onParticipantsSelected(mergedParticipants);
-
-    // Reset the participants state if needed
     setParticipants([]);
   };
 
@@ -135,15 +121,18 @@ export default function Participants({
             bgColor={"transparent"}
             onChangeText={(text) => setSearchTerm(text)}
           />
-          <Pressable onPress={handleAddButtonClick}>
+          <Pressable onPress={handleSelectAll}>
             <Animated.Image
               style={{
                 height: 25,
                 width: 25,
                 marginLeft: 20,
-                transform: [{ rotate: rotateInterpolate }],
               }}
-              source={require("./../../assets/add-alt.png")}
+              source={
+                selectAll
+                  ? require("./../../assets/select-none.png")
+                  : require("./../../assets/select-all.png")
+              }
             />
           </Pressable>
         </View>
@@ -162,6 +151,7 @@ export default function Participants({
                 {...item}
                 // isPlusButtonTriggered={isPlusButtonTriggered}
                 onParticipantSelect={handleParticipantSelection}
+                selectAll={selectAll}
               />
             )}
             keyExtractor={(item) => item.name}
