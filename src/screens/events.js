@@ -170,16 +170,36 @@ export default function EventsScreen({ navigation, data }) {
     } 
   };
 
-  const handleCreateEvent = () => {    
+  const handleCreateEvent = () => {        
+    setParticipantNames('')
     setBottomSheetVisible(true)
     setBtnFnc('create')
   }
   
-  const deleteEvent = (eventTitleToDelete) => {
-    setEventData((prevEvents) =>
-      prevEvents.filter((event) => event.event !== eventTitleToDelete)
-    );
-    console.log(`Event ${eventTitleToDelete} has been deleted.`);
+  const deleteEvent = async (event_id) => {
+    
+    try {      
+      const response = await axios.delete(`${global.baseurl}:4000/deleteEvent`, {
+        params: {
+          event_id: event_id,
+        },
+      });
+  
+      if (response.status === 200) {
+        console.log('succes');
+        setEventData((prevEvents) =>
+        prevEvents.filter((event) => event.id !== event_id)
+      );
+
+      console.log(`Event ${event_id} has been deleted.`);
+       
+      } else console.log('no');
+      
+      
+    } catch (error) {
+      console.log(error);
+    }
+    
   };
 
   const getParticipants = async (event_id) => {
@@ -884,7 +904,7 @@ export default function EventsScreen({ navigation, data }) {
               <ListView
                 data={eventData}
                 renderItem={({ item }) => (
-                  <Events {...item} onDelete={() => deleteEvent(item.event)} onEdit={() => handleEditEvent(item)}/>
+                  <Events {...item} onDelete={() => deleteEvent(item.id)} onEdit={() => handleEditEvent(item)}/>
                 )}
               />
             )}
