@@ -161,6 +161,7 @@ export default function Participants({
                 {...item}
                 // isPlusButtonTriggered={isPlusButtonTriggered}
                 onParticipantSelect={handleParticipantSelection}
+                onRemoveParticipant={handleRemoveParticipant}
               />
             )}
             keyExtractor={(item) => item.name}

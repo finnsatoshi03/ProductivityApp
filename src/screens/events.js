@@ -359,16 +359,18 @@ export default function EventsScreen({ navigation, data }) {
                     source={require("./../../assets/add-dotted.png")}
                   />
                 </Pressable>
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.description,
-                    }}
-                  >
-                    {participantNames}
-                  </Text>
-                </View>
+                {participantNames.length > 0 && (
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.description,
+                      }}
+                    >
+                      {participantNames}
+                    </Text>
+                  </View>
+                )}
               </View>
 
               <View style={{ paddingVertical: 10 }}>
