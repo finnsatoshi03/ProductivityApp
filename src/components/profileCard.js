@@ -91,26 +91,40 @@ export default function profileCard({
       <View style={{ flexDirection: "row", alignItems: "center", gap: 30 }}>
         <Avatar avatar={avatar} firstName={name} />
         <View>
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.semiBold,
-              fontSize: date ? hp("2%") : globalStyles.fontSize.subHeader,
-              color: "white",
-            }}
-          >
-            {nameParts[0]}
-          </Text>
-          {nameParts[1] && (
+          {date ? (
             <Text
               style={{
-                fontFamily: globalStyles.fontStyle.regular,
-                fontSize: globalStyles.fontSize.description,
+                fontFamily: globalStyles.fontStyle.semiBold,
+                fontSize: date ? hp("2%") : globalStyles.fontSize.subHeader,
                 color: "white",
-                lineHeight: 15,
               }}
             >
-              {nameParts[1]}
+              {name}
             </Text>
+          ) : (
+            <>
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.semiBold,
+                  fontSize: date ? hp("2%") : globalStyles.fontSize.subHeader,
+                  color: "white",
+                }}
+              >
+                {nameParts[0]}
+              </Text>
+              {nameParts[1] && (
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                    color: "white",
+                    lineHeight: 15,
+                  }}
+                >
+                  {nameParts[1]}
+                </Text>
+              )}
+            </>
           )}
           {date && (
             <Text
@@ -126,20 +140,21 @@ export default function profileCard({
           )}
         </View>
       </View>
-      <TouchableOpacity onPress={handlePress}>
-        <LottieView
-          progress={progress}
-          source={require("./../../assets/checkbox.json")}
-          loop={false}
-          style={{ width: 50, height: 50 }}
-        />
-      </TouchableOpacity>
       {showViewIcon ? (
         <Image
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
         />
-      ) : null}
+      ) : (
+        <TouchableOpacity onPress={handlePress}>
+          <LottieView
+            progress={progress}
+            source={require("./../../assets/checkbox.json")}
+            loop={false}
+            style={{ width: 50, height: 50 }}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
