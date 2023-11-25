@@ -421,13 +421,6 @@ export default function EventsScreen({ navigation, data }) {
             <>
               {/* DAHIL NASISISRA ANG LAYOUT NILAGYAN KO NETO, PARANG PRESSABLE LANG TO NA ADD BUTTON 
               PERO NIREPLICATE LANG YUNG SIZE NYA */}
-              <View
-                style={{
-                  paddingVertical: 20,
-                  marginVertical: hp("1.5%"),
-                  height: hp("8%"),
-                }}
-              />
             </>
           )}
 
@@ -907,7 +900,8 @@ export default function EventsScreen({ navigation, data }) {
           </Modal>
           <View
             style={{
-              height: hp("62%"),
+              height: userData.role !== "admin" ? hp("70%") : hp("62%"),
+              marginTop: userData.role !== "admin" ? hp("1.6%") : 0,
             }}
           >
             {eventData.length === 0 ? (
