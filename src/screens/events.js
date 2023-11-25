@@ -206,11 +206,32 @@ export default function EventsScreen({ navigation, data }) {
     setBtnFnc("create");
   };
 
-  const deleteEvent = (event_id) => {
-    setEventData((prevEvents) =>
-      prevEvents.filter((event) => event.id !== event_id)
-    );
-    console.log(`Event ${event_id} has been deleted.`);
+  const deleteEvent = async (event_id) => {
+
+    try {      
+      const response = await axios.delete(`${global.baseurl}:4000/deleteEvent`, {
+        params: {
+          event_id: event_id,
+        },
+      });
+  
+      if (response.status === 200) {
+        console.log('succes');
+        
+        setEventData((prevEvents) =>
+          prevEvents.filter((event) => event.id !== event_id)
+        );
+        console.log(`Event ${event_id} has been deleted.`);
+      
+      } else console.log('no');
+      
+      
+    } catch (error) {
+      console.log(error);
+    }
+
+
+    
   };
 
   const getParticipants = async (event_id) => {
