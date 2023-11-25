@@ -69,7 +69,7 @@ export default function profileCard({
     );
 
     if (!isParticipantAdded) {
-      onParticipantSelect({ avatar, id, date });
+      onParticipantSelect({ avatar, fullname, id, date });
     } else {
       // Participant is already added, handle accordingly (e.g., show a message)
       console.log("Participant is already added");
