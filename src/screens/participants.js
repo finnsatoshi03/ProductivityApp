@@ -64,10 +64,8 @@ export default function Participants({
 
   const handleSelectAll = () => {
     if (selectAll) {
-      // Deselect all participants visually
       setParticipants([]);
     } else {
-      // Select all participants visually
       setParticipants([...data]);
     }
     setSelectAll(!selectAll);
@@ -145,6 +143,7 @@ export default function Participants({
                 {...item}
                 addedParticipants={addedParticipants}
                 onParticipantSelect={handleParticipantSelection}
+                selectAll={selectAll}
               />
             )}
             keyExtractor={(item) => item.name}
