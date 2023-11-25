@@ -66,7 +66,7 @@ const ViewEvent = ({ route, navigation }) => {
   };
 
   const removeParticipant = () => {
-    
+    // TODO DO THIS DELETE PARTICIPANT
     console.log(selectedParticipant.id);
     // if (selectedParticipant) {
     //   const updatedParticipants = participants

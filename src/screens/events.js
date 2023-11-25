@@ -203,7 +203,8 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   const getParticipants = async (event_id) => {
-
+  // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
+  // TODO SAVE THE VALUE DONT DELETE OR CLEAR IT FOR EVERY ADD PARTICIPANTS/UPDATE
     try {
     
       const response = await axios.get(`${global.baseurl}:4000/getParticipant`, {
@@ -240,6 +241,7 @@ export default function EventsScreen({ navigation, data }) {
   }
   
   const handleEditEvent = (event) => {
+    
     setBottomSheetVisible(true)
     setBtnFnc('edit')
     setSelectedEvent(event.id)    
