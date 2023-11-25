@@ -19,6 +19,7 @@ export default function profileCard({
   date,
   showViewIcon,
   onParticipantSelect,
+  addedParticipants,
   selectAll,
   verify,
 }) {
@@ -63,10 +64,16 @@ export default function profileCard({
       }).start();
     }
 
-    onParticipantSelect({ avatar, fullname, id });
-    // if (isPlusButtonTriggered) {
-    //   // Call the callback with participant information
-    // }
+    const isParticipantAdded = addedParticipants.some(
+      (participant) => participant.id === avatar
+    );
+
+    if (!isParticipantAdded) {
+      onParticipantSelect({ avatar, id, date });
+    } else {
+      // Participant is already added, handle accordingly (e.g., show a message)
+      console.log("Participant is already added");
+    }
   };
 
   useEffect(() => {
@@ -150,7 +157,7 @@ export default function profileCard({
           style={{ width: 50, height: 50 }}
         />
       </TouchableOpacity>
-      { !verify ? (
+      {!verify ? (
         <Image
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
