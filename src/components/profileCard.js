@@ -149,20 +149,22 @@ export default function profileCard({
           )}
         </View>
       </View>
-      <TouchableOpacity onPress={handlePress}>
-        <LottieView
-          progress={progress}
-          source={require("./../../assets/checkbox.json")}
-          loop={false}
-          style={{ width: 50, height: 50 }}
-        />
-      </TouchableOpacity>
+
       {!verify ? (
         <Image
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
         />
-      ) : null}
+      ) : (
+        <TouchableOpacity onPress={handlePress}>
+          <LottieView
+            progress={progress}
+            source={require("./../../assets/checkbox.json")}
+            loop={false}
+            style={{ width: 50, height: 50 }}
+          />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
