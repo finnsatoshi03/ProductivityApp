@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -6,11 +6,12 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from "react-native";
-import { globalStyles } from "../styles/globalStyles";
 import { widthPercentageToDP as wp } from "react-native-responsive-screen";
+import Button from "./button";
 import Icon from "react-native-vector-icons/FontAwesome";
+import { globalStyles } from "../styles/globalStyles";
 
-export default Modal = ({ message, btnYES, btnNO, visible }) => {
+const Modal = ({ message, btnYES, visible, setVisible }) => {
   const handleNoButtonPress = () => {
     setVisible(false);
   };
@@ -20,7 +21,17 @@ export default Modal = ({ message, btnYES, btnNO, visible }) => {
         <View style={styles.modalContent}>
           <Text style={styles.message}>{message}</Text>
           <View style={styles.buttonContainer}>
-            <View style={styles.button}>
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <Button
+                text={"Yes"}
+                onPress={btnYES}
+                width={wp("30")}
+                bgColor="rgba(255,255,255,0.3)"
+                textColor="black"
+              />
+              <Button text={"No"} onPress={setVisible} width={wp("30")} />
+            </View>
+            {/* <View style={styles.button}>
               <TouchableOpacity onPress={btnYES}>
                 <Icon name="check" size={wp("4%")} color="#79AC78" />
               </TouchableOpacity>
@@ -31,7 +42,7 @@ export default Modal = ({ message, btnYES, btnNO, visible }) => {
                 <Icon name="times" size={wp("4%")} color="#79AC78" />
               </TouchableOpacity>
               <Text style={styles.buttonText}> NO</Text>
-            </View>
+            </View> */}
           </View>
         </View>
       </View>
@@ -47,15 +58,17 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
   },
   modalContent: {
-    backgroundColor: "#79AC78", // Base color
+    backgroundColor: globalStyles.colors.green, // Base color
     padding: wp("5%"),
-    borderRadius: wp("2%"),
+    borderRadius: wp("5%"),
     width: wp("80%"),
   },
   message: {
-    fontSize: wp("4.5%"),
+    fontFamily: globalStyles.fontStyle.regular,
+    fontSize: wp("4%"),
     color: "#fff", // Text color
     marginBottom: wp("5%"),
+    textAlign: "center",
   },
   buttonContainer: {
     flexDirection: "row",
@@ -74,3 +87,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
 });
+
+export default Modal;

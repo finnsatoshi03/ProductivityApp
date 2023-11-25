@@ -1,5 +1,12 @@
-import React, { useState, useRef } from "react";
-import { View, Text, Image, Animated, Pressable } from "react-native";
+import React, { useState, useRef, useEffect } from "react";
+import {
+  View,
+  Text,
+  Image,
+  Animated,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { globalStyles } from "../styles/globalStyles";
 import {
@@ -26,11 +33,11 @@ const commonStyles = {
 
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
-import '../../global'
+import "../../global";
 
 export default function eventCard({
   datetime,
-  event,  
+  event,
   location,
   reason,
   description,
@@ -38,7 +45,15 @@ export default function eventCard({
   onEdit,
   id,
 }) {
-    
+
+  const { getUser } = Authentication();
+
+  const [userData, setUserData] = useState({
+    fullname: "",
+    role: "",
+    user_id: "",
+  });
+
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
   const rotateInterpolation = animationRef.interpolate({
@@ -47,29 +62,46 @@ export default function eventCard({
   });
   const navigation = useNavigation();
 
-  function formatDateTime(datetimeString) {
-    const optionsDate = { 
-      day: 'numeric', 
-      month: 'long', 
-      year: 'numeric', 
+  const [isDeleting, setIsDeleting] = useState(false);
+  const [showSpinner, setShowSpinner] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+      console.log(userData);
     };
-  
+
+    fetchUserData();
+  }, []);
+
+  function formatDateTime(datetimeString) {
+    const optionsDate = {
+      day: "numeric",
+      month: "long",
+      year: "numeric",
+    };
+
     const optionsTime = {
-      hour: '2-digit',
-      minute: '2-digit',
+      hour: "2-digit",
+      minute: "2-digit",
       hour12: true,
     };
-  
-    const datePart = new Date(datetimeString).toLocaleDateString('en-GB', optionsDate);
-    const timePart = new Date(datetimeString).toLocaleTimeString('en-US', optionsTime);
-  
+
+    const datePart = new Date(datetimeString).toLocaleDateString(
+      "en-GB",
+      optionsDate
+    );
+    const timePart = new Date(datetimeString).toLocaleTimeString(
+      "en-US",
+      optionsTime
+    );
+
     return `${datePart} ${timePart}`;
-  }
-  console.log(id,datetime);
-  datetime =  formatDateTime(datetime);
-  
-  const viewEvent = async() => {
-    
+  }  
+  datetime = formatDateTime(datetime);
+
+  const viewEvent = async () => {
     const response = await axios.get(`${global.baseurl}:4000/getParticipant`, {
       params: {
         event_id: id,
@@ -77,39 +109,49 @@ export default function eventCard({
     });
 
     if (response.status === 200) {
-      const {data} = response
-      const users = data.users
-      
-      const participants = users.map(user => ({
+      const { data } = response;
+      const users = data.users;
+
+      const participants = users.map((user) => ({
         fullname: user.fullname,
-        id: user.id
+        id: user.id,
       }));
-      
+
       navigation.navigate("ViewEvent", {
         title: event,
-        dateTime: datetime,      
+        dateTime: datetime,
         id: id,
         location: location,
         description: description,
         joinReasons: [reason],
-        participants:participants
+        participants: participants,
       });
-
     } else {
-      console.log('error');
+      console.log("error");
     }
-    
   };
-  
-  const handleDelete = () => {
-    if (onDelete) {
-      onDelete();
+
+  const handleDelete = async () => {
+    try {
+      setShowSpinner(true);
+
+      if (onDelete) {
+        await onDelete();
+      }
+
+      // Simulate a delay (you can adjust the duration as needed)
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+
+      setShowSpinner(false);
+      setShowModal(false);
+    } catch (error) {
+      console.error("Error deleting event:", error);
+      // Handle error if onDelete fails
+      setShowSpinner(false);
     }
-    setTimeout(() => setShowModal(false), 1500);
   };
 
   const [showModal, setShowModal] = useState(false);
-  
 
   const toggleExpand = () => {
     Animated.timing(animationRef, {
@@ -261,14 +303,21 @@ export default function eventCard({
                     borderRadius: 30,
                   }}
                 >
-                  <Image source={require("./../../assets/warning.png")} />
+                  {showSpinner ? (
+                    <ActivityIndicator
+                      size="large"
+                      color={globalStyles.colors.green}
+                    />
+                  ) : (
+                    <Image source={require("./../../assets/warning.png")} />
+                  )}
                   <Text
                     style={{
                       fontFamily: globalStyles.fontStyle.bold,
                       fontSize: globalStyles.fontSize.subHeader,
                     }}
                   >
-                    Delete Event
+                    {showSpinner ? "Deleting Event" : "Delete Event"}
                   </Text>
                   <Text
                     style={{

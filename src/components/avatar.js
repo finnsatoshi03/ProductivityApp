@@ -17,12 +17,14 @@ export default function Avatar({
   const width = customWidth || wp("14.5%");
   const height = customHeight || hp("7%");
 
+  const isOnlineImage = typeof avatar === "string";
+
   return (
     <View>
       {avatar ? (
         <Image
           style={[style, { height, width, borderRadius: width / 2 }]}
-          source={avatar}
+          source={isOnlineImage ? { uri: avatar } : avatar}
         />
       ) : (
         defaultIconGenerator(firstName, size)

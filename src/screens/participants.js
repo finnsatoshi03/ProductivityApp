@@ -10,17 +10,19 @@ import {
 } from "react-native";
 import LottieView from "lottie-react-native";
 import { globalStyles } from "./../styles/globalStyles";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import Header from "./../components/header";
 import Searchbar from "./../components/searchbar";
 import ListView from "./../components/listView";
 import Profiles from "./../components/profileCard";
 import Button from "./../components/button";
 
-
 import axios from "axios";
 import { Authentication } from "../Auth/Authentication";
-import '../../global'
+import "../../global";
 
 export default function Participants({
   navigation,
@@ -32,39 +34,38 @@ export default function Participants({
   
   useEffect(() => {
     const retrieveUsers = async () => {
-      
       try {
-        const response = await axios.get(`${global.baseurl}:4000/retrieveVUsers`)
-        
+        const response = await axios.get(
+          `${global.baseurl}:4000/retrieveVUsers`
+        );
+
         if (response.status === 200) {
-        // Assuming your server responds with the 'users' data in the response
+          // Assuming your server responds with the 'users' data in the response
           const { data } = response;
           const users = data.users;
-          
-          setData(users)
+
+          setData(users);
         } else {
-          console.log('error');
+          console.log("error");
         }
       } catch (error) {
         console.log(error);
       }
-    }
-    retrieveUsers()
+    };
+    retrieveUsers();
   }, []);
   const [searchTerm, setSearchTerm] = useState("");
   const [participants, setParticipants] = useState([]);
   const [selectAll, setSelectAll] = useState(false);
 
-  const handleParticipantSelection = (participant) => {    
+  const handleParticipantSelection = (participant) => {
     setParticipants((prevParticipants) => [...prevParticipants, participant]);
   };
 
   const handleSelectAll = () => {
     if (selectAll) {
-      // Deselect all participants visually
       setParticipants([]);
     } else {
-      // Select all participants visually
       setParticipants([...data]);
     }
     setSelectAll(!selectAll);
@@ -79,7 +80,7 @@ export default function Participants({
     onParticipantsSelected(mergedParticipants);
     setParticipants([]);
   };
-
+  console.log(addedParticipants);
   useEffect(() => {
     const filteredData = data.filter(
       (participant) =>
@@ -94,6 +95,7 @@ export default function Participants({
         <View
           style={{
             height: hp("6%"),
+            width: wp("70%"),
           }}
         >
           <Header title={"Participants"} icon={"back"} onBack={onBack} />
@@ -133,18 +135,18 @@ export default function Participants({
           }}
         >
           <ListView
-            data={data.filter((item) =>
-              item.fullname.toLowerCase().includes(searchTerm.toLowerCase())
+            data={data.filter(
+              (item) => !addedParticipants.find((added) => added.id === item.id)
             )}
             renderItem={({ item }) => (
               <Profiles
                 {...item}
-                // isPlusButtonTriggered={isPlusButtonTriggered}
+                addedParticipants={addedParticipants}
                 onParticipantSelect={handleParticipantSelection}
                 selectAll={selectAll}
               />
             )}
-            keyExtractor={(item) => item.fullname}
+            keyExtractor={(item) => item.name}
           />
         </View>
         <View
