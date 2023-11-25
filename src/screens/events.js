@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   TextInput,
   Alert,
+  ActivityIndicator,
 } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import {
@@ -62,6 +63,7 @@ export default function EventsScreen({ navigation, data }) {
   const [addedParticipants, setAddedParticipants] = useState([]);
   const [btnFnc, setBtnFnc] = useState("create");
   const [selectedEvent, setSelectedEvent] = useState("");
+  const [isCreatingEvent, setCreatingEvent] = useState(false);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -95,6 +97,7 @@ export default function EventsScreen({ navigation, data }) {
     location,
     description
   ) => {
+    setCreatingEvent(true);
     const newEvent = {
       dateTime: `${startDate.toLocaleDateString("en-GB", {
         day: "numeric",
@@ -175,6 +178,8 @@ export default function EventsScreen({ navigation, data }) {
       );
     } catch (error) {
       console.log(error);
+    } finally {
+      setCreatingEvent(false);
     }
   };
 
@@ -595,21 +600,25 @@ export default function EventsScreen({ navigation, data }) {
                     width: "100%",
                   }}
                 >
-                  <Button
-                    text={"Create Event"}
-                    width={wp("55%")}
-                    fnc={"press"}
-                    onPress={() =>
-                      addEvent(
-                        eventTitle,
-                        participants,
-                        startDate,
-                        endDate,
-                        location,
-                        description
-                      )
-                    }
-                  />
+                  {isCreatingEvent ? (
+                    <ActivityIndicator size="large" color={"black"} />
+                  ) : (
+                    <Button
+                      text={"Create Event"}
+                      width={wp("55%")}
+                      fnc={"press"}
+                      onPress={() =>
+                        addEvent(
+                          eventTitle,
+                          participants,
+                          startDate,
+                          endDate,
+                          location,
+                          description
+                        )
+                      }
+                    />
+                  )}
 
                   <Button
                     text={"Cancel"}
