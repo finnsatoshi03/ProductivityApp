@@ -190,7 +190,17 @@ export default function sideBar({
                   fnc="navigate"
                 />
               ) : (
-                <></>
+                <Button
+                  text={"Notifications"}
+                  flexStart={true}
+                  transparent={true}
+                  textColor={"black"}
+                  fontSize={globalStyles.fontSize.mediumDescription}
+                  iconSource={require("./../../assets/notification.png")}
+                  navigation={navigation}
+                  destination={"Notifications"}
+                  fnc="navigate"
+                />
               )}
             </View>
             <View style={{ marginHorizontal: 30, marginTop: 20 }}>
