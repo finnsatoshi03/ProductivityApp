@@ -33,6 +33,7 @@ export default function ModalCard({
   const [isSecondaryModalVisible, setIsSecondaryModalVisible] = useState(false);
 
   const handleAccept = () => {
+    accept();
     Alert.alert(
       "Success",
       `The account ${username} is successfully approved.`,

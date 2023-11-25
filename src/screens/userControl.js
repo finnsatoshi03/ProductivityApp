@@ -55,6 +55,7 @@ export default function UserControl({ navigation }) {
 
     retrieveNotVerifiedUsers();
   }, []);
+
   const handleOpenModal = (user) => {
     setSelectedUser(user);
     setModalVisible(true);
@@ -75,6 +76,9 @@ export default function UserControl({ navigation }) {
 
       if (response.status === 200) {
         console.log("approved");
+        setNotVerifiedUsers((prevUsers) => {
+          return prevUsers.filter((user) => user.id !== id);
+        });
       } else {
         console.log("error");
       }
@@ -84,6 +88,7 @@ export default function UserControl({ navigation }) {
       console.log(error);
     }
   };
+
   const handleReject = async (id) => {
     const data = {
       user_id: id,
@@ -95,6 +100,9 @@ export default function UserControl({ navigation }) {
 
     if (response.status === 200) {
       console.log("rejected");
+      setNotVerifiedUsers((prevUsers) => {
+        return prevUsers.filter((user) => user.id !== id);
+      });
     } else {
       console.log("error");
     }
