@@ -121,6 +121,9 @@ export default function EventsScreen({ navigation, data }) {
           ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
           : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent);
 
+      console.log(newEvent);
+      console.log("Updated eventData:", eventData);
+
       if (response.status === 200) {
         const { data } = response;
         const user_ids = participants;
