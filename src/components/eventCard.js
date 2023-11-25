@@ -45,7 +45,6 @@ export default function eventCard({
   onEdit,
   id,
 }) {
-
   const { getUser } = Authentication();
 
   const [userData, setUserData] = useState({
@@ -98,7 +97,7 @@ export default function eventCard({
     );
 
     return `${datePart} ${timePart}`;
-  }  
+  }
   datetime = formatDateTime(datetime);
 
   const viewEvent = async () => {
@@ -262,12 +261,14 @@ export default function eventCard({
                   {location}
                 </Text>
               </View>
-              <Pressable onPress={onEdit}>
-                <Image
-                  style={{ height: hp("4%"), width: hp("4%") }}
-                  source={require("../../assets/edit.png")}
-                />
-              </Pressable>
+              {userData.role === "admin" && (
+                <Pressable onPress={onEdit}>
+                  <Image
+                    style={{ height: hp("4%"), width: hp("4%") }}
+                    source={require("../../assets/edit.png")}
+                  />
+                </Pressable>
+              )}
             </View>
             <View
               style={{
@@ -278,7 +279,9 @@ export default function eventCard({
                 paddingVertical: 10,
               }}
             >
-              <View style={{ width: "60%" }}>
+              <View
+                style={{ width: userData.role === "admin" ? "60%" : "100%" }}
+              >
                 <Button
                   text="VIEW"
                   bgColor={globalStyles.colors.green}
@@ -286,13 +289,15 @@ export default function eventCard({
                   fnc={"press"}
                 />
               </View>
-              <Button
-                text="DELETE"
-                bgColor="#e2e6f0"
-                textColor="#9198bc"
-                width={wp("25%")}
-                onPress={() => setShowModal(true)}
-              />
+              {userData.role === "admin" && (
+                <Button
+                  text="DELETE"
+                  bgColor="#e2e6f0"
+                  textColor="#9198bc"
+                  width={wp("25%")}
+                  onPress={() => setShowModal(true)}
+                />
+              )}
               <Modal isVisible={showModal}>
                 <View
                   style={{
