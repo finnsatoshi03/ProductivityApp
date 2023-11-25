@@ -14,6 +14,7 @@ import EditProfile from "../screens/editProfileModal";
 import UserControl from "../screens/userControl";
 import ViewEvent from "../components/viewEvent";
 import Conversation from "../components/conversationComponent";
+import Notifications from "../screens/notifications";
 import { DataProvider } from "./../DataContext";
 
 const Stack = createNativeStackNavigator();
@@ -88,6 +89,11 @@ export default function App() {
           <Stack.Screen
             name="UserControl"
             component={UserControl}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Notifications"
+            component={Notifications}
             options={{ headerShown: false }}
           />
           <Stack.Screen

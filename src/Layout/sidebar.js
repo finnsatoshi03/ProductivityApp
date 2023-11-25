@@ -1,16 +1,22 @@
 import React, { useState, useRef, useEffect } from "react";
-import { View, Text, Image, Animated, Pressable } from "react-native";
+import {
+  View,
+  Text,
+  Animated,
+  Pressable,
+  ActivityIndicator,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import Modal from "react-native-modal";
 import Button from "../components/button";
 import Avatar from "../components/avatar";
 
 import { Authentication } from "../Auth/Authentication";
-
 
 export default function sideBar({
   avatar,
@@ -20,13 +26,17 @@ export default function sideBar({
   onHide,
   navigation,
 }) {
-  const {logout, getUser} = Authentication()
+  const { logout, getUser } = Authentication();
 
   const [userData, setUserData] = useState({
-    fullname: '',
-    role: '',
-    user_id: ''
+    fullname: "",
+    role: "",
+    user_id: "",
   });
+  const [isModalVisible, setModalVisible] = useState(false);
+  const [logoutText, setLogoutText] = useState(
+    "Are you sure you want to logout?"
+  );
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -35,7 +45,7 @@ export default function sideBar({
     };
 
     fetchUserData();
-  }, []); 
+  }, []);
 
   console.log(userData || " ");
 
@@ -67,11 +77,25 @@ export default function sideBar({
     }
   }, []);
 
+  // const handleLogout = () => {
+  //   logout();
+  //   console.log("yo");
+  //   navigation.navigate("Homepage");
+  // };
   const handleLogout = () => {
-    logout()
-    console.log('yo');
-    navigation.navigate('Homepage')
-  }
+    setModalVisible(true);
+  };
+
+  const confirmLogout = () => {
+    setLogoutText("Signing out...");
+    setTimeout(() => {
+      logout();
+      navigation.navigate("Homepage");
+      setModalVisible(false);
+      setLogoutText("Are you sure you want to logout?");
+    }, 2000);
+  };
+
   return (
     <Pressable
       onPress={slideOut}
@@ -151,9 +175,9 @@ export default function sideBar({
                 iconSource={require("./../../assets/edit-user.png")}
                 navigation={navigation}
                 destination={"EditProfile"}
-                fnc='navigate'
+                fnc="navigate"
               />
-              {userData.role === 'admin' ? (
+              {userData.role === "admin" ? (
                 <Button
                   text={"Verify Account"}
                   flexStart={true}
@@ -163,12 +187,21 @@ export default function sideBar({
                   iconSource={require("./../../assets/verify.png")}
                   navigation={navigation}
                   destination={"UserControl"}
-                  fnc='navigate'
+                  fnc="navigate"
                 />
               ) : (
-                <></>
+                <Button
+                  text={"Notifications"}
+                  flexStart={true}
+                  transparent={true}
+                  textColor={"black"}
+                  fontSize={globalStyles.fontSize.mediumDescription}
+                  iconSource={require("./../../assets/notification.png")}
+                  navigation={navigation}
+                  destination={"Notifications"}
+                  fnc="navigate"
+                />
               )}
-              
             </View>
             <View style={{ marginHorizontal: 30, marginTop: 20 }}>
               <Button
@@ -180,7 +213,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/calendar.png")}
                 navigation={navigation}
                 destination={"Calendar"}
-                fnc='navigate'
+                fnc="navigate"
               />
               <Button
                 text={"Events"}
@@ -191,9 +224,9 @@ export default function sideBar({
                 iconSource={require("./../../assets/event-1.png")}
                 navigation={navigation}
                 destination={"Events"}
-                fnc='navigate'
+                fnc="navigate"
               />
-              {userData.role === 'admin' ? (
+              {userData.role === "admin" ? (
                 <Button
                   text={"Reports"}
                   flexStart={true}
@@ -203,7 +236,7 @@ export default function sideBar({
                   iconSource={require("./../../assets/reports.png")}
                   navigation={navigation}
                   destination={"Reports"}
-                  fnc='navigate'
+                  fnc="navigate"
                 />
               ) : (
                 <></>
@@ -217,7 +250,7 @@ export default function sideBar({
                 iconSource={require("./../../assets/chat.png")}
                 navigation={navigation}
                 destination={"Chat"}
-                fnc='navigate'
+                fnc="navigate"
               />
             </View>
           </View>
@@ -230,10 +263,45 @@ export default function sideBar({
               fontSize={globalStyles.fontSize.mediumDescription}
               iconSource={require("./../../assets/logout.png")}
               onPress={handleLogout}
-              fnc={'press'}
+              fnc={"press"}
             />
           </View>
         </Animated.View>
+        <Modal isVisible={isModalVisible}>
+          <View
+            style={{
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: "white",
+              padding: 20,
+              borderRadius: 30,
+            }}
+          >
+            <Text
+              style={{
+                padding: 10,
+                marginBottom: 10,
+                fontFamily: "montserrat-regular",
+                fontSize: hp("1.7%"),
+              }}
+            >
+              {logoutText}
+            </Text>
+            {logoutText === "Signing out..." && (
+              <ActivityIndicator size="large" style={{ marginBottom: 15 }} />
+            )}
+            <View style={{ flexDirection: "row", gap: 10 }}>
+              <Button text="Yes" onPress={confirmLogout} width={wp("30%")} />
+              <Button
+                text="No"
+                onPress={() => setModalVisible(false)}
+                width={wp("30%")}
+                bgColor="#e2e6f0"
+                textColor="#9198bc"
+              />
+            </View>
+          </View>
+        </Modal>
       </Pressable>
     </Pressable>
   );

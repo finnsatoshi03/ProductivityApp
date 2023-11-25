@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text } from "react-native";
+import { View, Text, Alert } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -26,12 +26,31 @@ export default function ModalCard({
   username,
   id,
   contact_no,
+  reject,
+  accept,
+  onBackdropPress,
 }) {
   const [isSecondaryModalVisible, setIsSecondaryModalVisible] = useState(false);
 
+  const handleAccept = () => {
+    accept();
+    Alert.alert(
+      "Success",
+      `The account ${username} is successfully approved.`,
+      [{ text: "OK", onPress: () => onBackdropPress() }],
+      { cancelable: false }
+    );
+  };
+
+  const handleReject = () => {
+    reject();
+    onBackdropPress();
+    setIsSecondaryModalVisible(false);
+  };
+
   return (
     <View>
-      <Modal isVisible={true}>
+      <Modal isVisible={true} onBackdropPress={onBackdropPress}>
         <View
           style={{
             backgroundColor: globalStyles.colors.green,
@@ -108,17 +127,23 @@ export default function ModalCard({
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <Button width={wp("50%")} text={"Accept"} />
+            <Button width={wp("50%")} text={"Accept"} onPress={handleAccept} />
             <Button
               width={wp("22%")}
               text={"Reject"}
               bgColor={"rgba(0,0,0,0.2)"}
               textColor="rgba(0,0,0,0.5)"
+              onPress={() => setIsSecondaryModalVisible(true)}
             />
           </View>
         </View>
       </Modal>
-      <SecondaryModal visible={isSecondaryModalVisible} />
+      <SecondaryModal
+        visible={isSecondaryModalVisible}
+        message={"Are you sure you want to reject this account?"}
+        btnYES={handleReject}
+        setVisible={() => setIsSecondaryModalVisible(false)}
+      />
     </View>
   );
 }
