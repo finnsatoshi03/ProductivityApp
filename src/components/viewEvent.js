@@ -58,7 +58,6 @@ const ViewEvent = ({ route, navigation }) => {
   const date = dateTimeArray.slice(0, 3).join(' ');
   const time = dateTimeArray.slice(3).join(' ');
   
-  
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
 
@@ -66,15 +65,17 @@ const ViewEvent = ({ route, navigation }) => {
     setSelectedParticipant(participant);
   };
 
-  // const removeParticipant = () => {
-  //   if (selectedParticipant) {
-  //     const updatedParticipants = participants
-  //       .split(", ")
-  //       .filter((participant) => participant !== selectedParticipant);
-  //     navigation.setParams({ participants: updatedParticipants.join(", ") });
-  //     setSelectedParticipant(null); // Clear the selection
-  //   }
-  // };
+  const removeParticipant = () => {
+    // TODO DO THIS DELETE PARTICIPANT
+    console.log(selectedParticipant.id);
+    // if (selectedParticipant) {
+    //   const updatedParticipants = participants
+    //     .split(", ")
+    //     .filter((participant) => participant !== selectedParticipant);
+    //   navigation.setParams({ participants: updatedParticipants.join(", ") });
+    //   setSelectedParticipant(null); // Clear the selection
+    // }
+  };
   console.log(participants);
   return (
     <View>
@@ -306,8 +307,8 @@ const ViewEvent = ({ route, navigation }) => {
             />
           </View>
           <View style={{ height: hp("5%") }}>
-            <Button text={"Remove"} />
-            {/* onPress={removeParticipant} put this to button if bug is fixed*/}
+            <Button text={"Remove"} 
+            onPress={removeParticipant} /> 
           </View>
         </View>
         {/* <Text style={styles.participantsModalTitle}>{participants}</Text> */}

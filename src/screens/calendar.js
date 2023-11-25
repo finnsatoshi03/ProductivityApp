@@ -27,7 +27,7 @@ export default function Calendar({ navigation }) {
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
-
+  //TODO MUST RETRIEVE ONCE EVERY DELETE,CREATE,UPDATE IN DB
   useEffect(() => {
     const fetchEventsData = async () => {
       try {

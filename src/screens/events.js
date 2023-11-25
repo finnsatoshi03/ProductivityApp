@@ -99,7 +99,7 @@ export default function EventsScreen({ navigation, data }) {
   ) => {
     setCreatingEvent(true);
     const newEvent = {
-      dateTime: `${startDate.toLocaleDateString("en-GB", {
+      datetime: `${startDate.toLocaleDateString("en-GB", {
         day: "numeric",
         month: "long",
         year: "numeric",
@@ -114,7 +114,7 @@ export default function EventsScreen({ navigation, data }) {
       description: description,
       event_id: selectedEvent === "" ? null : selectedEvent,
     };
-
+    
     try {
       const response =
         btnFnc === "create"
@@ -149,6 +149,7 @@ export default function EventsScreen({ navigation, data }) {
         console.log("NOOOO");
       }
 
+      console.log(newEvent);
       setEventData([...eventData, newEvent]);
       setBottomSheetVisible(true);
 
@@ -205,14 +206,37 @@ export default function EventsScreen({ navigation, data }) {
     setBtnFnc("create");
   };
 
-  const deleteEvent = (eventTitleToDelete) => {
-    setEventData((prevEvents) =>
-      prevEvents.filter((event) => event.event !== eventTitleToDelete)
-    );
-    console.log(`Event ${eventTitleToDelete} has been deleted.`);
+  const deleteEvent = async (event_id) => {
+
+    try {      
+      const response = await axios.delete(`${global.baseurl}:4000/deleteEvent`, {
+        params: {
+          event_id: event_id,
+        },
+      });
+  
+      if (response.status === 200) {
+        console.log('succes');
+        
+        setEventData((prevEvents) =>
+          prevEvents.filter((event) => event.id !== event_id)
+        );
+        console.log(`Event ${event_id} has been deleted.`);
+      
+      } else console.log('no');
+      
+      
+    } catch (error) {
+      console.log(error);
+    }
+
+
+    
   };
 
   const getParticipants = async (event_id) => {
+  // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
+  // TODO SAVE THE VALUE DONT DELETE OR CLEAR IT FOR EVERY ADD PARTICIPANTS/UPDATE
     try {
       const response = await axios.get(
         `${global.baseurl}:4000/getParticipant`,
@@ -230,14 +254,27 @@ export default function EventsScreen({ navigation, data }) {
         // clear it first
         setParticipantNames("");
         setParticipants([]);
+        // setAddedParticipants([])
 
         // Extract names and IDs from users
         const participantNames = users.map((user) => user.fullname);
         const participantIds = users.map((user) => user.id);
 
+        const participants = users.map((user) => ({
+          avatar: undefined,
+          date: undefined,
+          fullname: user.fullname,
+          id: user.id
+        }));
+
+        console.log(participants);
         // Set the participant data in the state
         setParticipantNames(participantNames.join(", "));
         setParticipants(participantIds);
+        setAddedParticipants(participants)
+        // console.log(addedParticipants);
+
+        
 
         console.log("sucess");
       } else {
@@ -286,7 +323,7 @@ export default function EventsScreen({ navigation, data }) {
 
   // Update the handleDateTimeConfirm function
   const handleDateTimeConfirm = (date, type) => {
-    console.log(date);
+  
     if (type === "date") {
       setStartDate(date);
       hideDatePicker();
@@ -296,6 +333,9 @@ export default function EventsScreen({ navigation, data }) {
     }
   };
 
+  const handleCloseNewModal = () => {
+    setNewModalVisible(false)
+  }
   return (
     <>
       <View style={globalStyles.container}>
@@ -866,11 +906,12 @@ export default function EventsScreen({ navigation, data }) {
               <Participants
                 onParticipantsSelected={(selectedParticipants) => {
                   // NEW: Update added participants
+                  
                   setAddedParticipants([
                     ...addedParticipants,
                     ...selectedParticipants,
                   ]);
-
+                  console.log(addedParticipants);
                   if (selectedParticipants.length > 0) {
                     const { idString, names } = selectedParticipants.reduce(
                       (acc, participant, index) => {
@@ -895,6 +936,7 @@ export default function EventsScreen({ navigation, data }) {
                   }
                 }}
                 addedParticipants={addedParticipants} // NEW: Pass added participants
+                onBack={handleCloseNewModal}
               />
             </View>
           </Modal>
@@ -916,11 +958,7 @@ export default function EventsScreen({ navigation, data }) {
               <ListView
                 data={eventData}
                 renderItem={({ item }) => (
-                  <Events
-                    {...item}
-                    onDelete={() => deleteEvent(item.event)}
-                    onEdit={() => handleEditEvent(item)}
-                  />
+                  <Events {...item} onDelete={() => deleteEvent(item.id)} onEdit={() => handleEditEvent(item)}/>
                 )}
               />
             )}

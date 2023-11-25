@@ -45,6 +45,15 @@ export default function eventCard({
   onEdit,
   id,
 }) {
+
+  const { getUser } = Authentication();
+
+  const [userData, setUserData] = useState({
+    fullname: "",
+    role: "",
+    user_id: "",
+  });
+
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
   const rotateInterpolation = animationRef.interpolate({
@@ -55,6 +64,16 @@ export default function eventCard({
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+      console.log(userData);
+    };
+
+    fetchUserData();
+  }, []);
 
   function formatDateTime(datetimeString) {
     const optionsDate = {
@@ -79,8 +98,7 @@ export default function eventCard({
     );
 
     return `${datePart} ${timePart}`;
-  }
-
+  }  
   datetime = formatDateTime(datetime);
 
   const viewEvent = async () => {

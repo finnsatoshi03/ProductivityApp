@@ -31,7 +31,7 @@ export default function Participants({
   addedParticipants,
 }) {
   const [data, setData] = useState([]);
-
+  
   useEffect(() => {
     const retrieveUsers = async () => {
       try {
@@ -80,7 +80,7 @@ export default function Participants({
     onParticipantsSelected(mergedParticipants);
     setParticipants([]);
   };
-
+  console.log(addedParticipants);
   useEffect(() => {
     const filteredData = data.filter(
       (participant) =>
