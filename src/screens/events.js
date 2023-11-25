@@ -132,6 +132,7 @@ export default function EventsScreen({ navigation, data }) {
           user_ids,
           event_id,
         };
+        newEvent.event_id = event_id;
         const request =
           btnFnc === "create"
             ? await axios.post(
