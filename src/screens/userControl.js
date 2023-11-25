@@ -79,11 +79,10 @@ export default function UserControl({ navigation }) {
         setNotVerifiedUsers((prevUsers) => {
           return prevUsers.filter((user) => user.id !== id);
         });
+        setTimeout(handleCloseModal, 1500); // delay of 2 seconds
       } else {
         console.log("error");
       }
-
-      handleCloseModal();
     } catch (error) {
       console.log(error);
     }
