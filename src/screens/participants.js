@@ -10,7 +10,10 @@ import {
 } from "react-native";
 import LottieView from "lottie-react-native";
 import { globalStyles } from "./../styles/globalStyles";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import Header from "./../components/header";
 import Searchbar from "./../components/searchbar";
 import ListView from "./../components/listView";
@@ -94,6 +97,7 @@ export default function Participants({
         <View
           style={{
             height: hp("6%"),
+            width: wp("70%"),
           }}
         >
           <Header title={"Participants"} icon={"back"} onBack={onBack} />
