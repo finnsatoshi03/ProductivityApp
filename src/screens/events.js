@@ -178,6 +178,22 @@ export default function EventsScreen({ navigation, data }) {
       );
     } catch (error) {
       console.log(error);
+
+      Alert.alert(
+        "Error",
+        btnFnc === "create"
+          ? "Error creating event. Please try again."
+          : "Error editing event. Please try again.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     } finally {
       setCreatingEvent(false);
     }
@@ -619,7 +635,6 @@ export default function EventsScreen({ navigation, data }) {
                       }
                     />
                   )}
-
                   <Button
                     text={"Cancel"}
                     width={wp("23%")}
@@ -808,21 +823,25 @@ export default function EventsScreen({ navigation, data }) {
                     width: "100%",
                   }}
                 >
-                  <Button
-                    text={"Edit Event"}
-                    width={wp("55%")}
-                    fnc={"press"}
-                    onPress={() =>
-                      addEvent(
-                        eventTitle,
-                        participants,
-                        startDate,
-                        endDate,
-                        location,
-                        description
-                      )
-                    }
-                  />
+                  {isCreatingEvent ? (
+                    <ActivityIndicator size="large" color={"black"} />
+                  ) : (
+                    <Button
+                      text={"Edit Event"}
+                      width={wp("55%")}
+                      fnc={"press"}
+                      onPress={() =>
+                        addEvent(
+                          eventTitle,
+                          participants,
+                          startDate,
+                          endDate,
+                          location,
+                          description
+                        )
+                      }
+                    />
+                  )}
                   <Button
                     text={"Cancel"}
                     width={wp("23%")}
