@@ -27,10 +27,9 @@ import Participants from "./participants";
 
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
-import '../../global'
+import "../../global";
 
 export default function EventsScreen({ navigation, data }) {
-
   const { eventData, setEventData } = useData();
 
   const { getUser } = Authentication();
@@ -61,18 +60,18 @@ export default function EventsScreen({ navigation, data }) {
   const [description, setDescription] = useState("");
 
   const [addedParticipants, setAddedParticipants] = useState([]);
-  const [btnFnc, setBtnFnc] = useState('create')
-  const [selectedEvent, setSelectedEvent] = useState('')
-  
+  const [btnFnc, setBtnFnc] = useState("create");
+  const [selectedEvent, setSelectedEvent] = useState("");
+
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getUser();
       setUserData(user);
     };
-    
+
     fetchUserData();
   }, []);
-  
+
   const months = [
     { label: "January", value: "January" },
     { label: "February", value: "February" },
@@ -87,7 +86,7 @@ export default function EventsScreen({ navigation, data }) {
     { label: "November", value: "November" },
     { label: "December", value: "December" },
   ];
-  
+
   const addEvent = async (
     eventTitle,
     participants,
@@ -96,7 +95,6 @@ export default function EventsScreen({ navigation, data }) {
     location,
     description
   ) => {
-    
     const newEvent = {
       dateTime: `${startDate.toLocaleDateString("en-GB", {
         day: "numeric",
@@ -111,45 +109,55 @@ export default function EventsScreen({ navigation, data }) {
       location: location,
       participants: participants,
       description: description,
-      event_id: selectedEvent === '' ? null : selectedEvent
+      event_id: selectedEvent === "" ? null : selectedEvent,
     };
-    
-            
-    try {      
-      const response = btnFnc === 'create' ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent) : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent)
-      
+
+    try {
+      const response =
+        btnFnc === "create"
+          ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
+          : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent);
+
       if (response.status === 200) {
-        const { data } = response
-        const user_ids = participants
-        const event_id = data.id        
+        const { data } = response;
+        const user_ids = participants;
+        const event_id = data.id;
         const userEvent = {
           user_ids,
-          event_id
-        }                   
-        const request = btnFnc === 'create' ? await axios.post(`${global.baseurl}:4000/addParticipant`, userEvent) : await axios.put(`${global.baseurl}:4000/updateParticipants`, userEvent)
+          event_id,
+        };
+        const request =
+          btnFnc === "create"
+            ? await axios.post(
+                `${global.baseurl}:4000/addParticipant`,
+                userEvent
+              )
+            : await axios.put(
+                `${global.baseurl}:4000/updateParticipants`,
+                userEvent
+              );
 
         if (request.status === 200) {
-          console.log('SUCCSESESE');
+          console.log("SUCCSESESE");
         } else {
-          console.log('NOT SUCESESES');
-        }  
-
+          console.log("NOT SUCESESES");
+        }
       } else {
         console.log("NOOOO");
       }
 
-    setEventData([...eventData, newEvent]);
-    setBottomSheetVisible(true);
+      setEventData([...eventData, newEvent]);
+      setBottomSheetVisible(true);
 
-    // Reset the states
-    setEventTitle("");
-    setParticipants([]);
-    setParticipantNames("");
-    setLocation("");
-    setDescription("");
-    setAddedParticipants([]);
-    setLocation("");
-    setDescription("");
+      // Reset the states
+      setEventTitle("");
+      setParticipants([]);
+      setParticipantNames("");
+      setLocation("");
+      setDescription("");
+      setAddedParticipants([]);
+      setLocation("");
+      setDescription("");
 
       Alert.alert(
         "Event Created",
@@ -167,15 +175,15 @@ export default function EventsScreen({ navigation, data }) {
       );
     } catch (error) {
       console.log(error);
-    } 
+    }
   };
 
-  const handleCreateEvent = () => {  
-    setParticipantNames('')  
-    setBottomSheetVisible(true)
-    setBtnFnc('create')
-  }
-  
+  const handleCreateEvent = () => {
+    setParticipantNames("");
+    setBottomSheetVisible(true);
+    setBtnFnc("create");
+  };
+
   const deleteEvent = (eventTitleToDelete) => {
     setEventData((prevEvents) =>
       prevEvents.filter((event) => event.event !== eventTitleToDelete)
@@ -184,57 +192,55 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   const getParticipants = async (event_id) => {
-
     try {
-    
-      const response = await axios.get(`${global.baseurl}:4000/getParticipant`, {
-        params: {
-          event_id: event_id,
-        },
-      });
+      const response = await axios.get(
+        `${global.baseurl}:4000/getParticipant`,
+        {
+          params: {
+            event_id: event_id,
+          },
+        }
+      );
 
       if (response.status === 200) {
-        const { data } = response
-        const users = data.users
-        
+        const { data } = response;
+        const users = data.users;
+
         // clear it first
-        setParticipantNames("")
+        setParticipantNames("");
         setParticipants([]);
 
         // Extract names and IDs from users
-        const participantNames = users.map(user => user.fullname);
-        const participantIds = users.map(user => user.id);
+        const participantNames = users.map((user) => user.fullname);
+        const participantIds = users.map((user) => user.id);
 
         // Set the participant data in the state
-        setParticipantNames(participantNames.join(', '));
+        setParticipantNames(participantNames.join(", "));
         setParticipants(participantIds);
 
-        console.log('sucess');
-
+        console.log("sucess");
       } else {
-        console.log('no');
+        console.log("no");
       }
     } catch (error) {
       console.log(error);
     }
+  };
 
-  }
-  
   const handleEditEvent = (event) => {
-    setBottomSheetVisible(true)
-    setBtnFnc('edit')
-    setSelectedEvent(event.id)    
-    
-    getParticipants(event.id)    
+    setBottomSheetVisible(true);
+    setBtnFnc("edit");
+    setSelectedEvent(event.id);
+
+    getParticipants(event.id);
     // setParticipantNames(event.)
-    const dateTime =  new Date(event.datetime);
-    
-    handleDateTimeConfirm(dateTime,'date')
-    setEventTitle(event.event)
-    setLocation(event.location)
-    setDescription(event.description)
-    
-  }
+    const dateTime = new Date(event.datetime);
+
+    handleDateTimeConfirm(dateTime, "date");
+    setEventTitle(event.event);
+    setLocation(event.location);
+    setDescription(event.description);
+  };
 
   const closeBottomSheet = () => {
     setBottomSheetVisible(false);
@@ -268,7 +274,6 @@ export default function EventsScreen({ navigation, data }) {
       hideTimePicker();
     }
   };
-  
 
   return (
     <>
@@ -328,6 +333,7 @@ export default function EventsScreen({ navigation, data }) {
                   ? globalStyles.colors.green
                   : "transparent",
                 borderRadius: 20,
+                height: hp("5%"),
               }}
               onPress={() =>
                 setActiveButtons({
@@ -354,6 +360,7 @@ export default function EventsScreen({ navigation, data }) {
                   ? globalStyles.colors.green
                   : "transparent",
                 borderRadius: 20,
+                height: hp("5%"),
               }}
               onPress={() =>
                 setActiveButtons({
@@ -413,7 +420,7 @@ export default function EventsScreen({ navigation, data }) {
             }}
           >
             {/* Content of the bottom sheet */}
-            {btnFnc === 'create' ? (
+            {btnFnc === "create" ? (
               <View
                 style={{
                   backgroundColor: globalStyles.colors.green,
@@ -431,7 +438,7 @@ export default function EventsScreen({ navigation, data }) {
                   }}
                   placeholderTextColor="rgba(0,0,0,0.5)"
                   paddingVertical={10}
-                  onChangeText={(text) => {                  
+                  onChangeText={(text) => {
                     setEventTitle(text);
                   }}
                 />
@@ -551,7 +558,7 @@ export default function EventsScreen({ navigation, data }) {
                       color: "black",
                     }}
                     placeholderTextColor={"rgba(0,0,0,0.5)"}
-                    onChangeText={(text) => {                    
+                    onChangeText={(text) => {
                       setLocation(text);
                     }}
                   />
@@ -575,7 +582,7 @@ export default function EventsScreen({ navigation, data }) {
                       color: "black",
                     }}
                     placeholderTextColor={"rgba(0,0,0,0.5)"}
-                    onChangeText={(text) => {                    
+                    onChangeText={(text) => {
                       setDescription(text);
                     }}
                   />
@@ -588,7 +595,6 @@ export default function EventsScreen({ navigation, data }) {
                     width: "100%",
                   }}
                 >
-                  
                   <Button
                     text={"Create Event"}
                     width={wp("55%")}
@@ -604,7 +610,7 @@ export default function EventsScreen({ navigation, data }) {
                       )
                     }
                   />
-                                                                 
+
                   <Button
                     text={"Cancel"}
                     width={wp("23%")}
@@ -617,206 +623,206 @@ export default function EventsScreen({ navigation, data }) {
               </View>
             ) : (
               <View
-              style={{
-                backgroundColor: globalStyles.colors.green,
-                padding: 40,
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-              }}
-            >
-              <TextInput
-                placeholder="Name of the event"
                 style={{
-                  fontFamily: globalStyles.fontStyle.semiBold,
-                  fontSize: globalStyles.fontSize.subHeader,
-                  color: "black",
-                }}
-                placeholderTextColor="rgba(0,0,0,0.5)"
-                paddingVertical={10}
-                onChangeText={(text) => {                  
-                  setEventTitle(text);
-                }}
-                value={eventTitle}
-              />
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                  }}
-                >
-                  Invite Participants
-                </Text>
-                <Pressable onPress={() => setNewModalVisible(true)}>
-                  <Image
-                    style={{
-                      height: hp("3.5%"),
-                      width: hp("3.5%"),
-                      borderRadius: hp("3.5%") / 2,
-                      opacity: 0.5,
-                    }}
-                    source={require("./../../assets/add-dotted.png")}
-                  />
-                </Pressable>
-                {participantNames.length > 0 && (
-                  <View>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.semiBold,
-                        fontSize: globalStyles.fontSize.description,
-                      }}
-                    >
-                      {participantNames}
-                    </Text>
-                  </View>
-                )}
-              </View>
-
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                  }}
-                >
-                  Select Date & Time
-                </Text>
-                <Pressable onPress={showDatePicker}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.bold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`Date: `}</Text>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`${startDate.toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}`}</Text>
-                </Pressable>
-                <DateTimePickerModal
-                  isVisible={isDatePickerVisible}
-                  mode="date"
-                  onConfirm={(date) => handleDateTimeConfirm(date, "date")}
-                  onCancel={hideDatePicker}
-                />
-                <Pressable onPress={showTimePicker}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.bold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`Time: `}</Text>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`${endDate.toLocaleTimeString("en-GB", {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  })}`}</Text>
-                </Pressable>
-                <DateTimePickerModal
-                  isVisible={isTimePickerVisible}
-                  mode="time"
-                  onConfirm={(date) => handleDateTimeConfirm(date, "time")}
-                  onCancel={hideTimePicker}
-                />
-              </View>
-              <View View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                    marginBottom: -7,
-                  }}
-                >
-                  Choose Location
-                </Text>
-                <TextInput
-                  placeholder="Where is the event?"
-                  style={{
-                    fontFamily: globalStyles.fontStyle.semiBold,
-                    fontSize: globalStyles.fontSize.mediumDescription,
-                    color: "black",
-                  }}
-                  placeholderTextColor={"rgba(0,0,0,0.5)"}
-                  onChangeText={(text) => {                    
-                    setLocation(text);
-                  }}
-                  value={location}
-                />
-              </View>
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                    marginBottom: -7,
-                  }}
-                >
-                  Write a description
-                </Text>
-                <TextInput
-                  placeholder="Message.."
-                  style={{
-                    fontFamily: globalStyles.fontStyle.semiBold,
-                    fontSize: globalStyles.fontSize.mediumDescription,
-                    color: "black",
-                  }}
-                  placeholderTextColor={"rgba(0,0,0,0.5)"}
-                  onChangeText={(text) => {                    
-                    setDescription(text);
-                  }}
-                  value={description}
-                />
-              </View>
-              <View
-                style={{
-                  marginVertical: 20,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: "100%",
+                  backgroundColor: globalStyles.colors.green,
+                  padding: 40,
+                  borderTopLeftRadius: 20,
+                  borderTopRightRadius: 20,
                 }}
               >
-                <Button
-                  text={"Edit Event"}
-                  width={wp("55%")}
-                  fnc={"press"}
-                  onPress={() =>
-                    addEvent(
-                      eventTitle,
-                      participants,
-                      startDate,
-                      endDate,
-                      location,
-                      description
-                    )
-                  }
-                />               
-                <Button
-                  text={"Cancel"}
-                  width={wp("23%")}
-                  bgColor="rgba(0,0,0,0.3)"
-                  textColor="#9198bc"
-                  onPress={closeBottomSheet}
-                  fnc={"press"}
+                <TextInput
+                  placeholder="Name of the event"
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: globalStyles.fontSize.subHeader,
+                    color: "black",
+                  }}
+                  placeholderTextColor="rgba(0,0,0,0.5)"
+                  paddingVertical={10}
+                  onChangeText={(text) => {
+                    setEventTitle(text);
+                  }}
+                  value={eventTitle}
                 />
-              </View>
+                <View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    Invite Participants
+                  </Text>
+                  <Pressable onPress={() => setNewModalVisible(true)}>
+                    <Image
+                      style={{
+                        height: hp("3.5%"),
+                        width: hp("3.5%"),
+                        borderRadius: hp("3.5%") / 2,
+                        opacity: 0.5,
+                      }}
+                      source={require("./../../assets/add-dotted.png")}
+                    />
+                  </Pressable>
+                  {participantNames.length > 0 && (
+                    <View>
+                      <Text
+                        style={{
+                          fontFamily: globalStyles.fontStyle.semiBold,
+                          fontSize: globalStyles.fontSize.description,
+                        }}
+                      >
+                        {participantNames}
+                      </Text>
+                    </View>
+                  )}
+                </View>
+
+                <View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    Select Date & Time
+                  </Text>
+                  <Pressable onPress={showDatePicker}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.bold,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`Date: `}</Text>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`${startDate.toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })}`}</Text>
+                  </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isDatePickerVisible}
+                    mode="date"
+                    onConfirm={(date) => handleDateTimeConfirm(date, "date")}
+                    onCancel={hideDatePicker}
+                  />
+                  <Pressable onPress={showTimePicker}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.bold,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`Time: `}</Text>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                    >{`${endDate.toLocaleTimeString("en-GB", {
+                      hour: "2-digit",
+                      minute: "2-digit",
+                    })}`}</Text>
+                  </Pressable>
+                  <DateTimePickerModal
+                    isVisible={isTimePickerVisible}
+                    mode="time"
+                    onConfirm={(date) => handleDateTimeConfirm(date, "time")}
+                    onCancel={hideTimePicker}
+                  />
+                </View>
+                <View View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                      marginBottom: -7,
+                    }}
+                  >
+                    Choose Location
+                  </Text>
+                  <TextInput
+                    placeholder="Where is the event?"
+                    style={{
+                      fontFamily: globalStyles.fontStyle.semiBold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                    placeholderTextColor={"rgba(0,0,0,0.5)"}
+                    onChangeText={(text) => {
+                      setLocation(text);
+                    }}
+                    value={location}
+                  />
+                </View>
+                <View style={{ paddingVertical: 10 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                      marginBottom: -7,
+                    }}
+                  >
+                    Write a description
+                  </Text>
+                  <TextInput
+                    placeholder="Message.."
+                    style={{
+                      fontFamily: globalStyles.fontStyle.semiBold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                    placeholderTextColor={"rgba(0,0,0,0.5)"}
+                    onChangeText={(text) => {
+                      setDescription(text);
+                    }}
+                    value={description}
+                  />
+                </View>
+                <View
+                  style={{
+                    marginVertical: 20,
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    width: "100%",
+                  }}
+                >
+                  <Button
+                    text={"Edit Event"}
+                    width={wp("55%")}
+                    fnc={"press"}
+                    onPress={() =>
+                      addEvent(
+                        eventTitle,
+                        participants,
+                        startDate,
+                        endDate,
+                        location,
+                        description
+                      )
+                    }
+                  />
+                  <Button
+                    text={"Cancel"}
+                    width={wp("23%")}
+                    bgColor="rgba(0,0,0,0.3)"
+                    textColor="#9198bc"
+                    onPress={closeBottomSheet}
+                    fnc={"press"}
+                  />
+                </View>
               </View>
             )}
           </Modal>
@@ -843,18 +849,21 @@ export default function EventsScreen({ navigation, data }) {
                     ...addedParticipants,
                     ...selectedParticipants,
                   ]);
-                  
-                  if (selectedParticipants.length > 0) {                    
-                    const { idString, names } = selectedParticipants.reduce((acc, participant, index) => {
-                      acc.idString += participant.id;
-                      acc.names += participant.fullname;
 
-                      if (index < selectedParticipants.length - 1) {
-                        acc.idString += ', ';
-                        acc.names += ', ';
-                      }
-                      return acc;
-                    }, { idString: '', names: '' });
+                  if (selectedParticipants.length > 0) {
+                    const { idString, names } = selectedParticipants.reduce(
+                      (acc, participant, index) => {
+                        acc.idString += participant.id;
+                        acc.names += participant.fullname;
+
+                        if (index < selectedParticipants.length - 1) {
+                          acc.idString += ", ";
+                          acc.names += ", ";
+                        }
+                        return acc;
+                      },
+                      { idString: "", names: "" }
+                    );
                     setParticipantNames(names); // Update the participantNames state
                     setParticipants(idString);
                     setNewModalVisible(false); // Close the modal
@@ -885,7 +894,11 @@ export default function EventsScreen({ navigation, data }) {
               <ListView
                 data={eventData}
                 renderItem={({ item }) => (
-                  <Events {...item} onDelete={() => deleteEvent(item.event)} onEdit={() => handleEditEvent(item)}/>
+                  <Events
+                    {...item}
+                    onDelete={() => deleteEvent(item.event)}
+                    onEdit={() => handleEditEvent(item)}
+                  />
                 )}
               />
             )}

@@ -7,6 +7,7 @@ import {
   Keyboard,
   Easing,
   Text,
+  ActivityIndicator,
 } from "react-native";
 import { globalStyles } from "../../styles/globalStyles";
 import Background from "../background";
@@ -39,9 +40,14 @@ export default function AdminLogin({
   const [passwordError, setPasswordError] = useState(null);
   const [errorMessage, setErrorMessage] = useState(null);
 
+  const [isLoading, setIsLoading] = useState(false);
+
   const { login } = Authentication();
 
   const onSubmit = async (values) => {
+    Keyboard.dismiss();
+    setIsLoading(true);
+
     const credentials = {
       username: username,
       password: password,
@@ -71,10 +77,16 @@ export default function AdminLogin({
           role: response.data.role,
           fullname: response.data.fullname,
         });
+        setIsLoading(false);
         console.log(response.data);
+        setErrorMessage("Login successful");
         navigation.navigate("Calendar");
+        // setTimeout(() => {
+
+        // }, 500);
       }
     } catch (error) {
+      setIsLoading(false);
       console.log(error);
       console.error(
         "An error occurred while making the request:",
@@ -198,7 +210,14 @@ export default function AdminLogin({
       <HeroMessage
         header={header}
         description={errorMessage || description}
-        style={{ color: errorMessage ? "red" : "black" }}
+        style={{
+          color:
+            errorMessage === "Login successful"
+              ? "green"
+              : errorMessage
+              ? "red"
+              : "black",
+        }}
       />
       <View style={{ marginBottom: 20 }}>
         {usernameError && (
@@ -225,13 +244,25 @@ export default function AdminLogin({
         />
       </View>
       <View style={globalStyles.loginButtonContainer}>
-        <LoginButton
-          navigation={navigation}
-          destination="Calendar"
-          text="Login"
-          onPress={onSubmit}
-          fnc={"press"}
-        />
+        {isLoading ? (
+          <>
+            <ActivityIndicator
+              size="extra-large"
+              color={globalStyles.colors.green}
+            />
+            <Text style={{ justifyContent: "center", alignSelf: "center" }}>
+              Checking your credentials...
+            </Text>
+          </>
+        ) : (
+          <LoginButton
+            navigation={navigation}
+            destination="Calendar"
+            text="Login"
+            onPress={onSubmit}
+            fnc={"press"}
+          />
+        )}
       </View>
     </KeyboardAvoidingView>
   );
