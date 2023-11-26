@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import moment from "moment";
 import { globalStyles } from "./../styles/globalStyles";
@@ -94,7 +95,9 @@ export default function Calendar({ navigation }) {
             />
           </View>
           <View style={{ height: hp("38%") }}>
-            <CalendarWidget events={eventData} onDayPress={handleDayPress} />
+            <ScrollView>
+              <CalendarWidget events={eventData} onDayPress={handleDayPress} />
+            </ScrollView>
           </View>
           <View
             style={{
