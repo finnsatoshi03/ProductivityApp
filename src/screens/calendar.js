@@ -155,6 +155,7 @@ export default function Calendar({ navigation }) {
                 renderItem={({ item }) => (
                   <Events
                     navigation={navigation}
+                    isInReportsScreen={true} // to hide the edit button
                     {...item}
                     onDelete={() => deleteEvent(item.event)}
                   />
