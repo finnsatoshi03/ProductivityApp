@@ -18,7 +18,18 @@ const defaultIconGenerator = (firstName, size = 7) => {
 
   const firstLetter = firstName ? firstName.charAt(0).toUpperCase() : "";
 
-  const randomColor = colors[Math.floor(Math.random() * colors.length)];
+  // Hash function to convert name into a number
+  const hash = (str) => {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+  };
+
+  // Used hash index
+  const colorIndex = Math.abs(hash(firstName)) % colors.length;
+  const randomColor = colors[colorIndex];
 
   const iconSize = hp(size);
 
