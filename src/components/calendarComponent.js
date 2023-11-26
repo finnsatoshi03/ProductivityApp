@@ -52,7 +52,7 @@ LocaleConfig.locales["en"] = {
 
 LocaleConfig.defaultLocale = "en";
 
-export default function CalendarComponent({ events }) {
+export default function CalendarComponent({ events, onDayPress }) {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
 
@@ -61,12 +61,59 @@ export default function CalendarComponent({ events }) {
 
   const [selected, setSelected] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
-  // const [events, setEvents] = useState({
-  //   "2023-11-20": { selected: true, marked: true, selectedColor: "blue" },
-  //   "2023-11-21": { marked: true },
-  //   "2023-11-22": { marked: true, dotColor: "red", activeOpacity: 0 },
-  //   "2023-11-23": { disabled: true, disableTouchEvent: true },
-  // }); // Use for marking dates with events
+
+  // console.log("events", events);
+  // if (Array.isArray(events)) {
+  //   events.map((event) => {
+  //     const date = event.datetime.split("T")[0];
+  //     console.log("Event date: ", date);
+  //   });
+  // } else {
+  //   console.log("events is not an array");
+  // }
+
+  let markedDates = {};
+
+  // need to use forEach instead of map because map returns a new array
+  const colors = [
+    "#FF0000",
+    "#00FF00",
+    "#0000FF",
+    "#FFFF00",
+    "#00FFFF",
+    "#FF00FF",
+  ];
+
+  if (Array.isArray(events)) {
+    events.forEach((event, index) => {
+      const date = event.datetime.split("T")[0];
+      const color = colors[index % colors.length];
+      const eventMarking = {
+        key: event.id,
+        color: color,
+        selectedDotColor: color,
+      };
+
+      if (markedDates[date]) {
+        markedDates[date].dots.push(eventMarking);
+      } else {
+        markedDates[date] = {
+          dots: [eventMarking],
+          selected: true,
+          selectedColor: "transparent",
+          selectedTextColor: globalStyles.colors.darkGreen,
+          activeOpacity: 0,
+        };
+      }
+    });
+  } else {
+    console.log("events is not an array");
+  }
+
+  const handleDayPress = (day) => {
+    setSelected(day.dateString);
+    onDayPress(day.dateString);
+  };
 
   return (
     <CalendarProvider>
@@ -79,11 +126,13 @@ export default function CalendarComponent({ events }) {
         onDayPress={(day) => {
           console.log("selected day", day);
           setSelected(day.dateString);
+          handleDayPress(day);
         }}
         enableSwipeMonths={true}
         // markedDates={events}
+        markingType={"multi-dot"}
         markedDates={{
-          ...events,
+          ...markedDates,
           [selected]: {
             selected: true,
             selectedColor: globalStyles.colors.darkGreen,
@@ -100,7 +149,7 @@ export default function CalendarComponent({ events }) {
           },
         }}
         // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
-        monthFormat={"yyyy MMMM"}
+        monthFormat={"MMMM yyyy"}
         // Handler which gets executed when visible month changes in calendar. Default = undefined
         onMonthChange={(month) => {
           console.log("month changed", month);
@@ -170,6 +219,7 @@ export default function CalendarComponent({ events }) {
           textMonthFontSize: globalStyles.fontSize.subHeader,
           textDayHeaderFontSize: globalStyles.fontSize.description,
         }}
+        style={{ height: 350 }}
       />
     </CalendarProvider>
   );

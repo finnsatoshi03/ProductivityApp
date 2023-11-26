@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Text,
   View,
@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import moment from "moment";
 import { globalStyles } from "./../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -65,6 +66,8 @@ export default function EventsScreen({ navigation, data }) {
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isCreatingEvent, setCreatingEvent] = useState(false);
 
+  const [sortOrder, setSortOrder] = useState("asc");
+
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getUser();
@@ -73,6 +76,14 @@ export default function EventsScreen({ navigation, data }) {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    eventData.forEach((event) => {
+      const eventDate = new Date(event.datetime.split(" ")[0]);
+      const eventMonth = eventDate.toLocaleString("default", { month: "long" });
+      console.log("Event month:", eventMonth);
+    });
+  }, [eventData]);
 
   const months = [
     { label: "January", value: "January" },
@@ -114,12 +125,15 @@ export default function EventsScreen({ navigation, data }) {
       description: description,
       event_id: selectedEvent === "" ? null : selectedEvent,
     };
-    
+
     try {
       const response =
         btnFnc === "create"
           ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
           : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent);
+
+      console.log(newEvent);
+      console.log("Updated eventData:", eventData);
 
       if (response.status === 200) {
         const { data } = response;
@@ -129,6 +143,7 @@ export default function EventsScreen({ navigation, data }) {
           user_ids,
           event_id,
         };
+        newEvent.event_id = event_id;
         const request =
           btnFnc === "create"
             ? await axios.post(
@@ -207,36 +222,64 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   const deleteEvent = async (event_id) => {
+    try {
+      const response = await axios.delete(
+        `${global.baseurl}:4000/deleteEvent`,
+        {
+          params: {
+            event_id: event_id,
+          },
+        }
+      );
 
-    try {      
-      const response = await axios.delete(`${global.baseurl}:4000/deleteEvent`, {
-        params: {
-          event_id: event_id,
-        },
-      });
-  
       if (response.status === 200) {
-        console.log('succes');
-        
+        console.log("succes");
+
         setEventData((prevEvents) =>
           prevEvents.filter((event) => event.id !== event_id)
         );
         console.log(`Event ${event_id} has been deleted.`);
-      
-      } else console.log('no');
-      
-      
+      } else console.log("no");
     } catch (error) {
       console.log(error);
     }
+  };
 
+  // TODO: add a toggle for change month sort and a remove sort for months
+  const [selectedMonth, setSelectedMonth] = useState(months[0].value); // TODO: remove default
+  const sortedEventData = useMemo(() => {
+    let sortedData = [...eventData];
 
-    
+    sortedData = sortedData.filter((event) => {
+      const eventDate = new Date(event.datetime.split(" ")[0]);
+      const eventMonth = eventDate.toLocaleString("default", { month: "long" });
+
+      // Check if the event month matches the selected month
+      return eventMonth === selectedMonth;
+    });
+
+    sortedData.sort((a, b) => {
+      const dateA = new Date(a.datetime);
+      const dateB = new Date(b.datetime);
+
+      if (sortOrder === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
+
+    return sortedData;
+  }, [eventData, sortOrder, selectedMonth]);
+
+  const handleMonthChange = (selectedMonth) => {
+    console.log("Selected month:", selectedMonth);
+    setSelectedMonth(selectedMonth);
   };
 
   const getParticipants = async (event_id) => {
-  // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
-  // TODO SAVE THE VALUE DONT DELETE OR CLEAR IT FOR EVERY ADD PARTICIPANTS/UPDATE
+    // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
+    // TODO SAVE THE VALUE DONT DELETE OR CLEAR IT FOR EVERY ADD PARTICIPANTS/UPDATE
     try {
       const response = await axios.get(
         `${global.baseurl}:4000/getParticipant`,
@@ -264,17 +307,15 @@ export default function EventsScreen({ navigation, data }) {
           avatar: undefined,
           date: undefined,
           fullname: user.fullname,
-          id: user.id
+          id: user.id,
         }));
 
         console.log(participants);
         // Set the participant data in the state
         setParticipantNames(participantNames.join(", "));
         setParticipants(participantIds);
-        setAddedParticipants(participants)
+        setAddedParticipants(participants);
         // console.log(addedParticipants);
-
-        
 
         console.log("sucess");
       } else {
@@ -323,7 +364,6 @@ export default function EventsScreen({ navigation, data }) {
 
   // Update the handleDateTimeConfirm function
   const handleDateTimeConfirm = (date, type) => {
-  
     if (type === "date") {
       setStartDate(date);
       hideDatePicker();
@@ -334,8 +374,8 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   const handleCloseNewModal = () => {
-    setNewModalVisible(false)
-  }
+    setNewModalVisible(false);
+  };
   return (
     <>
       <View style={globalStyles.container}>
@@ -383,6 +423,7 @@ export default function EventsScreen({ navigation, data }) {
                 }}
                 labelField="label"
                 valueField="value"
+                onChange={handleMonthChange}
               />
             </View>
             <Pressable
@@ -396,12 +437,16 @@ export default function EventsScreen({ navigation, data }) {
                 borderRadius: 20,
                 height: hp("5%"),
               }}
-              onPress={() =>
+              onPress={() => {
                 setActiveButtons({
                   ...activeButtons,
                   recent: !activeButtons.recent,
-                })
-              }
+                });
+                // Toggle sorting order on button click
+                setSortOrder((prevOrder) =>
+                  prevOrder === "asc" ? "desc" : "asc"
+                );
+              }}
             >
               <Text
                 style={{
@@ -906,7 +951,7 @@ export default function EventsScreen({ navigation, data }) {
               <Participants
                 onParticipantsSelected={(selectedParticipants) => {
                   // NEW: Update added participants
-                  
+
                   setAddedParticipants([
                     ...addedParticipants,
                     ...selectedParticipants,
@@ -956,9 +1001,13 @@ export default function EventsScreen({ navigation, data }) {
               </View>
             ) : (
               <ListView
-                data={eventData}
+                data={sortedEventData}
                 renderItem={({ item }) => (
-                  <Events {...item} onDelete={() => deleteEvent(item.id)} onEdit={() => handleEditEvent(item)}/>
+                  <Events
+                    {...item}
+                    onDelete={() => deleteEvent(item.id)}
+                    onEdit={() => handleEditEvent(item)}
+                  />
                 )}
               />
             )}
