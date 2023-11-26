@@ -28,7 +28,7 @@ export default function Participants({
   navigation,
   onParticipantsSelected,
   onBack,
-  addedParticipants,
+  addedParticipants,  
 }) {
   const [data, setData] = useState([]);
   
@@ -55,12 +55,8 @@ export default function Participants({
     retrieveUsers();
   }, []);
   const [searchTerm, setSearchTerm] = useState("");
-  const [participants, setParticipants] = useState([]);
+  const [participants, setParticipants] = useState(addedParticipants);
   const [selectAll, setSelectAll] = useState(false);
-
-  const handleParticipantSelection = (participant) => {
-    setParticipants((prevParticipants) => [...prevParticipants, participant]);
-  };
 
   const handleSelectAll = () => {
     if (selectAll) {
@@ -71,16 +67,38 @@ export default function Participants({
     setSelectAll(!selectAll);
   };
 
+  const handleParticipantSelection = (participant,id) => {    
+   
+    setParticipants((prevParticipants) => {
+      const isParticipantAdded = prevParticipants.some((p) => p.id === participant.id);
+    
+      if (!isParticipantAdded) {        
+        // Participant is not added, add them
+        return [...prevParticipants, participant];
+      } else {
+                
+        const updatedParticipants = participants.filter((participant) => participant.id !== id);
+        
+        return updatedParticipants;
+        
+      }
+    });
+    
+  };
+  console.log('yo',participants);  
   const addParticipants = () => {
-    // Merge the past added participants with the newly added participants
-    const mergedParticipants = [...participants, ...addedParticipants];
+    
+    const mergedParticipants = participants;
 
-    console.log("All Participants: ", mergedParticipants);
-
-    onParticipantsSelected(mergedParticipants);
+    // Remove duplicates based on the 'id' property
+    const uniqueMergedParticipants = mergedParticipants.filter((participant, index, self) =>
+      index === self.findIndex(p => p.id === participant.id)
+    );
+    
+    onParticipantsSelected(uniqueMergedParticipants);
     setParticipants([]);
   };
-  console.log(addedParticipants);
+    
   useEffect(() => {
     const filteredData = data.filter(
       (participant) =>
@@ -135,15 +153,15 @@ export default function Participants({
           }}
         >
           <ListView
-            data={data.filter(
-              (item) => !addedParticipants.find((added) => added.id === item.id)
-            )}
+            data={data}
             renderItem={({ item }) => (
               <Profiles
                 {...item}
                 addedParticipants={addedParticipants}
                 onParticipantSelect={handleParticipantSelection}
-                selectAll={selectAll}
+                selectAll={selectAll}         
+                participants={participants}  
+                purpose="edit"     
               />
             )}
             keyExtractor={(item) => item.name}

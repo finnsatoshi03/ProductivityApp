@@ -84,7 +84,7 @@ export default function EventsScreen({ navigation, data }) {
     eventData.forEach((event) => {
       const eventDate = new Date(event.datetime.split(" ")[0]);
       const eventMonth = eventDate.toLocaleString("default", { month: "long" });
-      console.log("Event month:", eventMonth);
+      // console.log("Event month:", eventMonth);
     });
   }, [eventData]);
 
@@ -113,40 +113,37 @@ export default function EventsScreen({ navigation, data }) {
   ) => {
     setCreatingEvent(true);
     const newEvent = {
-      datetime: `${startDate.toLocaleDateString("en-GB", {
-        day: "numeric",
-        month: "long",
-        year: "numeric",
-      })} ${endDate.toLocaleTimeString("en-US", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: true,
-      })}`,
+      datetime: new Date(
+        startDate.getFullYear(),
+        startDate.getMonth(),
+        startDate.getDate(),
+        endDate.getHours(),
+        endDate.getMinutes(),
+        0
+      ).toISOString(),      
       event: eventTitle,
-      location: location,
-      participants: participants,
+      location: location,    
       description: description,
-      event_id: selectedEvent === "" ? null : selectedEvent,
-    };
-
+      id: selectedEvent === "" ? null : selectedEvent,
+    };   
+    
     try {
       const response =
         btnFnc === "create"
           ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
           : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent);
-
-      console.log(newEvent);
-      console.log("Updated eventData:", eventData);
-
+            
       if (response.status === 200) {
         const { data } = response;
         const user_ids = participants;
+        console.log('as',user_ids);
         const event_id = data.id;
         const userEvent = {
           user_ids,
           event_id,
         };
-        newEvent.event_id = event_id;
+        newEvent.id = event_id;
+        console.log(participants);
         const request =
           btnFnc === "create"
             ? await axios.post(
@@ -167,9 +164,22 @@ export default function EventsScreen({ navigation, data }) {
         console.log("NOOOO");
       }
 
-      console.log(newEvent);
-      setEventData([...eventData, newEvent]);
+      if (btnFnc === 'create') {
+        setEventData(prevEventData => {
+          const updatedEventData = [...prevEventData, newEvent];
+          return updatedEventData; 
+        });
+      } else {
+        setEventData((prevEventData) => {
+          const updatedEventData = prevEventData.map((event) =>
+            event.id === newEvent.id ? newEvent : event
+          );
+          return updatedEventData; 
+        });
+      }
+      
       setBottomSheetVisible(true);
+      
 
       // Reset the states
       setEventTitle("");
@@ -217,13 +227,13 @@ export default function EventsScreen({ navigation, data }) {
       setCreatingEvent(false);
     }
   };
-
+  ``
   const handleCreateEvent = () => {
     setParticipantNames("");
     setBottomSheetVisible(true);
     setBtnFnc("create");
   };
-
+  // TODO enhancement delete also the records in participants
   const deleteEvent = async (event_id) => {
     try {
       const response = await axios.delete(
@@ -302,20 +312,18 @@ export default function EventsScreen({ navigation, data }) {
         // clear it first
         setParticipantNames("");
         setParticipants([]);
-        // setAddedParticipants([])
+        setAddedParticipants([])
 
         // Extract names and IDs from users
         const participantNames = users.map((user) => user.fullname);
-        const participantIds = users.map((user) => user.id);
+        const participantIds = users.map((user) => user.id).join(',');
 
         const participants = users.map((user) => ({
-          avatar: undefined,
-          date: undefined,
+          avatar: undefined,          
           fullname: user.fullname,
           id: user.id,
         }));
 
-        console.log(participants);
         // Set the participant data in the state
         setParticipantNames(participantNames.join(", "));
         setParticipants(participantIds);
@@ -386,6 +394,7 @@ export default function EventsScreen({ navigation, data }) {
       hideDatePicker();
     } else {
       setEndDate(date);
+      console.log(date);
       hideTimePicker();
     }
   };
@@ -990,11 +999,8 @@ export default function EventsScreen({ navigation, data }) {
                 onParticipantsSelected={(selectedParticipants) => {
                   // NEW: Update added participants
 
-                  setAddedParticipants([
-                    ...addedParticipants,
-                    ...selectedParticipants,
-                  ]);
-                  console.log(addedParticipants);
+                  setAddedParticipants(selectedParticipants);
+                  
                   if (selectedParticipants.length > 0) {
                     const { idString, names } = selectedParticipants.reduce(
                       (acc, participant, index) => {
@@ -1009,17 +1015,20 @@ export default function EventsScreen({ navigation, data }) {
                       },
                       { idString: "", names: "" }
                     );
-                    setParticipantNames(names); // Update the participantNames state
+
+                    setParticipantNames(names);
                     setParticipants(idString);
-                    setNewModalVisible(false); // Close the modal
-                  } else {
-                    // Handle the case where no participants are selected
-                    // You can customize this part based on your requirements
+                    setNewModalVisible(false);                     
+                    
+                  } else {                    
+                    setParticipantNames("");
+                    setParticipants([]);
+                    setNewModalVisible(false);   
                     console.log("No Participants Selected");
                   }
                 }}
-                addedParticipants={addedParticipants} // NEW: Pass added participants
-                onBack={handleCloseNewModal}
+                addedParticipants={addedParticipants}
+                onBack={handleCloseNewModal}                             
               />
             </View>
           </Modal>

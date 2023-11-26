@@ -63,9 +63,10 @@ const ViewEvent = ({ route, navigation }) => {
     setParticipantsModalVisible(false);
   };
   // console.log(dateTime);
-  const dateTimeArray = dateTime.split(" ");
-  const date = dateTimeArray.slice(0, 3).join(" ");
-  const time = dateTimeArray.slice(3).join(" ");
+  const dateTimeArray = dateTime.split(' ');
+  const date = dateTimeArray.slice(0, 3).join(' ');
+  const time = dateTimeArray.slice(3).join(' ');
+  
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
 
@@ -84,7 +85,7 @@ const ViewEvent = ({ route, navigation }) => {
   //   //   setSelectedParticipant(null); // Clear the selection
   //   // }
   // };
-  console.log(participants);
+  // console.log(participants);
 
   return (
     <View>
@@ -313,8 +314,8 @@ const ViewEvent = ({ route, navigation }) => {
                   fullname={item.fullname}
                   id={item.id}
                   verify={true}
-                  // onParticipantSelect={handleParticipantSelect}\
-                  hideCheckbox={true}
+                  // onParticipantSelect={handleParticipantSelect}
+                  purpose={'view'}
                 />
               )}
             />

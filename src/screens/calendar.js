@@ -21,13 +21,36 @@ import { useData } from "./../DataContext";
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
 import "../../global";
-
+// TODO ENHANCE THE AUTHENTICATION, JUST PASS THE AUTHENTICATION THRU THE PAGES
+// TODO TO NOT ALWAYS RETRIEVE A VALUE FROM THE AUTHENTICATION
+// TODO OR IF TINAMAD WAG NA LANG
+// TODO GAWING BASED ETONG CALENDAR SINCE DITO NAG START YUNG APP
+// TODO NEED TALAGA IENHANCE TO UNDEFINE LAGI YUNG FIRST RETRIEVAL
 export default function Calendar({ navigation }) {
+
+  const { getUser } = Authentication();
+
+  const [userData, setUserData] = useState({
+    fullname: "",
+    role: "",
+    user_id: "",
+  });
+
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
   const [loading, setLoading] = useState(true);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+      console.log(userData);
+    };
+
+    fetchUserData();
+  }, []);
 
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
@@ -62,12 +85,18 @@ export default function Calendar({ navigation }) {
     }
   };
 
-  //TODO MUST RETRIEVE ONCE EVERY DELETE,CREATE,UPDATE IN DB
+  
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
         setLoading(true);
-        const response = await axios.get(`${global.baseurl}:4000/getEvents`);
+        const response = userData === 'admin' ? 
+          await axios.get(`${global.baseurl}:4000/getEvents`) 
+        : await axios.get(`${global.baseurl}:4000/userViewEvents`,{
+          params: {
+            user_id: userData.user_id,
+          },
+        });
 
         if (response.status === 200) {
           const { data } = response;
