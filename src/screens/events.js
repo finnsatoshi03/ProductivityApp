@@ -448,7 +448,7 @@ export default function EventsScreen({ navigation, data }) {
                   style={{
                     position: "absolute",
                     zIndex: 5,
-                    right: hp("1.5%"),
+                    right: hp("1.8%"),
                     top: hp("1.2%"),
                     alignSelf: "center",
                     justifyContent: "center",
@@ -493,33 +493,35 @@ export default function EventsScreen({ navigation, data }) {
                 Recent
               </Text>
             </Pressable>
-            <Pressable
-              style={{
-                paddingVertical: 13,
-                paddingHorizontal: 20,
-                alignSelf: "center",
-                backgroundColor: activeButtons.starred
-                  ? globalStyles.colors.green
-                  : "transparent",
-                borderRadius: 20,
-                height: hp("5%"),
-              }}
-              onPress={() =>
-                setActiveButtons({
-                  ...activeButtons,
-                  starred: !activeButtons.starred,
-                })
-              }
-            >
-              <Text
+            {userData.role !== "admin" && (
+              <Pressable
                 style={{
-                  fontFamily: globalStyles.fontStyle.semiBold,
-                  color: activeButtons.starred ? "white" : "grey",
+                  paddingVertical: 13,
+                  paddingHorizontal: 20,
+                  alignSelf: "center",
+                  backgroundColor: activeButtons.starred
+                    ? globalStyles.colors.green
+                    : "transparent",
+                  borderRadius: 20,
+                  height: hp("5%"),
                 }}
+                onPress={() =>
+                  setActiveButtons({
+                    ...activeButtons,
+                    starred: !activeButtons.starred,
+                  })
+                }
               >
-                Starred
-              </Text>
-            </Pressable>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    color: activeButtons.starred ? "white" : "grey",
+                  }}
+                >
+                  Starred
+                </Text>
+              </Pressable>
+            )}
           </View>
           {userData.role === "admin" ? (
             <Pressable
