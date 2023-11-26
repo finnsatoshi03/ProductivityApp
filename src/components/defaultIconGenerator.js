@@ -7,13 +7,13 @@ import {
 
 const defaultIconGenerator = (firstName, size = 7) => {
   const colors = [
-    "#FF8A65",
-    "#FFD54F",
-    "#9575CD",
-    "#64B5F6",
-    "#4DB6AC",
-    "#FF8A80",
-    "#A1887F",
+    "#61040F", // dark red
+    "#615E09", // tae color
+    "#341761", // dark violet
+    "#126123", // light dark green
+    "#73E01F", // neon green
+    "#1F3D09", // medyo dark green
+    "#498F14", // medyo medyo dark green
   ];
 
   const firstLetter = firstName ? firstName.charAt(0).toUpperCase() : "";
@@ -27,8 +27,11 @@ const defaultIconGenerator = (firstName, size = 7) => {
     return hash;
   };
 
-  // Used hash index
-  const colorIndex = Math.abs(hash(firstName)) % colors.length;
+  // Check if firstName is defined and is a string before calculating the hash nag e-error kapag walang else
+  const colorIndex =
+    firstName && typeof firstName === "string"
+      ? Math.abs(hash(firstName)) % colors.length
+      : 0;
   const randomColor = colors[colorIndex];
 
   const iconSize = hp(size);
