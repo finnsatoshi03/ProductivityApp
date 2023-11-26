@@ -68,6 +68,34 @@ export default function CalendarComponent({ events }) {
   //   "2023-11-23": { disabled: true, disableTouchEvent: true },
   // }); // Use for marking dates with events
 
+  console.log("events", events);
+  if (Array.isArray(events)) {
+    events.map((event) => {
+      const date = event.datetime.split("T")[0];
+      console.log("Event date: ", date);
+    });
+  } else {
+    console.log("events is not an array");
+  }
+
+  let markedDates = {};
+
+  if (Array.isArray(events)) {
+    events.forEach((event) => {
+      const date = event.datetime.split("T")[0];
+      markedDates[date] = {
+        selected: true,
+        marked: true,
+        selectedColor: "transparent",
+        selectedTextColor: "black",
+        dotColor: "red",
+        activeOpacity: 0,
+      };
+    });
+  } else {
+    console.log("events is not an array");
+  }
+
   return (
     <CalendarProvider>
       {/* <ExpandableCalendar/> */}
@@ -83,7 +111,7 @@ export default function CalendarComponent({ events }) {
         enableSwipeMonths={true}
         // markedDates={events}
         markedDates={{
-          ...events,
+          ...markedDates,
           [selected]: {
             selected: true,
             selectedColor: globalStyles.colors.darkGreen,

@@ -63,7 +63,7 @@ export default function Calendar({ navigation }) {
             />
           </View>
           <View style={{ height: hp("40%") }}>
-            <CalendarWidget />
+            <CalendarWidget events={eventData} />
           </View>
           <View
             style={{
