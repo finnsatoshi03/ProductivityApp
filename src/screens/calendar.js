@@ -24,6 +24,7 @@ export default function Calendar({ navigation }) {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
   const [loading, setLoading] = useState(true);
+  const [filteredEvents, setFilteredEvents] = useState([]);
 
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
@@ -31,6 +32,14 @@ export default function Calendar({ navigation }) {
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
+
+  const handleDayPress = (selectedDate) => {
+    const filtered = eventData.filter(
+      (event) => event.datetime.split("T")[0] === selectedDate
+    );
+    setFilteredEvents(filtered);
+  };
+
   //TODO MUST RETRIEVE ONCE EVERY DELETE,CREATE,UPDATE IN DB
   useEffect(() => {
     const fetchEventsData = async () => {
@@ -51,6 +60,7 @@ export default function Calendar({ navigation }) {
     };
     fetchEventsData();
   }, []);
+
   return (
     <>
       <View style={globalStyles.container}>
@@ -63,7 +73,7 @@ export default function Calendar({ navigation }) {
             />
           </View>
           <View style={{ height: hp("40%") }}>
-            <CalendarWidget events={eventData} />
+            <CalendarWidget events={eventData} onDayPress={handleDayPress} />
           </View>
           <View
             style={{
@@ -87,7 +97,7 @@ export default function Calendar({ navigation }) {
                   Fetching events from the database...
                 </Text>
               </View>
-            ) : eventData.length === 0 ? (
+            ) : filteredEvents.length === 0 ? (
               <View
                 style={{
                   flex: 1,
@@ -98,13 +108,12 @@ export default function Calendar({ navigation }) {
                 <Text
                   style={{ textAlign: "center", fontSize: 18, color: "gray" }}
                 >
-                  Embracing Tranquility 🎉 {"\n"} No Current Events at the
-                  Moment
+                  Embracing Tranquility 🎉 {"\n"} No Current Events Today!
                 </Text>
               </View>
             ) : (
               <ListView
-                data={eventData}
+                data={filteredEvents}
                 renderItem={({ item }) => (
                   <Events
                     navigation={navigation}

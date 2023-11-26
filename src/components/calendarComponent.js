@@ -52,7 +52,7 @@ LocaleConfig.locales["en"] = {
 
 LocaleConfig.defaultLocale = "en";
 
-export default function CalendarComponent({ events }) {
+export default function CalendarComponent({ events, onDayPress }) {
   const currentDate = new Date();
   const currentYear = currentDate.getFullYear();
 
@@ -91,7 +91,7 @@ export default function CalendarComponent({ events }) {
           dots: [eventMarking],
           selected: true,
           selectedColor: "transparent",
-          selectedTextColor: "black",
+          selectedTextColor: globalStyles.colors.darkGreen,
           activeOpacity: 0,
         };
       }
@@ -99,6 +99,11 @@ export default function CalendarComponent({ events }) {
   } else {
     console.log("events is not an array");
   }
+
+  const handleDayPress = (day) => {
+    setSelected(day.dateString);
+    onDayPress(day.dateString);
+  };
 
   return (
     <CalendarProvider>
@@ -111,6 +116,7 @@ export default function CalendarComponent({ events }) {
         onDayPress={(day) => {
           console.log("selected day", day);
           setSelected(day.dateString);
+          handleDayPress(day);
         }}
         enableSwipeMonths={true}
         // markedDates={events}
