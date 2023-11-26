@@ -10,6 +10,7 @@ const DropdownComponent = ({
   ...props
 }) => {
   const [value, setValue] = useState(initialValue);
+  const [selectedMonth, setSelectedMonth] = useState(null);
   const [isFocus, setIsFocus] = useState(false);
 
   return (
@@ -49,6 +50,7 @@ const DropdownComponent = ({
       onBlur={() => setIsFocus(false)}
       onChange={(item) => {
         setValue(item.value);
+        setSelectedMonth(item.value);
         // Call the onChange prop with the selected item
         if (onChange) {
           onChange(item.value);

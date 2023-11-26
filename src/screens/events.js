@@ -9,6 +9,7 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
+import moment from "moment";
 import { globalStyles } from "./../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -66,6 +67,7 @@ export default function EventsScreen({ navigation, data }) {
   const [isCreatingEvent, setCreatingEvent] = useState(false);
 
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedMonth, setSelectedMonth] = useState(months[0].value); // TODO: CHANGE DEFAULT TO CURRENT MONTH
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -75,6 +77,14 @@ export default function EventsScreen({ navigation, data }) {
 
     fetchUserData();
   }, []);
+
+  useEffect(() => {
+    eventData.forEach((event) => {
+      const eventDate = new Date(event.datetime.split(" ")[0]);
+      const eventMonth = eventDate.toLocaleString("default", { month: "long" });
+      console.log("Event month:", eventMonth);
+    });
+  }, [eventData]);
 
   const months = [
     { label: "January", value: "January" },
@@ -236,25 +246,36 @@ export default function EventsScreen({ navigation, data }) {
     }
   };
 
+  // TODO: add a toggle for change month sort and a remove sort for months
   const sortedEventData = useMemo(() => {
     let sortedData = [...eventData];
 
-    // Sort the data based on the datetime property only if "Recent" is toggled
-    if (activeButtons.recent) {
-      sortedData.sort((a, b) => {
-        const dateA = new Date(a.datetime);
-        const dateB = new Date(b.datetime);
+    sortedData = sortedData.filter((event) => {
+      const eventDate = new Date(event.datetime.split(" ")[0]);
+      const eventMonth = eventDate.toLocaleString("default", { month: "long" });
 
-        if (sortOrder === "asc") {
-          return dateA - dateB;
-        } else {
-          return dateB - dateA;
-        }
-      });
-    }
+      // Check if the event month matches the selected month
+      return eventMonth === selectedMonth;
+    });
+
+    sortedData.sort((a, b) => {
+      const dateA = new Date(a.datetime);
+      const dateB = new Date(b.datetime);
+
+      if (sortOrder === "asc") {
+        return dateA - dateB;
+      } else {
+        return dateB - dateA;
+      }
+    });
 
     return sortedData;
-  }, [eventData, sortOrder, activeButtons.recent]);
+  }, [eventData, sortOrder, selectedMonth]);
+
+  const handleMonthChange = (selectedMonth) => {
+    console.log("Selected month:", selectedMonth);
+    setSelectedMonth(selectedMonth);
+  };
 
   const getParticipants = async (event_id) => {
     // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
@@ -402,6 +423,7 @@ export default function EventsScreen({ navigation, data }) {
                 }}
                 labelField="label"
                 valueField="value"
+                onChange={handleMonthChange}
               />
             </View>
             <Pressable
