@@ -67,7 +67,6 @@ export default function EventsScreen({ navigation, data }) {
   const [isCreatingEvent, setCreatingEvent] = useState(false);
 
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedMonth, setSelectedMonth] = useState(months[0].value); // TODO: CHANGE DEFAULT TO CURRENT MONTH
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -247,6 +246,7 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   // TODO: add a toggle for change month sort and a remove sort for months
+  const [selectedMonth, setSelectedMonth] = useState(months[0].value); // TODO: remove default
   const sortedEventData = useMemo(() => {
     let sortedData = [...eventData];
 
