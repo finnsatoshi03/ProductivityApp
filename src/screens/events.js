@@ -26,6 +26,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
 import Participants from "./participants";
+import { ChatNotificationProvider, useChatNotification } from "../components/notificationContext";
 
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
@@ -70,6 +71,8 @@ export default function EventsScreen({ navigation, data }) {
   const [selectedMonth, setSelectedMonth] = useState(null); // TODO: remove default
   // const [dropdownPlaceholder, setDropdownPlaceholder] = useState("Month");
   const [dropdownKey, setDropdownKey] = useState(0);
+
+  const {notificationCount} = useChatNotification();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -1051,7 +1054,7 @@ export default function EventsScreen({ navigation, data }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Events"} navigation={navigation} />
+            <Navbar notifCounts={{Chat : notificationCount}} icon={"Events"} navigation={navigation} />
           </View>
           {/* <Text>Events Screen</Text> */}
         </View>
