@@ -22,6 +22,7 @@ export default function profileCard({
   addedParticipants,
   selectAll,
   verify,
+  hideCheckbox,
 }) {
   const progress = useRef(new Animated.Value(0)).current;
   const [clickCount, setClickCount] = useState(0);
@@ -69,7 +70,7 @@ export default function profileCard({
     );
 
     if (!isParticipantAdded) {
-      onParticipantSelect({ avatar, fullname, id});
+      onParticipantSelect({ avatar, fullname, id });
     } else {
       // Participant is already added, handle accordingly (e.g., show a message)
       console.log("Participant is already added");
@@ -156,14 +157,16 @@ export default function profileCard({
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
         />
       ) : (
-        <TouchableOpacity onPress={handlePress}>
-          <LottieView
-            progress={progress}
-            source={require("./../../assets/checkbox.json")}
-            loop={false}
-            style={{ width: 50, height: 50 }}
-          />
-        </TouchableOpacity>
+        !hideCheckbox && (
+          <TouchableOpacity onPress={handlePress}>
+            <LottieView
+              progress={progress}
+              source={require("./../../assets/checkbox.json")}
+              loop={false}
+              style={{ width: 50, height: 50 }}
+            />
+          </TouchableOpacity>
+        )
       )}
     </View>
   );

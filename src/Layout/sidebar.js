@@ -49,9 +49,7 @@ export default function sideBar({
 
   console.log(userData || " ");
 
-  const position = useRef(
-    new Animated.Value(isVisible ? 0 : -wp("70%"))
-  ).current;
+  const position = useRef(new Animated.Value(-wp("70%"))).current;
 
   const slideIn = () => {
     Animated.timing(position, {
@@ -75,7 +73,7 @@ export default function sideBar({
     } else {
       slideOut();
     }
-  }, []);
+  }, [isVisible]);
 
   // const handleLogout = () => {
   //   logout();
@@ -97,212 +95,202 @@ export default function sideBar({
   };
 
   return (
-    <Pressable
-      onPress={slideOut}
+    <Modal
+      isVisible={isVisible}
+      onBackdropPress={slideOut}
       style={{
-        flex: 1,
-        position: "absolute",
-        zIndex: 99,
-        top: 0,
-        left: 0,
-        right: 0,
-        bottom: 0,
+        margin: 0,
+        justifyContent: "flex-start",
+        alignItems: "flex-start",
       }}
+      animationIn="slideInLeft"
+      animationOut="slideOutLeft"
     >
-      <Pressable
-        onPress={(event) => event.stopPropagation()}
+      <Animated.View
         style={{
-          width: wp("70%"),
-          height: hp("100%"),
           flex: 1,
+          justifyContent: "space-between",
+          backgroundColor: globalStyles.colors.lightGreen,
+          width: wp("70%"),
+          paddingTop: 54,
+          paddingBottom: 24,
+          borderTopRightRadius: 100,
+          borderBottomRightRadius: 100,
+          transform: [{ translateX: position }],
         }}
       >
-        <Animated.View
-          style={{
-            flex: 1,
-            justifyContent: "space-between",
-            backgroundColor: globalStyles.colors.lightGreen,
-            width: wp("70%"),
-            paddingTop: 54,
-            paddingBottom: 24,
-            borderTopRightRadius: 100,
-            borderBottomRightRadius: 100,
-            transform: [{ translateX: position }],
-          }}
-        >
-          <View>
-            <View
+        <View>
+          <View
+            style={{
+              marginHorizontal: 30,
+              borderBottomColor: "grey",
+              borderBottomWidth: 1,
+              paddingVertical: 20,
+            }}
+          >
+            <Avatar avatar={avatar} firstName={name} />
+            <Text
               style={{
-                marginHorizontal: 30,
-                borderBottomColor: "grey",
-                borderBottomWidth: 1,
-                paddingVertical: 20,
+                fontFamily: globalStyles.fontStyle.bold,
+                fontSize: globalStyles.fontSize.largeDescription,
               }}
             >
-              <Avatar avatar={avatar} firstName={name} />
-              <Text
-                style={{
-                  fontFamily: globalStyles.fontStyle.bold,
-                  fontSize: globalStyles.fontSize.largeDescription,
-                }}
-              >
-                {userData.fullname}
-              </Text>
-              <Text
-                style={{
-                  fontFamily: globalStyles.fontStyle.regular,
-                  fontSize: globalStyles.fontSize.description,
-                }}
-              >
-                {userData.role}
-              </Text>
-            </View>
-            <View
+              {userData.fullname}
+            </Text>
+            <Text
               style={{
-                marginHorizontal: 30,
-                borderBottomColor: "grey",
-                borderBottomWidth: 1,
-                paddingBottom: 20,
-                marginTop: 20,
+                fontFamily: globalStyles.fontStyle.regular,
+                fontSize: globalStyles.fontSize.description,
               }}
             >
-              <Button
-                text={"Edit Profile"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/edit-user.png")}
-                navigation={navigation}
-                destination={"EditProfile"}
-                fnc="navigate"
-              />
-              {userData.role === "admin" ? (
-                <Button
-                  text={"Verify Account"}
-                  flexStart={true}
-                  transparent={true}
-                  textColor={"black"}
-                  fontSize={globalStyles.fontSize.mediumDescription}
-                  iconSource={require("./../../assets/verify.png")}
-                  navigation={navigation}
-                  destination={"UserControl"}
-                  fnc="navigate"
-                />
-              ) : (
-                <Button
-                  text={"Notifications"}
-                  flexStart={true}
-                  transparent={true}
-                  textColor={"black"}
-                  fontSize={globalStyles.fontSize.mediumDescription}
-                  iconSource={require("./../../assets/notification.png")}
-                  navigation={navigation}
-                  destination={"Notifications"}
-                  fnc="navigate"
-                />
-              )}
-            </View>
-            <View style={{ marginHorizontal: 30, marginTop: 20 }}>
-              <Button
-                text={"Calendar"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/calendar.png")}
-                navigation={navigation}
-                destination={"Calendar"}
-                fnc="navigate"
-              />
-              <Button
-                text={"Events"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/event-1.png")}
-                navigation={navigation}
-                destination={"Events"}
-                fnc="navigate"
-              />
-              {userData.role === "admin" ? (
-                <Button
-                  text={"Reports"}
-                  flexStart={true}
-                  transparent={true}
-                  textColor={"black"}
-                  fontSize={globalStyles.fontSize.mediumDescription}
-                  iconSource={require("./../../assets/reports.png")}
-                  navigation={navigation}
-                  destination={"Reports"}
-                  fnc="navigate"
-                />
-              ) : (
-                <></>
-              )}
-              <Button
-                text={"Chats"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/chat.png")}
-                navigation={navigation}
-                destination={"Chat"}
-                fnc="navigate"
-              />
-            </View>
+              {userData.role}
+            </Text>
           </View>
-          <View style={{ marginHorizontal: 30 }}>
+          <View
+            style={{
+              marginHorizontal: 30,
+              borderBottomColor: "grey",
+              borderBottomWidth: 1,
+              paddingBottom: 20,
+              marginTop: 20,
+            }}
+          >
             <Button
-              text={"Logout"}
+              text={"Edit Profile"}
               flexStart={true}
               transparent={true}
               textColor={"black"}
               fontSize={globalStyles.fontSize.mediumDescription}
-              iconSource={require("./../../assets/logout.png")}
-              onPress={handleLogout}
-              fnc={"press"}
+              iconSource={require("./../../assets/edit-user.png")}
+              navigation={navigation}
+              destination={"EditProfile"}
+              fnc="navigate"
+            />
+            {userData.role === "admin" ? (
+              <Button
+                text={"Verify Account"}
+                flexStart={true}
+                transparent={true}
+                textColor={"black"}
+                fontSize={globalStyles.fontSize.mediumDescription}
+                iconSource={require("./../../assets/verify.png")}
+                navigation={navigation}
+                destination={"UserControl"}
+                fnc="navigate"
+              />
+            ) : (
+              <Button
+                text={"Notifications"}
+                flexStart={true}
+                transparent={true}
+                textColor={"black"}
+                fontSize={globalStyles.fontSize.mediumDescription}
+                iconSource={require("./../../assets/notification.png")}
+                navigation={navigation}
+                destination={"Notifications"}
+                fnc="navigate"
+              />
+            )}
+          </View>
+          <View style={{ marginHorizontal: 30, marginTop: 20 }}>
+            <Button
+              text={"Calendar"}
+              flexStart={true}
+              transparent={true}
+              textColor={"black"}
+              fontSize={globalStyles.fontSize.mediumDescription}
+              iconSource={require("./../../assets/calendar.png")}
+              navigation={navigation}
+              destination={"Calendar"}
+              fnc="navigate"
+            />
+            <Button
+              text={"Events"}
+              flexStart={true}
+              transparent={true}
+              textColor={"black"}
+              fontSize={globalStyles.fontSize.mediumDescription}
+              iconSource={require("./../../assets/event-1.png")}
+              navigation={navigation}
+              destination={"Events"}
+              fnc="navigate"
+            />
+            {userData.role === "admin" ? (
+              <Button
+                text={"Reports"}
+                flexStart={true}
+                transparent={true}
+                textColor={"black"}
+                fontSize={globalStyles.fontSize.mediumDescription}
+                iconSource={require("./../../assets/reports.png")}
+                navigation={navigation}
+                destination={"Reports"}
+                fnc="navigate"
+              />
+            ) : (
+              <></>
+            )}
+            <Button
+              text={"Chats"}
+              flexStart={true}
+              transparent={true}
+              textColor={"black"}
+              fontSize={globalStyles.fontSize.mediumDescription}
+              iconSource={require("./../../assets/chat.png")}
+              navigation={navigation}
+              destination={"Chat"}
+              fnc="navigate"
             />
           </View>
-        </Animated.View>
-        <Modal isVisible={isModalVisible}>
-          <View
+        </View>
+        <View style={{ marginHorizontal: 30 }}>
+          <Button
+            text={"Logout"}
+            flexStart={true}
+            transparent={true}
+            textColor={"black"}
+            fontSize={globalStyles.fontSize.mediumDescription}
+            iconSource={require("./../../assets/logout.png")}
+            onPress={handleLogout}
+            fnc={"press"}
+          />
+        </View>
+      </Animated.View>
+      <Modal isVisible={isModalVisible}>
+        <View
+          style={{
+            justifyContent: "center",
+            alignItems: "center",
+            backgroundColor: "white",
+            padding: 20,
+            borderRadius: 30,
+          }}
+        >
+          <Text
             style={{
-              justifyContent: "center",
-              alignItems: "center",
-              backgroundColor: "white",
-              padding: 20,
-              borderRadius: 30,
+              padding: 10,
+              marginBottom: 10,
+              fontFamily: "montserrat-regular",
+              fontSize: hp("1.7%"),
             }}
           >
-            <Text
-              style={{
-                padding: 10,
-                marginBottom: 10,
-                fontFamily: "montserrat-regular",
-                fontSize: hp("1.7%"),
-              }}
-            >
-              {logoutText}
-            </Text>
-            {logoutText === "Signing out..." && (
-              <ActivityIndicator size="large" style={{ marginBottom: 15 }} />
-            )}
-            <View style={{ flexDirection: "row", gap: 10 }}>
-              <Button text="Yes" onPress={confirmLogout} width={wp("30%")} />
-              <Button
-                text="No"
-                onPress={() => setModalVisible(false)}
-                width={wp("30%")}
-                bgColor="#e2e6f0"
-                textColor="#9198bc"
-              />
-            </View>
+            {logoutText}
+          </Text>
+          {logoutText === "Signing out..." && (
+            <ActivityIndicator size="large" style={{ marginBottom: 15 }} />
+          )}
+          <View style={{ flexDirection: "row", gap: 10 }}>
+            <Button text="Yes" onPress={confirmLogout} width={wp("30%")} />
+            <Button
+              text="No"
+              onPress={() => setModalVisible(false)}
+              width={wp("30%")}
+              bgColor="#e2e6f0"
+              textColor="#9198bc"
+            />
           </View>
-        </Modal>
-      </Pressable>
-    </Pressable>
+        </View>
+      </Modal>
+    </Modal>
   );
 }

@@ -33,6 +33,7 @@ export default function SignupForm({ navigation }) {
   });
 
   const [selectedValue, setSelectedValue] = useState(null);
+  // const [takenUsername, setTakenUsername] = useState(false);
   const data = [
     { label: "Department of Health", value: "health" },
     { label: "Department of Education", value: "education" },
@@ -62,6 +63,7 @@ export default function SignupForm({ navigation }) {
       [field]: value,
     }));
   };
+
   const onSubmit = async () => {
     console.log(formdata);
 
@@ -76,6 +78,7 @@ export default function SignupForm({ navigation }) {
       console.log(error);
     }
   };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -97,6 +100,8 @@ export default function SignupForm({ navigation }) {
                 flexDirection: "row",
                 paddingVertical: 30,
                 justifyContent: "space-between",
+                // backgroundColor: "red",
+                height: hp("10%"),
               }}
             >
               <Pressable onPress={() => navigation.goBack()}>
@@ -110,7 +115,14 @@ export default function SignupForm({ navigation }) {
                 source={require("../../../assets/logo.png")}
               />
             </View>
-            <View style={{ marginBottom: 20 }}>
+            <View
+              style={{
+                marginBottom: hp("2%"),
+                // backgroundColor: "blue",
+                zIndex: 4,
+                height: hp("17%"),
+              }}
+            >
               <HeroMessage
                 header={"Account Verification"}
                 description={"Join us and make your agenda more productive!"}
@@ -124,9 +136,17 @@ export default function SignupForm({ navigation }) {
                 // marginBottom: 40,
                 justifyContent: "center",
                 alignItems: "center",
+                // backgroundColor: "green",
+                height: hp("55%"),
+                zIndex: 4,
               }}
             >
               <SignUpLabel text="Username" />
+              {/* {takenUsername && (
+                <Text style={{ color: "red" }}>
+                  Username is already taken. Please choose another.
+                </Text>
+              )} */}
               <InputFields
                 placeholder="Your chosen username"
                 maxWidth={true}
@@ -201,7 +221,15 @@ export default function SignupForm({ navigation }) {
                 </View>
               </View>
             </View>
-            <View style={{ zIndex: 4, marginTop: 30 }}>
+            <View
+              style={{
+                zIndex: 4,
+                marginTop: hp("3%"),
+                // backgroundColor: "violet",
+                // flex: 1,
+                height: hp("13%"),
+              }}
+            >
               <VerifyButton
                 text="VERIFY ACCOUNT"
                 onPress={onSubmit}
