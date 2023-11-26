@@ -57,8 +57,7 @@ export const Authentication = () => {
     try {
         const userString = await AsyncStorage.getItem('user');
         if (userString) {
-            const user = JSON.parse(userString);
-            console.log(user);            
+            const user = JSON.parse(userString);                 
             return user; // Return the parsed user object
         } else {
             return null; // Return null if no user data is found

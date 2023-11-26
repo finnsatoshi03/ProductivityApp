@@ -85,7 +85,7 @@ export default function CalendarComponent({ events, onDayPress }) {
   ];
 
   if (Array.isArray(events)) {
-    events.forEach((event, index) => {
+    events.forEach((event, index) => {            
       const date = event.datetime.split("T")[0];
       const color = colors[index % colors.length];
       const eventMarking = {

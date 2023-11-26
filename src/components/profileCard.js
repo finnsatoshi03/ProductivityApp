@@ -22,28 +22,48 @@ export default function profileCard({
   addedParticipants,
   selectAll,
   verify,
+  participants,
+  purpose
 }) {
   const progress = useRef(new Animated.Value(0)).current;
   const [clickCount, setClickCount] = useState(0);
 
+  const runAnimation = () => {
+    Animated.timing(progress, {
+      toValue: 0.5,
+      duration: 500,
+      useNativeDriver: true,
+    }).start();
+  };
+  
   const nameParts = fullname.split(" ");
 
-  // useEffect(() => {
-  //   if (!isPlusButtonTriggered) {
-  //     setClickCount(0);
-  //   }
-  // }, [isPlusButtonTriggered]);
-
-  const handlePress = () => {
+  const isIdFound = () => {
+    if (purpose === 'edit') {
+      return participants.some((participant) => participant.id === id);
+    } else {      
+      return false; 
+    }
+  };
+ 
+  
+  const handlePress = () => {    
     if (selectAll) {
       Animated.timing(progress, {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
       }).start();
-    } else {
+    } 
+  
+    const isParticipantAdded = participants.some(
+      (participant) => participant.id === id
+      
+    );
+ 
+    if (!isParticipantAdded) {
       setClickCount((prevCount) => prevCount + 1);
-
+  
       let endValue;
       switch (clickCount % 3) {
         case 0:
@@ -56,35 +76,42 @@ export default function profileCard({
           endValue = progress._value;
           break;
       }
-
+  
       Animated.timing(progress, {
         toValue: endValue,
         duration: 500,
         useNativeDriver: true,
       }).start();
-    }
-
-    const isParticipantAdded = addedParticipants.some(
-      (participant) => participant.id === avatar
-    );
-
-    if (!isParticipantAdded) {
-      onParticipantSelect({ avatar, fullname, id});
+      onParticipantSelect({ avatar, fullname, id },id);
     } else {
-      // Participant is already added, handle accordingly (e.g., show a message)
-      console.log("Participant is already added");
+      Animated.timing(progress, {
+        toValue: 0,
+        duration: 500,
+        useNativeDriver: true,
+      }).start();
+      onParticipantSelect({ avatar, fullname, id },id);
     }
   };
-
+    
   useEffect(() => {
     // Update the progress value based on the selectAll state
     Animated.timing(progress, {
       toValue: selectAll ? 0.5 : 0,
       duration: 500,
       useNativeDriver: true,
-    }).start();
+    }).start();   
   }, [selectAll]);
 
+  useEffect(() => {
+    // Run the animation if the ID is found       
+    if (purpose === 'edit') {      
+      if (isIdFound) {
+        console.log(purpose); 
+        runAnimation();
+      }
+      
+    }
+  }, []);
   return (
     <View
       style={{
@@ -155,7 +182,7 @@ export default function profileCard({
           source={require("./../../assets/view.png")}
           style={{ width: hp("2.5%"), height: hp("2.5%") }}
         />
-      ) : (
+      ) : (purpose !== 'view' ? (
         <TouchableOpacity onPress={handlePress}>
           <LottieView
             progress={progress}
@@ -164,7 +191,7 @@ export default function profileCard({
             style={{ width: 50, height: 50 }}
           />
         </TouchableOpacity>
-      )}
+      ) : null)}
     </View>
   );
 }
