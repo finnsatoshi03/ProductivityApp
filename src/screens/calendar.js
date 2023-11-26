@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
 } from "react-native";
+import moment from "moment";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
@@ -25,6 +26,7 @@ export default function Calendar({ navigation }) {
   const { eventData, setEventData } = useData();
   const [loading, setLoading] = useState(true);
   const [filteredEvents, setFilteredEvents] = useState([]);
+  const [selectedDay, setSelectedDay] = useState("");
 
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
@@ -34,10 +36,29 @@ export default function Calendar({ navigation }) {
   };
 
   const handleDayPress = (selectedDate) => {
+    setSelectedDay(selectedDate);
     const filtered = eventData.filter(
       (event) => event.datetime.split("T")[0] === selectedDate
     );
     setFilteredEvents(filtered);
+  };
+
+  const formatDate = (date) => {
+    return moment(date).format("Do of MMMM");
+  };
+
+  const compareDates = (selectedDate) => {
+    const today = moment().startOf("day");
+    const yesterday = moment().subtract(1, "days").startOf("day");
+    const tomorrow = moment().add(1, "days").startOf("day");
+
+    if (moment(selectedDate).isSame(yesterday)) {
+      return "Yesterday's Events";
+    } else if (moment(selectedDate).isSame(tomorrow)) {
+      return "Tomorrow's Events";
+    } else {
+      return `${formatDate(selectedDate)}'s Events`;
+    }
   };
 
   //TODO MUST RETRIEVE ONCE EVERY DELETE,CREATE,UPDATE IN DB
@@ -72,14 +93,31 @@ export default function Calendar({ navigation }) {
               onPressMenu={() => setSidebarVisible(true)}
             />
           </View>
-          <View style={{ height: hp("40%") }}>
+          <View style={{ height: hp("38%") }}>
             <CalendarWidget events={eventData} onDayPress={handleDayPress} />
           </View>
           <View
             style={{
-              height: hp("38%"),
+              height: hp("40%"),
             }}
           >
+            <View
+              style={{
+                height: hp("4%"),
+                marginBottom: hp("1%"),
+              }}
+            >
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.semiBold,
+                  fontSize: globalStyles.fontSize.subHeader,
+                }}
+              >
+                {selectedDay === ""
+                  ? "Today's Events"
+                  : compareDates(selectedDay)}
+              </Text>
+            </View>
             {loading ? (
               <View
                 style={{

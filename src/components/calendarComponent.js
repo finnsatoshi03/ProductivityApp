@@ -62,22 +62,32 @@ export default function CalendarComponent({ events, onDayPress }) {
   const [selected, setSelected] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
 
-  console.log("events", events);
-  if (Array.isArray(events)) {
-    events.map((event) => {
-      const date = event.datetime.split("T")[0];
-      console.log("Event date: ", date);
-    });
-  } else {
-    console.log("events is not an array");
-  }
+  // console.log("events", events);
+  // if (Array.isArray(events)) {
+  //   events.map((event) => {
+  //     const date = event.datetime.split("T")[0];
+  //     console.log("Event date: ", date);
+  //   });
+  // } else {
+  //   console.log("events is not an array");
+  // }
 
   let markedDates = {};
 
+  // need to use forEach instead of map because map returns a new array
+  const colors = [
+    "#FF0000",
+    "#00FF00",
+    "#0000FF",
+    "#FFFF00",
+    "#00FFFF",
+    "#FF00FF",
+  ];
+
   if (Array.isArray(events)) {
-    events.forEach((event) => {
+    events.forEach((event, index) => {
       const date = event.datetime.split("T")[0];
-      const color = "#" + Math.floor(Math.random() * 16777215).toString(16);
+      const color = colors[index % colors.length];
       const eventMarking = {
         key: event.id,
         color: color,
@@ -139,7 +149,7 @@ export default function CalendarComponent({ events, onDayPress }) {
           },
         }}
         // Month format in calendar title. Formatting values: http://arshaw.com/xdate/#Formatting
-        monthFormat={"yyyy MMMM"}
+        monthFormat={"MMMM yyyy"}
         // Handler which gets executed when visible month changes in calendar. Default = undefined
         onMonthChange={(month) => {
           console.log("month changed", month);
@@ -209,6 +219,7 @@ export default function CalendarComponent({ events, onDayPress }) {
           textMonthFontSize: globalStyles.fontSize.subHeader,
           textDayHeaderFontSize: globalStyles.fontSize.description,
         }}
+        style={{ height: 350 }}
       />
     </CalendarProvider>
   );
