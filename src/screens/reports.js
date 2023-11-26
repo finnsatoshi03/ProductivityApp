@@ -11,7 +11,6 @@ import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
 
 export default function Reports({ navigation }) {
-
   const { eventData, setEventData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -62,6 +61,7 @@ export default function Reports({ navigation }) {
                 renderItem={({ item }) => (
                   <Events
                     navigation={navigation}
+                    isInReportsScreen={true} // to hide the edit button
                     {...item}
                     onDelete={() => deleteEvent(item.event)}
                   />

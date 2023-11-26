@@ -39,7 +39,7 @@ export default function profileCard({
   const nameParts = fullname.split(" ");
 
   const isIdFound = () => {
-    if (purpose === 'edit') {
+    if (purpose !== 'view') {
       return participants.some((participant) => participant.id === id);
     } else {      
       return false; 
@@ -105,7 +105,7 @@ export default function profileCard({
   useEffect(() => {
     // Run the animation if the ID is found       
     if (purpose === 'edit') {      
-      if (isIdFound) {
+      if (isIdFound()) {
         console.log(purpose); 
         runAnimation();
       }

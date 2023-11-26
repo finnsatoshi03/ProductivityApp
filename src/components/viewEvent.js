@@ -23,11 +23,20 @@ import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 
 const ViewEvent = ({ route, navigation }) => {
-  const { title, location, description, dateTime, joinReasons, id, participants } = route.params;
+  const {
+    title,
+    location,
+    description,
+    dateTime,
+    joinReasons,
+    id,
+    participants,
+  } = route.params;
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
-  const [isParticipantsModalVisible, setParticipantsModalVisible] = useState(false);
-    
+  const [isParticipantsModalVisible, setParticipantsModalVisible] =
+    useState(false);
+
   const hideModal = () => {
     setModalVisible(false);
     navigation.goBack();
@@ -61,22 +70,23 @@ const ViewEvent = ({ route, navigation }) => {
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
 
-  const handleParticipantSelect = (participant) => {
-    setSelectedParticipant(participant);
-  };
+  // const handleParticipantSelect = (participant) => {
+  //   setSelectedParticipant(participant);
+  // };
 
-  const removeParticipant = () => {
-    // TODO DO THIS DELETE PARTICIPANT
-    console.log(selectedParticipant.id);
-    // if (selectedParticipant) {
-    //   const updatedParticipants = participants
-    //     .split(", ")
-    //     .filter((participant) => participant !== selectedParticipant);
-    //   navigation.setParams({ participants: updatedParticipants.join(", ") });
-    //   setSelectedParticipant(null); // Clear the selection
-    // }
-  };
+  // const removeParticipant = () => {
+  //   // TODO DO THIS DELETE PARTICIPANT
+  //   console.log(selectedParticipant.id);
+  //   // if (selectedParticipant) {
+  //   //   const updatedParticipants = participants
+  //   //     .split(", ")
+  //   //     .filter((participant) => participant !== selectedParticipant);
+  //   //   navigation.setParams({ participants: updatedParticipants.join(", ") });
+  //   //   setSelectedParticipant(null); // Clear the selection
+  //   // }
+  // };
   // console.log(participants);
+
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -255,8 +265,10 @@ const ViewEvent = ({ route, navigation }) => {
                     color: "white",
                   }}
                 >
-                  {/* ///TODO CHANGE THIS TO INVITED USER COUNT */}
-                  {id}
+                  {participants
+                    .map((participant) => participant.fullname)
+                    .join(", ")}
+                  {/* {participants} */}
                 </Text>
                 <TouchableOpacity
                   style={styles.attendeesButton}
@@ -294,7 +306,7 @@ const ViewEvent = ({ route, navigation }) => {
               onBack={hideParticipantsModal}
             />
           </View>
-          <View style={{ height: hp("59%"), marginBottom: hp("1%") }}>
+          <View style={{ height: hp("64%"), marginBottom: hp("1%") }}>
             <ListView
               data={participants}
               renderItem={({ item }) => (
@@ -302,7 +314,7 @@ const ViewEvent = ({ route, navigation }) => {
                   fullname={item.fullname}
                   id={item.id}
                   verify={true}
-                  onParticipantSelect={handleParticipantSelect}
+                  // onParticipantSelect={handleParticipantSelect}
                   purpose={'view'}
                 />
               )}
