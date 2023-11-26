@@ -9,11 +9,12 @@ import ListView from "./../components/listView";
 import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
+import { ChatNotificationProvider, useChatNotification } from "../components/notificationContext";
 
 export default function Reports({ navigation }) {
-
   const { eventData, setEventData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const {notificationCount} = useChatNotification();
 
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
@@ -62,6 +63,7 @@ export default function Reports({ navigation }) {
                 renderItem={({ item }) => (
                   <Events
                     navigation={navigation}
+                    isInReportsScreen={true} // to hide the edit button
                     {...item}
                     onDelete={() => deleteEvent(item.event)}
                   />
@@ -70,7 +72,7 @@ export default function Reports({ navigation }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Reports"} navigation={navigation} />
+            <Navbar notifCounts={{Chat : notificationCount}} icon={"Reports"} navigation={navigation} />
           </View>
         </View>
       </View>

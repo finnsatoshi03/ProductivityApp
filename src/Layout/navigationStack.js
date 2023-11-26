@@ -16,6 +16,7 @@ import ViewEvent from "../components/viewEvent";
 import Conversation from "../components/conversationComponent";
 import Notifications from "../screens/notifications";
 import { DataProvider } from "./../DataContext";
+import { ChatNotificationProvider } from "../components/notificationContext.js";
 
 const Stack = createNativeStackNavigator();
 
@@ -24,90 +25,92 @@ export default function App() {
 
   return (
     <DataProvider>
-      <NavigationContainer>
-        <Stack.Navigator
-          initialRouteName="Homepage"
-          screenOptions={{
-            animation: "none",
-          }}
-        >
-          <Stack.Screen
-            name="Homepage"
-            component={Homepage}
+      <ChatNotificationProvider>
+        <NavigationContainer>
+          <Stack.Navigator
+            initialRouteName="Homepage"
+            screenOptions={{
+              animation: "none",
+            }}
+          >
+            <Stack.Screen
+              name="Homepage"
+              component={Homepage}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Admin"
+              component={AdminScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="User"
+              component={UserScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Login"
+              component={Login}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Verification"
+              component={AccountVerification}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Calendar"
+              component={CalendarScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Events"
+              component={EventsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Reports"
+              component={ReportsScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Chat"
+              component={ChatScreen}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Conversation"
+              component={Conversation}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="EditProfile"
+              component={EditProfile}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="UserControl"
+              component={UserControl}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="Notifications"
+              component={Notifications}
+              options={{ headerShown: false }}
+            />
+            <Stack.Screen
+              name="ViewEvent"
+              component={ViewEvent}
+              options={{ headerShown: false }}
+            />
+            {/* <Stack.Screen
+            name="LoginButtons"
+            component={LoginButtons}
             options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Admin"
-            component={AdminScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="User"
-            component={UserScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Login"
-            component={Login}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Verification"
-            component={AccountVerification}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Calendar"
-            component={CalendarScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Events"
-            component={EventsScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Reports"
-            component={ReportsScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Chat"
-            component={ChatScreen}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Conversation"
-            component={Conversation}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="EditProfile"
-            component={EditProfile}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="UserControl"
-            component={UserControl}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="Notifications"
-            component={Notifications}
-            options={{ headerShown: false }}
-          />
-          <Stack.Screen
-            name="ViewEvent"
-            component={ViewEvent}
-            options={{ headerShown: false }}
-          />
-          {/* <Stack.Screen
-          name="LoginButtons"
-          component={LoginButtons}
-          options={{ headerShown: false }}
-        /> */}
-        </Stack.Navigator>
-      </NavigationContainer>
+          /> */}
+          </Stack.Navigator>
+        </NavigationContainer>
+      </ChatNotificationProvider>
     </DataProvider>
   );
 }

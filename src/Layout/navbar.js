@@ -128,26 +128,27 @@ export default function Navbar({ navigation, notifCounts, icon }) {
               </Text>
             )}
 
-            {notifCounts[item.name] > 0 && (
-              <View
-                style={{
-                  position: "absolute",
-                  top: -hp("1%"),
-                  right: -wp("1%"),
-                  backgroundColor: "green",
-                  borderRadius: hp("2%"),
-                  width: wp("5%"),
-                  height: hp("2.5%"),
-                  justifyContent: "center",
-                  alignItems: "center",
-                  zIndex: 5,
-                }}
-              >
-                <Text style={{ color: "white", fontSize: hp("1.6%") }}>
-                  {notifCounts[item.name]}
-                </Text>
-              </View>
-            )}
+
+            {item.name === 'Chat' && notifCounts[item.name] > 0 && (
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: -hp("1%"),
+                        right: -wp("1%"),
+                        backgroundColor: "green",
+                        borderRadius: hp("2%"),
+                        width: wp("5%"),
+                        height: hp("2.5%"),
+                        justifyContent: "center",
+                        alignItems: "center",
+                        zIndex: 5,
+                      }}
+                    >
+                      <Text style={{ color: "white", fontSize: hp("1.6%") }}>
+                        {notifCounts[item.name]}
+                      </Text>
+                    </View>
+              )}
           </TouchableOpacity>
         )
       ))}

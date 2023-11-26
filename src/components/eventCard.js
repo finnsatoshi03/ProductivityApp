@@ -44,6 +44,7 @@ export default function eventCard({
   onDelete,
   onEdit,
   id,
+  isInReportsScreen,
 }) {
   const { getUser } = Authentication();
 
@@ -261,7 +262,7 @@ export default function eventCard({
                   {location}
                 </Text>
               </View>
-              {userData.role === "admin" && (
+              {userData.role === "admin" && !isInReportsScreen && (
                 <Pressable onPress={onEdit}>
                   <Image
                     style={{ height: hp("4%"), width: hp("4%") }}

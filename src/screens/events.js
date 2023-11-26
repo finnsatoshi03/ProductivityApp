@@ -26,6 +26,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
 import Participants from "./participants";
+import { ChatNotificationProvider, useChatNotification } from "../components/notificationContext";
 
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
@@ -67,6 +68,11 @@ export default function EventsScreen({ navigation, data }) {
   const [isCreatingEvent, setCreatingEvent] = useState(false);
 
   const [sortOrder, setSortOrder] = useState("asc");
+  const [selectedMonth, setSelectedMonth] = useState(null); // TODO: remove default
+  // const [dropdownPlaceholder, setDropdownPlaceholder] = useState("Month");
+  const [dropdownKey, setDropdownKey] = useState(0);
+
+  const {notificationCount} = useChatNotification();
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -246,36 +252,38 @@ export default function EventsScreen({ navigation, data }) {
   };
 
   // TODO: add a toggle for change month sort and a remove sort for months
-  const [selectedMonth, setSelectedMonth] = useState(months[0].value); // TODO: remove default
   const sortedEventData = useMemo(() => {
     let sortedData = [...eventData];
 
-    sortedData = sortedData.filter((event) => {
-      const eventDate = new Date(event.datetime.split(" ")[0]);
-      const eventMonth = eventDate.toLocaleString("default", { month: "long" });
+    // Check if a month is selected
+    if (selectedMonth) {
+      sortedData = sortedData.filter((event) => {
+        const eventDate = new Date(event.datetime.split(" ")[0]);
+        const eventMonth = eventDate.toLocaleString("default", {
+          month: "long",
+        });
 
-      // Check if the event month matches the selected month
-      return eventMonth === selectedMonth;
-    });
+        // Check if the event month matches the selected month
+        return eventMonth === selectedMonth;
+      });
+    }
 
-    sortedData.sort((a, b) => {
-      const dateA = new Date(a.datetime);
-      const dateB = new Date(b.datetime);
+    // Sort the data based on the datetime property only if "Recent" is toggled
+    if (activeButtons.recent) {
+      sortedData.sort((a, b) => {
+        const dateA = new Date(a.datetime);
+        const dateB = new Date(b.datetime);
 
-      if (sortOrder === "asc") {
-        return dateA - dateB;
-      } else {
-        return dateB - dateA;
-      }
-    });
+        if (sortOrder === "asc") {
+          return dateA - dateB;
+        } else {
+          return dateB - dateA;
+        }
+      });
+    }
 
     return sortedData;
-  }, [eventData, sortOrder, selectedMonth]);
-
-  const handleMonthChange = (selectedMonth) => {
-    console.log("Selected month:", selectedMonth);
-    setSelectedMonth(selectedMonth);
-  };
+  }, [eventData, sortOrder, activeButtons.recent, selectedMonth]);
 
   const getParticipants = async (event_id) => {
     // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
@@ -339,6 +347,18 @@ export default function EventsScreen({ navigation, data }) {
     setEventTitle(event.event);
     setLocation(event.location);
     setDescription(event.description);
+  };
+
+  const handleMonthChange = (selectedMonth) => {
+    console.log("Selected month:", selectedMonth);
+    setSelectedMonth(selectedMonth);
+    setDropdownKey((prevKey) => prevKey + 1);
+  };
+
+  const clearSelectedMonth = () => {
+    setSelectedMonth(null);
+    // setDropdownPlaceholder("Month");
+    setDropdownKey((prevKey) => prevKey + 1);
   };
 
   const closeBottomSheet = () => {
@@ -409,7 +429,8 @@ export default function EventsScreen({ navigation, data }) {
                 placeholderTextStyle={{
                   fontFamily: globalStyles.fontStyle.semiBold,
                 }}
-                placeholder={"Month"}
+                key={dropdownKey}
+                placeholder={selectedMonth ? selectedMonth : "Month"}
                 maxWidth={true}
                 data={months}
                 containerStyle={{
@@ -425,6 +446,24 @@ export default function EventsScreen({ navigation, data }) {
                 valueField="value"
                 onChange={handleMonthChange}
               />
+              {selectedMonth && (
+                <Pressable
+                  style={{
+                    position: "absolute",
+                    zIndex: 5,
+                    right: hp("1.8%"),
+                    top: hp("1.2%"),
+                    alignSelf: "center",
+                    justifyContent: "center",
+                  }}
+                  onPress={() => clearSelectedMonth()}
+                >
+                  <Image
+                    style={{ height: hp("2.5%"), width: hp("2.5%") }}
+                    source={require("./../../assets/clear.png")}
+                  />
+                </Pressable>
+              )}
             </View>
             <Pressable
               style={{
@@ -457,33 +496,35 @@ export default function EventsScreen({ navigation, data }) {
                 Recent
               </Text>
             </Pressable>
-            <Pressable
-              style={{
-                paddingVertical: 13,
-                paddingHorizontal: 20,
-                alignSelf: "center",
-                backgroundColor: activeButtons.starred
-                  ? globalStyles.colors.green
-                  : "transparent",
-                borderRadius: 20,
-                height: hp("5%"),
-              }}
-              onPress={() =>
-                setActiveButtons({
-                  ...activeButtons,
-                  starred: !activeButtons.starred,
-                })
-              }
-            >
-              <Text
+            {userData.role !== "admin" && (
+              <Pressable
                 style={{
-                  fontFamily: globalStyles.fontStyle.semiBold,
-                  color: activeButtons.starred ? "white" : "grey",
+                  paddingVertical: 13,
+                  paddingHorizontal: 20,
+                  alignSelf: "center",
+                  backgroundColor: activeButtons.starred
+                    ? globalStyles.colors.green
+                    : "transparent",
+                  borderRadius: 20,
+                  height: hp("5%"),
                 }}
+                onPress={() =>
+                  setActiveButtons({
+                    ...activeButtons,
+                    starred: !activeButtons.starred,
+                  })
+                }
               >
-                Starred
-              </Text>
-            </Pressable>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    color: activeButtons.starred ? "white" : "grey",
+                  }}
+                >
+                  Starred
+                </Text>
+              </Pressable>
+            )}
           </View>
           {userData.role === "admin" ? (
             <Pressable
@@ -1013,7 +1054,7 @@ export default function EventsScreen({ navigation, data }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Events"} navigation={navigation} />
+            <Navbar notifCounts={{Chat : notificationCount}} icon={"Events"} navigation={navigation} />
           </View>
           {/* <Text>Events Screen</Text> */}
         </View>

@@ -5,6 +5,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import moment from "moment";
 import { globalStyles } from "./../styles/globalStyles";
@@ -16,6 +17,7 @@ import ListView from "./../components/listView";
 import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
+import { ChatNotificationProvider, useChatNotification } from "../components/notificationContext";
 
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
@@ -27,6 +29,7 @@ export default function Calendar({ navigation }) {
   const [loading, setLoading] = useState(true);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
+  const {notificationCount} = useChatNotification();
 
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
@@ -94,7 +97,9 @@ export default function Calendar({ navigation }) {
             />
           </View>
           <View style={{ height: hp("38%") }}>
-            <CalendarWidget events={eventData} onDayPress={handleDayPress} />
+            <ScrollView>
+              <CalendarWidget events={eventData} onDayPress={handleDayPress} />
+            </ScrollView>
           </View>
           <View
             style={{
@@ -155,6 +160,7 @@ export default function Calendar({ navigation }) {
                 renderItem={({ item }) => (
                   <Events
                     navigation={navigation}
+                    isInReportsScreen={true} // to hide the edit button
                     {...item}
                     onDelete={() => deleteEvent(item.event)}
                   />
@@ -163,7 +169,7 @@ export default function Calendar({ navigation }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Calendar"} navigation={navigation} />
+            <Navbar notifCounts={{Chat : notificationCount}} icon={"Calendar"} navigation={navigation} />
           </View>
           {/* <Text>Tite</Text> */}
         </View>

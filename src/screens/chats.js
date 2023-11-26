@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -24,6 +24,7 @@ import Modal from "react-native-modal";
 import Avatar from "../components/avatar";
 import Button from "../components/button";
 import { useNavigation } from "@react-navigation/native";
+import { ChatNotificationProvider, useChatNotification } from "../components/notificationContext";
 // import InputFields from "../components/input";
 
 export default function Chats() {
@@ -33,6 +34,7 @@ export default function Chats() {
 
   const [communityName, setCommunityName] = useState("");
   const [communityAvatar, setCommunityAvatar] = useState(null);
+  const { notificationCount, incrementCount, decrementCount, setCount } = useChatNotification();
 
   const [data, setData] = useState([
     {
@@ -148,6 +150,23 @@ export default function Chats() {
     setCommunityName("");
     setCommunityAvatar(null);
   };
+
+  // Call the function when the component mounts or as needed
+  useEffect(() => {
+    let unreadCount = 0;
+
+  // Iterate through the data array and count unread messages based on isReadProp
+    data.forEach((item) => {
+      if (!item.isReadProp) {
+        unreadCount++;
+      }
+    });
+
+    // Update the notification count with the total unread count
+    setCount(unreadCount);
+
+    console.log("Initial Unread Messages Count:", unreadCount);
+  }, []);
 
   return (
     <>
@@ -288,6 +307,14 @@ export default function Chats() {
                 <ChatCard
                   {...item}
                   onPress={() => {
+                    const updatedData = data.map((chat) => {
+                      if (chat.name === item.name) {
+                        decrementCount();
+                        return { ...chat, isRead: true }; // Assuming you're marking it as read
+                      }
+                      return chat;
+                    });
+                    setData(updatedData);
                     navigateToConversation(item);
                     console.log("Navigating to Conversation:", item);
                   }}
@@ -296,7 +323,7 @@ export default function Chats() {
             />
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} />
+            <Navbar notifCounts={{Chat : notificationCount}} icon={"Chat"} navigation={navigation} />
           </View>
           {/* <Text>Chats Screen</Text> */}
         </View>
