@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import {
   Text,
   View,
@@ -64,6 +64,8 @@ export default function EventsScreen({ navigation, data }) {
   const [btnFnc, setBtnFnc] = useState("create");
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isCreatingEvent, setCreatingEvent] = useState(false);
+
+  const [sortOrder, setSortOrder] = useState("asc");
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -234,6 +236,26 @@ export default function EventsScreen({ navigation, data }) {
     }
   };
 
+  const sortedEventData = useMemo(() => {
+    let sortedData = [...eventData];
+
+    // Sort the data based on the datetime property only if "Recent" is toggled
+    if (activeButtons.recent) {
+      sortedData.sort((a, b) => {
+        const dateA = new Date(a.datetime);
+        const dateB = new Date(b.datetime);
+
+        if (sortOrder === "asc") {
+          return dateA - dateB;
+        } else {
+          return dateB - dateA;
+        }
+      });
+    }
+
+    return sortedData;
+  }, [eventData, sortOrder, activeButtons.recent]);
+
   const getParticipants = async (event_id) => {
     // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
     // TODO SAVE THE VALUE DONT DELETE OR CLEAR IT FOR EVERY ADD PARTICIPANTS/UPDATE
@@ -393,12 +415,16 @@ export default function EventsScreen({ navigation, data }) {
                 borderRadius: 20,
                 height: hp("5%"),
               }}
-              onPress={() =>
+              onPress={() => {
                 setActiveButtons({
                   ...activeButtons,
                   recent: !activeButtons.recent,
-                })
-              }
+                });
+                // Toggle sorting order on button click
+                setSortOrder((prevOrder) =>
+                  prevOrder === "asc" ? "desc" : "asc"
+                );
+              }}
             >
               <Text
                 style={{
@@ -953,7 +979,7 @@ export default function EventsScreen({ navigation, data }) {
               </View>
             ) : (
               <ListView
-                data={eventData}
+                data={sortedEventData}
                 renderItem={({ item }) => (
                   <Events
                     {...item}
