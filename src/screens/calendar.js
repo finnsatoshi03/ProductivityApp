@@ -1,5 +1,11 @@
-import React, { useState,useEffect } from "react";
-import { Text, View, StyleSheet, TouchableOpacity } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  Text,
+  View,
+  StyleSheet,
+  TouchableOpacity,
+  ActivityIndicator,
+} from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
@@ -10,16 +16,14 @@ import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
 
-
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
-import '../../global'
-
+import "../../global";
 
 export default function Calendar({ navigation }) {
-
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
+  const [loading, setLoading] = useState(true);
 
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
@@ -31,18 +35,21 @@ export default function Calendar({ navigation }) {
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
-        const response = await axios.get(`${global.baseurl}:4000/getEvents`)
+        setLoading(true);
+        const response = await axios.get(`${global.baseurl}:4000/getEvents`);
 
         if (response.status === 200) {
           const { data } = response;
-          const events = data.events;          
-          setEventData(events)
+          const events = data.events;
+          setEventData(events);
         }
       } catch (error) {
         console.log(error);
-      }      
-    }
-    fetchEventsData()
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchEventsData();
   }, []);
   return (
     <>
@@ -63,7 +70,24 @@ export default function Calendar({ navigation }) {
               height: hp("38%"),
             }}
           >
-            {eventData.length === 0 ? (
+            {loading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <ActivityIndicator
+                  style={{}}
+                  size="large"
+                  color={globalStyles.colors.darkGreen}
+                />
+                <Text style={{ textAlign: "center" }}>
+                  Fetching events from the database...
+                </Text>
+              </View>
+            ) : eventData.length === 0 ? (
               <View
                 style={{
                   flex: 1,
@@ -72,11 +96,7 @@ export default function Calendar({ navigation }) {
                 }}
               >
                 <Text
-                  style={{
-                    textAlign: "center",
-                    fontSize: 18,
-                    color: "gray",
-                  }}
+                  style={{ textAlign: "center", fontSize: 18, color: "gray" }}
                 >
                   Embracing Tranquility 🎉 {"\n"} No Current Events at the
                   Moment
