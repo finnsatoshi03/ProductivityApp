@@ -23,11 +23,20 @@ import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 
 const ViewEvent = ({ route, navigation }) => {
-  const { title, location, description, dateTime, joinReasons, id, participants } = route.params;
+  const {
+    title,
+    location,
+    description,
+    dateTime,
+    joinReasons,
+    id,
+    participants,
+  } = route.params;
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
-  const [isParticipantsModalVisible, setParticipantsModalVisible] = useState(false);
-    
+  const [isParticipantsModalVisible, setParticipantsModalVisible] =
+    useState(false);
+
   const hideModal = () => {
     setModalVisible(false);
     navigation.goBack();
@@ -53,30 +62,30 @@ const ViewEvent = ({ route, navigation }) => {
   const hideParticipantsModal = () => {
     setParticipantsModalVisible(false);
   };
-  console.log(dateTime);
-  const dateTimeArray = dateTime.split(' ');
-  const date = dateTimeArray.slice(0, 3).join(' ');
-  const time = dateTimeArray.slice(3).join(' ');
-  
+  // console.log(dateTime);
+  const dateTimeArray = dateTime.split(" ");
+  const date = dateTimeArray.slice(0, 3).join(" ");
+  const time = dateTimeArray.slice(3).join(" ");
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
 
-  const handleParticipantSelect = (participant) => {
-    setSelectedParticipant(participant);
-  };
+  // const handleParticipantSelect = (participant) => {
+  //   setSelectedParticipant(participant);
+  // };
 
-  const removeParticipant = () => {
-    // TODO DO THIS DELETE PARTICIPANT
-    console.log(selectedParticipant.id);
-    // if (selectedParticipant) {
-    //   const updatedParticipants = participants
-    //     .split(", ")
-    //     .filter((participant) => participant !== selectedParticipant);
-    //   navigation.setParams({ participants: updatedParticipants.join(", ") });
-    //   setSelectedParticipant(null); // Clear the selection
-    // }
-  };
+  // const removeParticipant = () => {
+  //   // TODO DO THIS DELETE PARTICIPANT
+  //   console.log(selectedParticipant.id);
+  //   // if (selectedParticipant) {
+  //   //   const updatedParticipants = participants
+  //   //     .split(", ")
+  //   //     .filter((participant) => participant !== selectedParticipant);
+  //   //   navigation.setParams({ participants: updatedParticipants.join(", ") });
+  //   //   setSelectedParticipant(null); // Clear the selection
+  //   // }
+  // };
   console.log(participants);
+
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -255,7 +264,10 @@ const ViewEvent = ({ route, navigation }) => {
                     color: "white",
                   }}
                 >
-                  {id}
+                  {participants
+                    .map((participant) => participant.fullname)
+                    .join(", ")}
+                  {/* {participants} */}
                 </Text>
                 <TouchableOpacity
                   style={styles.attendeesButton}
@@ -293,7 +305,7 @@ const ViewEvent = ({ route, navigation }) => {
               onBack={hideParticipantsModal}
             />
           </View>
-          <View style={{ height: hp("59%"), marginBottom: hp("1%") }}>
+          <View style={{ height: hp("64%"), marginBottom: hp("1%") }}>
             <ListView
               data={participants}
               renderItem={({ item }) => (
@@ -301,15 +313,16 @@ const ViewEvent = ({ route, navigation }) => {
                   fullname={item.fullname}
                   id={item.id}
                   verify={true}
-                  onParticipantSelect={handleParticipantSelect}
+                  // onParticipantSelect={handleParticipantSelect}\
+                  hideCheckbox={true}
                 />
               )}
             />
           </View>
-          <View style={{ height: hp("5%") }}>
+          {/* <View style={{ height: hp("5%") }}>
             <Button text={"Remove"} 
             onPress={removeParticipant} /> 
-          </View>
+          </View> */}
         </View>
         {/* <Text style={styles.participantsModalTitle}>{participants}</Text> */}
       </Modal>
