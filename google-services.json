@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "857527752363",
+    "firebase_url": "https://productivity-app-df0cb-default-rtdb.firebaseio.com",
+    "project_id": "productivity-app-df0cb",
+    "storage_bucket": "productivity-app-df0cb.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857527752363:android:5507ae6bbb1f8a519449ee",
+        "android_client_info": {
+          "package_name": "com.zah.productivityapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCAMcFBrMK4_a250nYY6iAh-fBkyqOFLqI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
