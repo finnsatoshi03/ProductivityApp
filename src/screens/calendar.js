@@ -45,13 +45,14 @@ export default function Calendar({ navigation }) {
   useEffect(() => {
     const fetchUserData = async () => {
       const user = await getUser();
+      
       setUserData(user);
-      console.log(userData);
+      
     };
 
     fetchUserData();
-  }, []);
-
+  }, [userData]);
+  
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
       eventData.filter((event) => event.event !== eventTitleToDelete)
@@ -110,7 +111,7 @@ export default function Calendar({ navigation }) {
       }
     };
     fetchEventsData();
-  }, []);
+  }, [userData]);
 
   return (
     <>

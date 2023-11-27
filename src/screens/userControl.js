@@ -43,7 +43,7 @@ export default function UserControl({ navigation }) {
 
         if (response.status === 200) {
           const { data } = response;
-          console.log(data.users);
+          
           setNotVerifiedUsers(data.users);
         } else {
           console.log(response.message);
@@ -75,7 +75,7 @@ export default function UserControl({ navigation }) {
       const response = await axios.patch(`${global.baseurl}:4000/verify`, data);
 
       if (response.status === 200) {
-        console.log("approved");
+        
         setNotVerifiedUsers((prevUsers) => {
           return prevUsers.filter((user) => user.id !== id);
         });

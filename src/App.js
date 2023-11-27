@@ -5,7 +5,7 @@ import Navigator from "./Layout/navigationStack";
 import { View, Text } from "react-native";
 import { globalStyles } from "./styles/globalStyles";
 import Participants from "./screens/participants";
-
+import Chat from "../test/chat.js/sad/chat";
 const getFonts = () =>
   Font.loadAsync({
     "montserrat-regular": require("../assets/fonts/Montserrat-Regular.ttf"),

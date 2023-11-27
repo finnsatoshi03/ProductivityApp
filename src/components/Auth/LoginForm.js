@@ -64,9 +64,7 @@ export default function AdminLogin({
       if (userType === "User") {
         baseurl = `${global.baseurl}:4000/userlogin`;
       }
-      // console.log(`${global.baseurl}:4000/adminlogin`);
-      // console.log(baseurl);
-
+     
       const response = await axios.post(baseurl, credentials);
 
       if (response.status === 200) {
@@ -78,12 +76,10 @@ export default function AdminLogin({
           fullname: response.data.fullname,
         });
         setIsLoading(false);
-        console.log(response.data);
+        console.log('yo');
         setErrorMessage("Login successful");
         navigation.navigate("Calendar");
-        // setTimeout(() => {
-
-        // }, 500);
+       
       }
     } catch (error) {
       setIsLoading(false);
