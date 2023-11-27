@@ -77,7 +77,7 @@ export default function CalendarComponent({ events, onDayPress }) {
   // need to use forEach instead of map because map returns a new array
   const colors = [
     "#61040F", // dark red
-    "#615E09", // tae color
+    "#f75b00", // orange color
     "#341761", // dark violet
     "#126123", // light dark green
     "#73E01F", // neon green
