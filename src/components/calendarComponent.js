@@ -76,16 +76,17 @@ export default function CalendarComponent({ events, onDayPress }) {
 
   // need to use forEach instead of map because map returns a new array
   const colors = [
-    "#FF0000",
-    "#00FF00",
-    "#0000FF",
-    "#FFFF00",
-    "#00FFFF",
-    "#FF00FF",
+    "#61040F", // dark red
+    "#615E09", // tae color
+    "#341761", // dark violet
+    "#126123", // light dark green
+    "#73E01F", // neon green
+    "#1F3D09", // medyo dark green
+    "#498F14", // medyo medyo dark green
   ];
 
   if (Array.isArray(events)) {
-    events.forEach((event, index) => {            
+    events.forEach((event, index) => {
       const date = event.datetime.split("T")[0];
       const color = colors[index % colors.length];
       const eventMarking = {

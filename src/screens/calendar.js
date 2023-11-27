@@ -27,7 +27,6 @@ import "../../global";
 // TODO GAWING BASED ETONG CALENDAR SINCE DITO NAG START YUNG APP
 // TODO NEED TALAGA IENHANCE TO UNDEFINE LAGI YUNG FIRST RETRIEVAL
 export default function Calendar({ navigation }) {
-
   const { getUser } = Authentication();
 
   const [userData, setUserData] = useState({
@@ -85,18 +84,19 @@ export default function Calendar({ navigation }) {
     }
   };
 
-  
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
         setLoading(true);
-        const response = userData === 'admin' ? 
-          await axios.get(`${global.baseurl}:4000/getEvents`) 
-        : await axios.get(`${global.baseurl}:4000/userViewEvents`,{
-          params: {
-            user_id: userData.user_id,
-          },
-        });
+        // const response =
+        //   userData.role === "admin"
+        //     ? await axios.get(`${global.baseurl}:4000/getEvents`)
+        //     : await axios.get(`${global.baseurl}:4000/userViewEvents`, {
+        //         params: {
+        //           user_id: userData.user_id,
+        //         },
+        //       });
+        const response = await axios.get(`${global.baseurl}:4000/getEvents`);
 
         if (response.status === 200) {
           const { data } = response;
