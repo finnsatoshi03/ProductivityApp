@@ -1032,8 +1032,8 @@ export default function EventsScreen({ navigation, data }) {
           </Modal>
           <View
             style={{
-              height: userData.role !== "admin" ? hp("70%") : hp("62%"),
-              marginTop: userData.role !== "admin" ? hp("1.6%") : 0,
+              height: userData.role !== "admin" ? hp("71%") : hp("62%"),
+              marginTop: userData.role !== "admin" ? hp("2%") : 0,
             }}
           >
             {eventData.length === 0 ? (
