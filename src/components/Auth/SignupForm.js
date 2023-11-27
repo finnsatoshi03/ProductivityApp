@@ -221,7 +221,7 @@ export default function SignupForm({ navigation }) {
                   zIndex: 4,
                 }}
               >
-                <SignUpLabel text="Username" error={errors.username} />
+                <SignUpLabel text="Username *" error={errors.username} />
                 {/* {takenUsername && (
                 <Text style={{ color: "red" }}>
                   Username is already taken. Please choose another.
@@ -234,7 +234,7 @@ export default function SignupForm({ navigation }) {
                   value={formdata.username}
                   onChangeText={(value) => handleInputChange("username", value)}
                 />
-                <SignUpLabel text="Password" error={errors.password} />
+                <SignUpLabel text="Password *" error={errors.password} />
                 <InputFields
                   placeholder="Your secure password"
                   maxWidth={true}
@@ -243,7 +243,7 @@ export default function SignupForm({ navigation }) {
                   value={formdata.password}
                   onChangeText={(value) => handleInputChange("password", value)}
                 />
-                <SignUpLabel text="Fullname" error={errors.fullname} />
+                <SignUpLabel text="Fullname *" error={errors.fullname} />
                 <InputFields
                   placeholder="Your full name"
                   maxWidth={true}
@@ -252,7 +252,7 @@ export default function SignupForm({ navigation }) {
                   onChangeText={(value) => handleInputChange("fullname", value)}
                 />
                 <SignUpLabel
-                  text="Employment ID"
+                  text="Employment ID *"
                   error={errors.employment_id}
                 />
                 <InputFields
@@ -264,7 +264,7 @@ export default function SignupForm({ navigation }) {
                     handleInputChange("employment_id", value)
                   }
                 />
-                <SignUpLabel text="Designated Office" />
+                <SignUpLabel text="Designated Office *" />
                 <InputFields
                   maxWidth={true}
                   isDropdown={true}
@@ -283,7 +283,7 @@ export default function SignupForm({ navigation }) {
                   }}
                 >
                   <View style={{ flex: 1 }}>
-                    <SignUpLabel text="Email Account" error={errors.email} />
+                    <SignUpLabel text="Email Account *" error={errors.email} />
                     <InputFields
                       placeholder="Your email address"
                       noWidth={wp("43%")}
@@ -294,7 +294,10 @@ export default function SignupForm({ navigation }) {
                     />
                   </View>
                   <View style={{ flex: 1 }}>
-                    <SignUpLabel text="Contact Number" error={errors.contact} />
+                    <SignUpLabel
+                      text="Contact Number *"
+                      error={errors.contact}
+                    />
                     <InputFields
                       placeholder="Your contact number"
                       noWidth={wp("43%")}
