@@ -40,6 +40,7 @@ export default function SignupForm({ navigation }) {
     password: "",
     fullname: "",
     employment_id: "",
+    office: "",
     email: "",
     contact: "",
   });
@@ -119,6 +120,7 @@ export default function SignupForm({ navigation }) {
       employment_id: !formdata.employment_id.trim()
         ? "Employment ID is required"
         : "",
+      office: !formdata.office.trim() ? "Designated is required" : "",
       email: !formdata.email.trim() ? "Email is required" : "",
       contact: !formdata.contact.trim() ? "Number is required" : "",
     }));
@@ -264,7 +266,7 @@ export default function SignupForm({ navigation }) {
                     handleInputChange("employment_id", value)
                   }
                 />
-                <SignUpLabel text="Designated Office *" />
+                <SignUpLabel text="Designated Office *" error={errors.office} />
                 <InputFields
                   maxWidth={true}
                   isDropdown={true}
@@ -273,6 +275,7 @@ export default function SignupForm({ navigation }) {
                   placeholder={"Your office location"}
                   value={formdata.office}
                   onChangeText={(value) => handleInputChange("office", value)}
+                  onValueChange={(value) => handleInputChange("office", value)}
                 />
                 <View
                   style={{
