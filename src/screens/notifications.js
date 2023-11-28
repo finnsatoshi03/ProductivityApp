@@ -91,7 +91,7 @@ export default function Notifications({ navigation, route }) {
               height: hp("14%"),
             }}
           >
-            <Navbar notifCounts={6} icon={"Events"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
+            <Navbar notifCounts={6} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
           </View>
           {/* <Text>Sample</Text> */}
         </View>
