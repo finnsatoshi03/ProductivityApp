@@ -14,18 +14,12 @@ import Input from "./../components/input";
 import Button from "./../components/button";
 
 import axios from "axios";
-import { Authentication } from "../Auth/Authentication";
-
 import '../../global'
 
-export default function EditProfile({ username, email, number, navigation }) {  
+export default function EditProfile({  navigation, route }) {  
 
-  const {getUser} = Authentication()
-  const [userData, setUserData] = useState({
-    fullname: '',
-    role: '',
-    user_id: ''
-  });
+  const { fullname, user, user_id, role} = route.params;
+  
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isModalVisible, setModalVisible] = useState(true);
   const [usernamefield, setUsername] = useState('')
@@ -33,20 +27,11 @@ export default function EditProfile({ username, email, number, navigation }) {
   const [contactfield, setContact] = useState('')
   const [img, setImg] = useState('')
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = await getUser();
-      setUserData(user);
-    };
-
-    fetchUserData();
-  }, []); 
-
   const hideModal = () => {
     setModalVisible(false);    
     navigation.goBack();
   };
-  console.log(userData.user_id);
+  
   const onSubmit = async (values) => {
   
     const data = {
@@ -54,17 +39,17 @@ export default function EditProfile({ username, email, number, navigation }) {
       username: usernamefield,
       email: emailfield,
       contact: contactfield, 
-      user_id: userData.user_id
+      user_id: user_id
     }
     
     try {      
-      let baseurl = userData.role === 'admin' ? `${global.baseurl}:4000/editAdmin` : `${global.baseurl}:4000/editUser`;
-      console.log(baseurl);
+      let baseurl = role === 'admin' ? `${global.baseurl}:4000/editAdmin` : `${global.baseurl}:4000/editUser`;
+      
       const response = await axios.patch(baseurl, data);
 
       if (response.status === 200) {        
         console.log('SUCCESS');        
-      }
+      } else console.log('failed')
 
     } catch (error) {
       console.log(error);
@@ -143,7 +128,7 @@ export default function EditProfile({ username, email, number, navigation }) {
             <Input
               style={{ borderWidth: 0, borderColor: 0 }}
               noWidth={true}
-              placeholder={username || "Change Username"}
+              placeholder={"Change Username"}
               value={usernamefield} // new prop
               onChangeText={handlUsername} // new prop
             />
@@ -157,7 +142,7 @@ export default function EditProfile({ username, email, number, navigation }) {
             <Input
               style={{ borderWidth: 0, borderColor: 0 }}
               noWidth={true}
-              placeholder={email || "Change Email Adress"}
+              placeholder={"Change Email Adress"}
               value={emailfield} // new prop
               onChangeText={handlEmail} // new prop
             />
@@ -171,7 +156,7 @@ export default function EditProfile({ username, email, number, navigation }) {
             <Input
               style={{ borderWidth: 0, borderColor: 0 }}
               noWidth={true}
-              placeholder={number || "Change Contact Number"}
+              placeholder={"Change Contact Number"}
               value={contactfield} // new prop
               onChangeText={handlContact} // new prop
             />

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Text, View, TouchableOpacity } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -8,63 +8,47 @@ import NotificationCard from "./../components/notificationCard";
 import Navbar from "../Layout/navbar";
 import Sidebar from "./../Layout/sidebar";
 
-export default function Notifications({ navigation }) {
-  const data = [
-    {
-      name: "Event 1",
-      description: "You are invited to Event 1",
-      date: "2022-12-01",
-      time: "10:00",
-    },
-    {
-      name: "Event 2",
-      description: "You are invited to Event 2",
-      date: "2022-12-02",
-      time: "11:00",
-    },
-    {
-      name: "Event 3",
-      description: "You are invited to Event 3",
-      date: "2022-12-03",
-      time: "12:00",
-    },
-    {
-      name: "Event 4",
-      description: "You are invited to Event 4",
-      date: "2022-12-04",
-      time: "13:00",
-    },
-    {
-      name: "Event 5",
-      description: "You are invited to Event 5",
-      date: "2022-12-05",
-      time: "14:00",
-    },
-    {
-      name: "Event 6",
-      description: "You are invited to Event 6",
-      date: "2022-12-06",
-      time: "15:00",
-    },
-    {
-      name: "Event 7",
-      description: "You are invited to Event 7",
-      date: "2022-12-07",
-      time: "16:00",
-    },
-    {
-      name: "Event 8",
-      description: "You are invited to Event 7",
-      date: "2022-12-07",
-      time: "16:00",
-    },
-    {
-      name: "Event 9",
-      description: "You are invited to Event 7",
-      date: "2022-12-07",
-      time: "16:00",
-    },
-  ];
+
+import axios from "axios";
+import '../../global'
+
+export default function Notifications({ navigation, route }) {
+
+  const { fullname, user, user_id, role} = route.params;
+
+  const [data,setData] = useState({
+    // name: "",
+    message: "",
+    date: "",
+    created_at: "",
+    read: "",
+  });
+
+  useEffect(() => {
+    const getNotifications = async () => {
+      try {
+        const response = await axios.get(`${global.baseurl}:4000/getNotifications`, {
+          params:{
+            user_id: user_id
+          }
+        });
+  
+        if (response.status === 200) {
+          const {data} = response
+          const notification = data.notifications
+          
+          setData(notification)
+  
+          console.log('sucess');
+        } else console.log('failed');
+      
+      } catch (err) {
+        console.log(err);
+      }
+    }
+    getNotifications()
+  }, [])
+
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -107,7 +91,7 @@ export default function Notifications({ navigation }) {
               height: hp("14%"),
             }}
           >
-            <Navbar notifCounts={{}} navigation={navigation} />
+            <Navbar notifCounts={6} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
           </View>
           {/* <Text>Sample</Text> */}
         </View>
@@ -122,6 +106,10 @@ export default function Notifications({ navigation }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
+            fullname={fullname} 
+            user={user}
+            user_id={user_id}
+            role={role}
           />
         </>
       )}

@@ -21,34 +21,21 @@ import { Authentication } from "../Auth/Authentication";
 export default function sideBar({
   avatar,
   name,
-  roleLabel,
   isVisible,
   onHide,
   navigation,
+  fullname,
+  user,
+  user_id,
+  role
 }) {
-  const { logout, getUser } = Authentication();
+  const { logout } = Authentication();
 
-  const [userData, setUserData] = useState({
-    fullname: "",
-    role: "",
-    user_id: "",
-  });
   const [isModalVisible, setModalVisible] = useState(false);
   const [logoutText, setLogoutText] = useState(
     "Are you sure you want to logout?"
   );
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = await getUser();
-      setUserData(user);
-    };
-
-    fetchUserData();
-  }, []);
-
-  console.log(userData || " ");
-
+  
   const position = useRef(new Animated.Value(-wp("70%"))).current;
 
   const slideIn = () => {
@@ -73,14 +60,10 @@ export default function sideBar({
     } else {
       slideOut();
     }
-  }, [isVisible]);
+  }, []);
 
-  // const handleLogout = () => {
-  //   logout();
-  //   console.log("yo");
-  //   navigation.navigate("Homepage");
-  // };
-  const handleLogout = () => {
+  
+  const handleLogout = () => {    
     setModalVisible(true);
   };
 
@@ -135,7 +118,7 @@ export default function sideBar({
                 fontSize: globalStyles.fontSize.largeDescription,
               }}
             >
-              {userData.fullname}
+              {fullname}
             </Text>
             <Text
               style={{
@@ -143,7 +126,7 @@ export default function sideBar({
                 fontSize: globalStyles.fontSize.description,
               }}
             >
-              {userData.role}
+              {role}
             </Text>
           </View>
           <View
@@ -165,8 +148,12 @@ export default function sideBar({
               navigation={navigation}
               destination={"EditProfile"}
               fnc="navigate"
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
             />
-            {userData.role === "admin" ? (
+            {role === "admin" ? (
               <Button
                 text={"Verify Account"}
                 flexStart={true}
@@ -177,6 +164,10 @@ export default function sideBar({
                 navigation={navigation}
                 destination={"UserControl"}
                 fnc="navigate"
+                fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
               />
             ) : (
               <Button
@@ -189,6 +180,10 @@ export default function sideBar({
                 navigation={navigation}
                 destination={"Notifications"}
                 fnc="navigate"
+                fullname={fullname}
+                user={user}
+                user_id={user_id}
+                role={role}
               />
             )}
           </View>
@@ -203,6 +198,10 @@ export default function sideBar({
               navigation={navigation}
               destination={"Calendar"}
               fnc="navigate"
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
             />
             <Button
               text={"Events"}
@@ -214,8 +213,12 @@ export default function sideBar({
               navigation={navigation}
               destination={"Events"}
               fnc="navigate"
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}              
             />
-            {userData.role === "admin" ? (
+            {role === "admin" ? (
               <Button
                 text={"Reports"}
                 flexStart={true}
@@ -226,6 +229,10 @@ export default function sideBar({
                 navigation={navigation}
                 destination={"Reports"}
                 fnc="navigate"
+                fullname={fullname}
+                user={user}
+                user_id={user_id}
+                role={role}
               />
             ) : (
               <></>
@@ -240,6 +247,10 @@ export default function sideBar({
               navigation={navigation}
               destination={"Chat"}
               fnc="navigate"
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
             />
           </View>
         </View>

@@ -10,7 +10,10 @@ import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 import { useData } from "./../DataContext";
 
-export default function Reports({ navigation }) {
+export default function Reports({ navigation, route }) {
+  
+  const { fullname, user, user_id, role} = route.params;
+
   const { eventData, setEventData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
@@ -64,13 +67,17 @@ export default function Reports({ navigation }) {
                     isInReportsScreen={true} // to hide the edit button
                     {...item}
                     onDelete={() => deleteEvent(item.event)}
+                    fullname={fullname} 
+                    user={user}
+                    user_id={user_id}
+                    role={role}
                   />
                 )}
               />
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Reports"} navigation={navigation} />
+            <Navbar notifCounts={6} icon={"Reports"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
           </View>
         </View>
       </View>
@@ -84,6 +91,10 @@ export default function Reports({ navigation }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
+            fullname={fullname} 
+            user={user}
+            user_id={user_id}
+            role={role}
           />
         </>
       )}

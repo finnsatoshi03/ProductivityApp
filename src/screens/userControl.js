@@ -22,10 +22,13 @@ import ModalCard from "../components/modalCard";
 import Avatar from "../components/avatar";
 
 import axios from "axios";
-import { Authentication } from "../Auth/Authentication";
+
 import "../../global";
 
-export default function UserControl({ navigation }) {
+export default function UserControl({ navigation, route }) {
+
+  const { fullname, user, user_id, role} = route.params;
+
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [notVerifiedUsers, setNotVerifiedUsers] = useState({
     image: "",
@@ -52,7 +55,7 @@ export default function UserControl({ navigation }) {
 
         if (response.status === 200) {
           const { data } = response;
-          console.log(data.users);
+          
           setNotVerifiedUsers(data.users);
         } else {
           console.log(response.message);
@@ -85,7 +88,7 @@ export default function UserControl({ navigation }) {
       const response = await axios.patch(`${global.baseurl}:4000/verify`, data);
 
       if (response.status === 200) {
-        console.log("approved");
+        
         setNotVerifiedUsers((prevUsers) => {
           return prevUsers.filter((user) => user.id !== id);
         });
@@ -103,12 +106,10 @@ export default function UserControl({ navigation }) {
       user_id: id,
       verify: false,
     };
-    console.log(data);
-
+    
     const response = await axios.patch(`${global.baseurl}:4000/verify`, data);
 
-    if (response.status === 200) {
-      console.log("rejected");
+    if (response.status === 200) {      
       setNotVerifiedUsers((prevUsers) => {
         return prevUsers.filter((user) => user.id !== id);
       });
@@ -179,7 +180,9 @@ export default function UserControl({ navigation }) {
               icon="none"
               navigation={navigation}
               eventsData={notVerifiedUsers}
+              fullname={fullname} user={user} user_id={user_id} role={role} 
             />
+            
           </View>
         </View>
       </View>
@@ -193,6 +196,10 @@ export default function UserControl({ navigation }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
+            fullname={fullname} 
+            user={user}
+            user_id={user_id}
+            role={role}
           />
         </>
       )}
