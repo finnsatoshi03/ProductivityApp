@@ -107,7 +107,7 @@ export default function Notifications({ navigation }) {
               height: hp("14%"),
             }}
           >
-            <Navbar notifCounts={{}} />
+            <Navbar notifCounts={{}} navigation={navigation} />
           </View>
           {/* <Text>Sample</Text> */}
         </View>
