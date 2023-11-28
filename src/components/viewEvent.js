@@ -22,7 +22,6 @@ import ProfileCard from "./profileCard";
 import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 
-import { Authentication } from "../Auth/Authentication";
 
 const ViewEvent = ({ route, navigation }) => {
   const {
@@ -33,25 +32,8 @@ const ViewEvent = ({ route, navigation }) => {
     joinReasons,
     id,
     participants,
+    fullname, user, user_id, role
   } = route.params;
-
-  const { getUser } = Authentication();
-
-  const [userData, setUserData] = useState({
-    fullname: "",
-    role: "",
-    user_id: "",
-  });
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = await getUser();
-      setUserData(user);
-      console.log(userData);
-    };
-
-    fetchUserData();
-  }, []);
 
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
@@ -98,23 +80,6 @@ const ViewEvent = ({ route, navigation }) => {
     );
   };
 
-  // const handleParticipantSelect = (participant) => {
-  //   setSelectedParticipant(participant);
-  // };
-
-  // const removeParticipant = () => {
-  //   // TODO DO THIS DELETE PARTICIPANT
-  //   console.log(selectedParticipant.id);
-  //   // if (selectedParticipant) {
-  //   //   const updatedParticipants = participants
-  //   //     .split(", ")
-  //   //     .filter((participant) => participant !== selectedParticipant);
-  //   //   navigation.setParams({ participants: updatedParticipants.join(", ") });
-  //   //   setSelectedParticipant(null); // Clear the selection
-  //   // }
-  // };
-  // console.log(participants);
-
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -126,7 +91,7 @@ const ViewEvent = ({ route, navigation }) => {
                 style={styles.backgroundImage}
               />
             )}
-            {userData.role === "user" && (
+            {role === "user" && (
               <View style={styles.starIconContainer}>
                 <View style={styles.starIconBg}>
                   <GlobalIconButton

@@ -1,7 +1,19 @@
 import { Text, View } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 
-export default function notificationCard({ name, description, date, time }) {
+export default function notificationCard({ name, message, created_at }) {
+
+  const dateObject = new Date(created_at);
+  const formattedDate = new Intl.DateTimeFormat('en-US', {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
+  }).format(dateObject);
+
+  
+  
   return (
     <View
       style={{
@@ -20,9 +32,9 @@ export default function notificationCard({ name, description, date, time }) {
             flexShrink: 1,
           }}
         >
-          {`${name} `}
+          {message}
         </Text>
-        <Text
+        {/* <Text
           style={{
             fontFamily: globalStyles.fontStyle.regular,
             fontSize: globalStyles.fontSize.mediumDescription,
@@ -30,11 +42,11 @@ export default function notificationCard({ name, description, date, time }) {
           }}
         >
           {description}
-        </Text>
+        </Text> */}
       </View>
 
       <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-        {date}, {time}
+        {formattedDate}
       </Text>
     </View>
   );

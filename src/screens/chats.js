@@ -26,7 +26,10 @@ import Button from "../components/button";
 import { useNavigation } from "@react-navigation/native";
 // import InputFields from "../components/input";
 
-export default function Chats() {
+export default function Chats({ route }) {
+
+  const { fullname, user, user_id, role} = route.params;
+
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
@@ -296,7 +299,7 @@ export default function Chats() {
             />
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} />
+            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
           </View>
           {/* <Text>Chats Screen</Text> */}
         </View>
@@ -311,6 +314,10 @@ export default function Chats() {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
+            fullname={fullname} 
+            user={user}
+            user_id={user_id}
+            role={role}
           />
         </>
       )}

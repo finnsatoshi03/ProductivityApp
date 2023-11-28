@@ -7,29 +7,12 @@ import {
   heightPercentageToDP as hp,
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
-import { Authentication } from "../Auth/Authentication";
 
-
-
-export default function Navbar({ navigation, notifCounts, icon }) {
-  const {getUser} = Authentication()
-
-  const [userData, setUserData] = useState({
-    fullname: '',
-    role: '',
-    user_id: ''
-  });
+export default function Navbar({ navigation, notifCounts, icon, fullname, user, user_id, role }) {
+  console.log(fullname);
   const [selectedIcon, setSelectedIcon] = useState(icon);
   const isFocused = useIsFocused();
   
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = await getUser();
-      setUserData(user);
-    };
-
-    fetchUserData();
-  }, []); 
   
   
   useEffect(() => {
@@ -89,7 +72,7 @@ export default function Navbar({ navigation, notifCounts, icon }) {
       }}
     >      
       {navIcons.map((item, index) => (  
-        (item.name !== 'Reports' || userData.role !== 'user') && (
+        (item.name !== 'Reports' || role !== 'user') && (
           <TouchableOpacity
             key={item.name}
             style={{
@@ -110,7 +93,12 @@ export default function Navbar({ navigation, notifCounts, icon }) {
             }}
             onPress={() => {
               setSelectedIcon(item.name);
-              navigation.navigate(item.destination);
+              navigation.navigate(item.destination, {
+                fullname: fullname,
+                user: user,
+                user_id:user_id,
+                role: role,
+              });
             }}
           >
             <Image

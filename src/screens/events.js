@@ -31,17 +31,13 @@ import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
 import "../../global";
 
-export default function EventsScreen({ navigation, data }) {
+export default function EventsScreen({ navigation, route }) {
+  
+  const { fullname, user, user_id, role} = route.params;
+  
+  
   const { eventData, setEventData } = useData();
-
-  const { getUser } = Authentication();
-
-  const [userData, setUserData] = useState({
-    fullname: "",
-    role: "",
-    user_id: "",
-  });
-
+  
   const [activeButtons, setActiveButtons] = useState({
     recent: false,
     starred: false,
@@ -70,15 +66,6 @@ export default function EventsScreen({ navigation, data }) {
   const [selectedMonth, setSelectedMonth] = useState(null);
   // const [dropdownPlaceholder, setDropdownPlaceholder] = useState("Month");
   const [dropdownKey, setDropdownKey] = useState(0);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = await getUser();
-      setUserData(user);
-    };
-
-    fetchUserData();
-  }, []);
 
   useEffect(() => {
     eventData.forEach((event) => {
@@ -136,14 +123,14 @@ export default function EventsScreen({ navigation, data }) {
       if (response.status === 200) {
         const { data } = response;
         const user_ids = participants;
-        console.log("as", user_ids);
+        
         const event_id = data.id;
         const userEvent = {
           user_ids,
           event_id,
         };
         newEvent.id = event_id;
-        console.log(participants);
+        
         const request =
           btnFnc === "create"
             ? await axios.post(
@@ -501,7 +488,7 @@ export default function EventsScreen({ navigation, data }) {
                 Recent
               </Text>
             </Pressable>
-            {userData.role !== "admin" && (
+            {role !== "admin" && (
               <Pressable
                 style={{
                   paddingVertical: 13,
@@ -531,7 +518,7 @@ export default function EventsScreen({ navigation, data }) {
               </Pressable>
             )}
           </View>
-          {userData.role === "admin" ? (
+          {role === "admin" ? (
             <Pressable
               onPress={handleCreateEvent}
               style={{
@@ -1032,8 +1019,8 @@ export default function EventsScreen({ navigation, data }) {
           </Modal>
           <View
             style={{
-              height: userData.role !== "admin" ? hp("71%") : hp("62%"),
-              marginTop: userData.role !== "admin" ? hp("2%") : 0,
+              height: role !== "admin" ? hp("71%") : hp("62%"),
+              marginTop: role !== "admin" ? hp("2%") : 0,
             }}
           >
             {eventData.length === 0 ? (
@@ -1052,13 +1039,17 @@ export default function EventsScreen({ navigation, data }) {
                     {...item}
                     onDelete={() => deleteEvent(item.id)}
                     onEdit={() => handleEditEvent(item)}
+                    fullname={fullname} 
+                    user={user}
+                    user_id={user_id}
+                    role={role}
                   />
                 )}
               />
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Events"} navigation={navigation} />
+            <Navbar notifCounts={6} icon={"Events"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
           </View>
           {/* <Text>Events Screen</Text> */}
         </View>
@@ -1073,6 +1064,10 @@ export default function EventsScreen({ navigation, data }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
+            fullname={fullname} 
+            user={user}
+            user_id={user_id}
+            role={role}
           />
         </>
       )}

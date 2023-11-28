@@ -19,6 +19,11 @@ export default function Button({
   padding,
   onPress,
   fnc,
+
+  fullname,
+  user,
+  user_id,
+  role
 }) {
   return (
     <View
@@ -35,10 +40,14 @@ export default function Button({
         }}
         onPress={() => {
           if (fnc == "navigate") {
-            navigation.navigate(destination);
+            navigation.navigate(destination, {
+              fullname: fullname,
+              user: user,
+              user_id:user_id,
+              role: role,
+            });
           } else if (fnc == "press") {
-            onPress();
-            console.log("pressed");
+            onPress();            
           } else if (onPress) {
             onPress();
           } else

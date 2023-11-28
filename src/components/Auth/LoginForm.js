@@ -76,9 +76,14 @@ export default function AdminLogin({
           fullname: response.data.fullname,
         });
         setIsLoading(false);
-        console.log('yo');
+        
         setErrorMessage("Login successful");
-        navigation.navigate("Calendar");
+        navigation.navigate("Calendar", {
+          fullname: response.data.fullname,
+          user: response.data.username,
+          user_id:response.data.user_id,
+          role: response.data.role,
+        });
        
       }
     } catch (error) {

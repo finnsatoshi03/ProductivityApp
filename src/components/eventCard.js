@@ -31,7 +31,7 @@ const commonStyles = {
   },
 };
 
-import { Authentication } from "../Auth/Authentication";
+
 import axios from "axios";
 import "../../global";
 
@@ -45,14 +45,13 @@ export default function eventCard({
   onEdit,
   id,
   isInReportsScreen,
-}) {
-  const { getUser } = Authentication();
 
-  const [userData, setUserData] = useState({
-    fullname: "",
-    role: "",
-    user_id: "",
-  });
+  fullname,
+  user,
+  user_id,
+  role
+}) {
+
 
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
@@ -64,16 +63,6 @@ export default function eventCard({
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      const user = await getUser();
-      setUserData(user);
-      console.log(userData);
-    };
-
-    fetchUserData();
-  }, []);
 
   function formatDateTime(datetimeString) {
     const optionsDate = {
@@ -125,6 +114,11 @@ export default function eventCard({
         description: description,
         joinReasons: [reason],
         participants: participants,
+
+        fullname:fullname,
+        user:user,
+        user_id:user_id,
+        role:role,
       });
     } else {
       console.log("error");
@@ -262,7 +256,7 @@ export default function eventCard({
                   {location}
                 </Text>
               </View>
-              {userData.role === "admin" && !isInReportsScreen && (
+              {role === "admin" && !isInReportsScreen && (
                 <Pressable onPress={onEdit}>
                   <Image
                     style={{ height: hp("4%"), width: hp("4%") }}
@@ -281,7 +275,7 @@ export default function eventCard({
               }}
             >
               <View
-                style={{ width: userData.role === "admin" ? "60%" : "100%" }}
+                style={{ width: role === "admin" ? "60%" : "100%" }}
               >
                 <Button
                   text="VIEW"
@@ -290,7 +284,7 @@ export default function eventCard({
                   fnc={"press"}
                 />
               </View>
-              {userData.role === "admin" && (
+              {role === "admin" && (
                 <Button
                   text="DELETE"
                   bgColor="#e2e6f0"
