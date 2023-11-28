@@ -22,6 +22,8 @@ import ProfileCard from "./profileCard";
 import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 
+import { Authentication } from "../Auth/Authentication";
+
 const ViewEvent = ({ route, navigation }) => {
   const {
     title,
@@ -32,6 +34,25 @@ const ViewEvent = ({ route, navigation }) => {
     id,
     participants,
   } = route.params;
+
+  const { getUser } = Authentication();
+
+  const [userData, setUserData] = useState({
+    fullname: "",
+    role: "",
+    user_id: "",
+  });
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      const user = await getUser();
+      setUserData(user);
+      console.log(userData);
+    };
+
+    fetchUserData();
+  }, []);
+
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
   const [isParticipantsModalVisible, setParticipantsModalVisible] =
@@ -63,12 +84,19 @@ const ViewEvent = ({ route, navigation }) => {
     setParticipantsModalVisible(false);
   };
   // console.log(dateTime);
-  const dateTimeArray = dateTime.split(' ');
-  const date = dateTimeArray.slice(0, 3).join(' ');
-  const time = dateTimeArray.slice(3).join(' ');
-  
+  const dateTimeArray = dateTime.split(" ");
+  const date = dateTimeArray.slice(0, 3).join(" ");
+  const time = dateTimeArray.slice(3).join(" ");
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
+  const [iconType, setIconType] = useState("outlined-star");
+
+  const handleIconButtonPress = () => {
+    console.log("Star icon pressed");
+    setIconType((prevIconType) =>
+      prevIconType === "outlined-star" ? "solid-star" : "outlined-star"
+    );
+  };
 
   // const handleParticipantSelect = (participant) => {
   //   setSelectedParticipant(participant);
@@ -98,21 +126,17 @@ const ViewEvent = ({ route, navigation }) => {
                 style={styles.backgroundImage}
               />
             )}
-            <View style={styles.trashIconContainer}>
-              {/* Circular background behind Trash Icon */}
-              <View style={styles.trashIconBackground}>
-                <GlobalIconButton
-                  iconType="trash"
-                  color="#7D9C65"
-                  onPressed={() => {
-                    // Handle trash icon button press event here
-                    // This function will be executed when the trash icon is pressed
-                    console.log("Trash icon pressed");
-                    // Add your logic to delete the event or perform any necessary action
-                  }}
-                />
+            {userData.role === "user" && (
+              <View style={styles.starIconContainer}>
+                <View style={styles.starIconBg}>
+                  <GlobalIconButton
+                    iconType={iconType}
+                    color="#7D9C65"
+                    onPressed={handleIconButtonPress}
+                  />
+                </View>
               </View>
-            </View>
+            )}
             <LinearGradient
               colors={["rgba(247,249,248,0)", "rgba(125,156,101,1)"]}
               start={{ x: 0.5, y: 0 }}
@@ -315,7 +339,7 @@ const ViewEvent = ({ route, navigation }) => {
                   id={item.id}
                   verify={true}
                   // onParticipantSelect={handleParticipantSelect}
-                  purpose={'view'}
+                  purpose={"view"}
                 />
               )}
             />
@@ -423,12 +447,12 @@ const styles = StyleSheet.create({
   //   marginLeft: wp("1%"),
   //   color: "white",
   // },
-  trashIconContainer: {
+  starIconContainer: {
     position: "absolute",
     top: wp("6%"), // Adjust the top position as needed
     right: wp("6%"), // Adjust the right position as needed
   },
-  trashIconBackground: {
+  starIconBg: {
     backgroundColor: "rgba(255, 255, 255, 0.8)",
     borderRadius: wp("25%"), // Adjust the radius to make it circular
     width: wp("12%"), // Set the width and height as per the buttonSize

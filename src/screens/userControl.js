@@ -1,5 +1,12 @@
 import { useState, useEffect } from "react";
-import { Text, View, TouchableOpacity, Modal, FlatList } from "react-native";
+import {
+  Text,
+  View,
+  TouchableOpacity,
+  Modal,
+  FlatList,
+  ActivityIndicator,
+} from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -33,9 +40,11 @@ export default function UserControl({ navigation }) {
   });
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedUser, setSelectedUser] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     const retrieveNotVerifiedUsers = async () => {
+      setIsLoading(true);
       try {
         const response = await axios.get(
           `${global.baseurl}:4000/retrieveNVUsers`
@@ -51,6 +60,7 @@ export default function UserControl({ navigation }) {
       } catch (error) {
         console.log(error);
       }
+      setIsLoading(false);
     };
 
     retrieveNotVerifiedUsers();
@@ -121,14 +131,33 @@ export default function UserControl({ navigation }) {
             />
           </View>
           <View style={{ height: hp("79%") }}>
-            <ListView
-              data={notVerifiedUsers}
-              renderItem={({ item }) => (
-                <TouchableOpacity onPress={() => handleOpenModal(item)}>
-                  <Participants {...item} />
-                </TouchableOpacity>
-              )}
-            />
+            {isLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignSelf: "center",
+                }}
+              >
+                <ActivityIndicator
+                  style={{}}
+                  size="large"
+                  color={globalStyles.colors.darkGreen}
+                />
+                <Text style={{ textAlign: "center" }}>
+                  Fetching users from the database...
+                </Text>
+              </View>
+            ) : (
+              <ListView
+                data={notVerifiedUsers}
+                renderItem={({ item }) => (
+                  <TouchableOpacity onPress={() => handleOpenModal(item)}>
+                    <Participants {...item} />
+                  </TouchableOpacity>
+                )}
+              />
+            )}
           </View>
           {selectedUser && (
             <ModalCard

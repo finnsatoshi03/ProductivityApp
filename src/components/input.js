@@ -17,6 +17,7 @@ const InputFields = ({
   style,
   value, // new prop
   onChangeText, // new prop
+  onValueChange,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
 
@@ -45,6 +46,7 @@ const InputFields = ({
           }}
           labelField="label"
           valueField="value"
+          onChange={onValueChange}
         />
       ) : (
         <TextInput

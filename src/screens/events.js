@@ -67,7 +67,7 @@ export default function EventsScreen({ navigation, data }) {
   const [isCreatingEvent, setCreatingEvent] = useState(false);
 
   const [sortOrder, setSortOrder] = useState("asc");
-  const [selectedMonth, setSelectedMonth] = useState(null); // TODO: remove default
+  const [selectedMonth, setSelectedMonth] = useState(null);
   // const [dropdownPlaceholder, setDropdownPlaceholder] = useState("Month");
   const [dropdownKey, setDropdownKey] = useState(0);
 
@@ -120,23 +120,23 @@ export default function EventsScreen({ navigation, data }) {
         endDate.getHours(),
         endDate.getMinutes(),
         0
-      ).toISOString(),      
+      ).toISOString(),
       event: eventTitle,
-      location: location,    
+      location: location,
       description: description,
       id: selectedEvent === "" ? null : selectedEvent,
-    };   
-    
+    };
+
     try {
       const response =
         btnFnc === "create"
           ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
           : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent);
-            
+
       if (response.status === 200) {
         const { data } = response;
         const user_ids = participants;
-        console.log('as',user_ids);
+        console.log("as", user_ids);
         const event_id = data.id;
         const userEvent = {
           user_ids,
@@ -164,22 +164,21 @@ export default function EventsScreen({ navigation, data }) {
         console.log("NOOOO");
       }
 
-      if (btnFnc === 'create') {
-        setEventData(prevEventData => {
+      if (btnFnc === "create") {
+        setEventData((prevEventData) => {
           const updatedEventData = [...prevEventData, newEvent];
-          return updatedEventData; 
+          return updatedEventData;
         });
       } else {
         setEventData((prevEventData) => {
           const updatedEventData = prevEventData.map((event) =>
             event.id === newEvent.id ? newEvent : event
           );
-          return updatedEventData; 
+          return updatedEventData;
         });
       }
-      
+
       setBottomSheetVisible(true);
-      
 
       // Reset the states
       setEventTitle("");
@@ -227,7 +226,7 @@ export default function EventsScreen({ navigation, data }) {
       setCreatingEvent(false);
     }
   };
-  ``
+  ``;
   const handleCreateEvent = () => {
     setParticipantNames("");
     setBottomSheetVisible(true);
@@ -312,14 +311,14 @@ export default function EventsScreen({ navigation, data }) {
         // clear it first
         setParticipantNames("");
         setParticipants([]);
-        setAddedParticipants([])
+        setAddedParticipants([]);
 
         // Extract names and IDs from users
         const participantNames = users.map((user) => user.fullname);
-        const participantIds = users.map((user) => user.id).join(',');
+        const participantIds = users.map((user) => user.id).join(",");
 
         const participants = users.map((user) => ({
-          avatar: undefined,          
+          avatar: undefined,
           fullname: user.fullname,
           id: user.id,
         }));
@@ -1000,7 +999,7 @@ export default function EventsScreen({ navigation, data }) {
                   // NEW: Update added participants
 
                   setAddedParticipants(selectedParticipants);
-                  
+
                   if (selectedParticipants.length > 0) {
                     const { idString, names } = selectedParticipants.reduce(
                       (acc, participant, index) => {
@@ -1018,24 +1017,23 @@ export default function EventsScreen({ navigation, data }) {
 
                     setParticipantNames(names);
                     setParticipants(idString);
-                    setNewModalVisible(false);                     
-                    
-                  } else {                    
+                    setNewModalVisible(false);
+                  } else {
                     setParticipantNames("");
                     setParticipants([]);
-                    setNewModalVisible(false);   
+                    setNewModalVisible(false);
                     console.log("No Participants Selected");
                   }
                 }}
                 addedParticipants={addedParticipants}
-                onBack={handleCloseNewModal}                             
+                onBack={handleCloseNewModal}
               />
             </View>
           </Modal>
           <View
             style={{
-              height: userData.role !== "admin" ? hp("70%") : hp("62%"),
-              marginTop: userData.role !== "admin" ? hp("1.6%") : 0,
+              height: userData.role !== "admin" ? hp("71%") : hp("62%"),
+              marginTop: userData.role !== "admin" ? hp("2%") : 0,
             }}
           >
             {eventData.length === 0 ? (
