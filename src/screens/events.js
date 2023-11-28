@@ -279,8 +279,7 @@ export default function EventsScreen({ navigation, route }) {
   }, [eventData, sortOrder, activeButtons.recent, selectedMonth]);
 
   const getParticipants = async (event_id) => {
-    // TODO SAVE THE VALUE OF PARTICIPANTS IN PARTICIPANT NAMES
-    // TODO SAVE THE VALUE DONT DELETE OR CLEAR IT FOR EVERY ADD PARTICIPANTS/UPDATE
+ 
     try {
       const response = await axios.get(
         `${global.baseurl}:4000/getParticipant`,
@@ -1035,7 +1034,8 @@ export default function EventsScreen({ navigation, route }) {
               <ListView
                 data={sortedEventData}
                 renderItem={({ item }) => (
-                  <Events
+                  sortedEventData.length !== 0 ? (
+                    <Events
                     {...item}
                     onDelete={() => deleteEvent(item.id)}
                     onEdit={() => handleEditEvent(item)}
@@ -1044,6 +1044,10 @@ export default function EventsScreen({ navigation, route }) {
                     user_id={user_id}
                     role={role}
                   />
+                  ) : (
+                    <></>
+                  )
+                  
                 )}
               />
             )}

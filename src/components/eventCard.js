@@ -31,7 +31,6 @@ const commonStyles = {
   },
 };
 
-
 import axios from "axios";
 import "../../global";
 
