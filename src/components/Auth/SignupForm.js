@@ -407,7 +407,7 @@ export default function SignupForm({ navigation }) {
                 <VerifyButton
                   text={"Let's Login!"}
                   width={wp("30%")}
-                  onPress={() => navigation.navigate("User")}
+                  onPress={() => navigation.replace("User")}
                 />
               ) : (
                 <VerifyButton
