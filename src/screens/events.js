@@ -32,12 +32,10 @@ import axios from "axios";
 import "../../global";
 
 export default function EventsScreen({ navigation, route }) {
-  
-  const { fullname, user, user_id, role} = route.params;
-  
-  
+  const { fullname, user, user_id, role } = route.params;
+
   const { eventData, setEventData } = useData();
-  
+
   const [activeButtons, setActiveButtons] = useState({
     recent: false,
     starred: false,
@@ -99,20 +97,55 @@ export default function EventsScreen({ navigation, route }) {
     description
   ) => {
     setCreatingEvent(true);
+    const datetime = new Date(
+      startDate.getFullYear(),
+      startDate.getMonth(),
+      startDate.getDate(),
+      endDate.getHours(),
+      endDate.getMinutes(),
+      0
+    );
+
+    const days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+    const months = [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ];
+
+    const formattedDate =
+      days[datetime.getDay()] +
+      ", " +
+      datetime.getDate() +
+      " " +
+      months[datetime.getMonth()] +
+      " " +
+      datetime.getFullYear() +
+      " " +
+      datetime.getHours().toString().padStart(2, "0") +
+      ":" +
+      datetime.getMinutes().toString().padStart(2, "0") +
+      ":00";
+
     const newEvent = {
-      datetime: new Date(
-        startDate.getFullYear(),
-        startDate.getMonth(),
-        startDate.getDate(),
-        endDate.getHours(),
-        endDate.getMinutes(),
-        0
-      ).toISOString(),
+      datetime: formattedDate,
       event: eventTitle,
       location: location,
       description: description,
       id: selectedEvent === "" ? null : selectedEvent,
     };
+
+    console.log("Date: ", newEvent.datetime);
+    // console.log(new Date(newEvent.datetime).toLocaleString());
 
     try {
       const response =
@@ -123,14 +156,14 @@ export default function EventsScreen({ navigation, route }) {
       if (response.status === 200) {
         const { data } = response;
         const user_ids = participants;
-        
+
         const event_id = data.id;
         const userEvent = {
           user_ids,
           event_id,
         };
         newEvent.id = event_id;
-        
+
         const request =
           btnFnc === "create"
             ? await axios.post(
@@ -213,7 +246,7 @@ export default function EventsScreen({ navigation, route }) {
       setCreatingEvent(false);
     }
   };
-  ``;
+
   const handleCreateEvent = () => {
     setParticipantNames("");
     setBottomSheetVisible(true);
@@ -279,7 +312,6 @@ export default function EventsScreen({ navigation, route }) {
   }, [eventData, sortOrder, activeButtons.recent, selectedMonth]);
 
   const getParticipants = async (event_id) => {
- 
     try {
       const response = await axios.get(
         `${global.baseurl}:4000/getParticipant`,
@@ -376,10 +408,11 @@ export default function EventsScreen({ navigation, route }) {
   const handleDateTimeConfirm = (date, type) => {
     if (type === "date") {
       setStartDate(date);
+      console.log(date);
       hideDatePicker();
     } else {
-      setEndDate(date);
-      console.log(date);
+      setEndDate(date.toLocaleTimeString());
+      console.log(date.toLocaleTimeString());
       hideTimePicker();
     }
   };
@@ -1033,27 +1066,34 @@ export default function EventsScreen({ navigation, route }) {
             ) : (
               <ListView
                 data={sortedEventData}
-                renderItem={({ item }) => (
+                renderItem={({ item }) =>
                   sortedEventData.length !== 0 ? (
                     <Events
-                    {...item}
-                    onDelete={() => deleteEvent(item.id)}
-                    onEdit={() => handleEditEvent(item)}
-                    fullname={fullname} 
-                    user={user}
-                    user_id={user_id}
-                    role={role}
-                  />
+                      {...item}
+                      onDelete={() => deleteEvent(item.id)}
+                      onEdit={() => handleEditEvent(item)}
+                      fullname={fullname}
+                      user={user}
+                      user_id={user_id}
+                      role={role}
+                    />
                   ) : (
                     <></>
                   )
-                  
-                )}
+                }
               />
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Events"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
+            <Navbar
+              notifCounts={6}
+              icon={"Events"}
+              navigation={navigation}
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
+            />
           </View>
           {/* <Text>Events Screen</Text> */}
         </View>
@@ -1068,7 +1108,7 @@ export default function EventsScreen({ navigation, route }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
-            fullname={fullname} 
+            fullname={fullname}
             user={user}
             user_id={user_id}
             role={role}

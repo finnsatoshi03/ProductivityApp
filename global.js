@@ -5,4 +5,4 @@
 // CHANGE THE BASE URL TO
 // http://100.100.100.100
 
-global.baseurl = "http://192.168.1.4";
+global.baseurl = "http://192.168.1.13";

@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   ScrollView,
+  Platform,
+  StatusBar,
 } from "react-native";
 import moment from "moment";
 import { globalStyles } from "./../styles/globalStyles";
@@ -16,22 +18,24 @@ import CalendarWidget from "./../components/calendarComponent";
 import ListView from "./../components/listView";
 import Events from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
+import {
+  SafeAreaProvider,
+  SafeAreaInsetsContext,
+} from "react-native-safe-area-context";
 import { useData } from "./../DataContext";
-
 
 import axios from "axios";
 import "../../global";
 
 export default function Calendar({ navigation, route }) {
-  
-  const { fullname, user, user_id, role} = route.params;
+  const { fullname, user, user_id, role } = route.params;
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
   const [loading, setLoading] = useState(true);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedDay, setSelectedDay] = useState("");
-      
+
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
       eventData.filter((event) => event.event !== eventTitleToDelete)
@@ -65,7 +69,7 @@ export default function Calendar({ navigation, route }) {
     }
   };
 
-  useEffect(() => {    
+  useEffect(() => {
     const fetchEventsData = async () => {
       try {
         setLoading(true);
@@ -76,7 +80,7 @@ export default function Calendar({ navigation, route }) {
                 params: {
                   user_id: user_id,
                 },
-              });      
+              });
         if (response.status === 200) {
           const { data } = response;
           const events = data.events;
@@ -84,17 +88,17 @@ export default function Calendar({ navigation, route }) {
         }
       } catch (error) {
         console.log(error);
-      } finally {       
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchEventsData()    
+    fetchEventsData();
   }, []);
 
   return (
     <>
-      <View style={globalStyles.container}>
+      <View style={[globalStyles.container, { paddingBottom: navbarHeight }]}>
         <View style={{ flex: 1 }}>
           <View style={{ height: hp("8%") }}>
             <Header
@@ -170,8 +174,7 @@ export default function Calendar({ navigation, route }) {
                     isInReportsScreen={true} // to hide the edit button
                     {...item}
                     onDelete={() => deleteEvent(item.event)}
-
-                    fullname={fullname} 
+                    fullname={fullname}
                     user={user}
                     user_id={user_id}
                     role={role}
@@ -181,7 +184,15 @@ export default function Calendar({ navigation, route }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Calendar"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
+            <Navbar
+              notifCounts={6}
+              icon={"Calendar"}
+              navigation={navigation}
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
+            />
           </View>
           {/* <Text>Tite</Text> */}
         </View>
@@ -196,7 +207,7 @@ export default function Calendar({ navigation, route }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
-            fullname={fullname} 
+            fullname={fullname}
             user={user}
             user_id={user_id}
             role={role}
