@@ -12,6 +12,9 @@ export default function NotificationCard({
   eventLocation,
   eventTime,
   eventTitle,
+  status,
+  reason,
+  adminNotif,
   onPressAccept,
   onPressReject,
   onPressTrash,
@@ -60,7 +63,10 @@ export default function NotificationCard({
             flexDirection: "row",
             marginBottom: 3,
             flexWrap: "wrap",
-            width: wp("55%"),
+            width:
+              eventDate && eventLocation && eventTime && eventTitle
+                ? wp("55%")
+                : "100%",
           }}
         >
           {eventDate && eventLocation && eventTime && eventTitle ? (
@@ -99,6 +105,42 @@ export default function NotificationCard({
                 </Text>
                 {eventTime || "TI:ME AM" + "."}
               </Text>
+            </>
+          ) : adminNotif ? (
+            <>
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.bold,
+                  fontSize: globalStyles.fontSize.mediumDescription,
+                  flexShrink: 1,
+                  marginBottom: 5,
+                }}
+              >
+                {status === "accepted" ? (
+                  <>
+                    {name} is excited to{" "}
+                    <Text style={{ color: globalStyles.colors.green }}>
+                      accept
+                    </Text>{" "}
+                    your invitation for {eventTitle}! 🎉
+                  </>
+                ) : (
+                  <>
+                    <Text style={{ color: "#df5f4b" }}>Unfortunately</Text>,{" "}
+                    {name} won't be able to make it to {eventTitle} this time.
+                  </>
+                )}
+              </Text>
+              {status !== "accepted" && (
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                  }}
+                >
+                  {name + ": " + reason}
+                </Text>
+              )}
             </>
           ) : (
             <Text

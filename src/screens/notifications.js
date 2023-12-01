@@ -36,14 +36,33 @@ export default function Notifications({ navigation, route }) {
       // message: "You're Invited",
       date: "Nov 23, 2023", // sample event for event notification
       created_at: "2023-11-23T10:30:00Z",
-      eventTitle: "Fuck",
+      eventTitle: "MONEY",
       eventLocation: "Location",
       eventDate: "Date",
       eventTime: "Time",
     },
     {
       id: 2, // sample event for normal notification
-      message: "FUCK YOU",
+      message: "MONEY MONEY",
+      date: "Nov 23, 2023",
+      created_at: "2023-11-23T10:30:00Z",
+    },
+    {
+      id: 3, // sample event for admin notification
+      adminNotif: true,
+      eventTitle: "Admin Notification",
+      name: "User1",
+      reason: "Nag tatae",
+      date: "Nov 23, 2023",
+      created_at: "2023-11-23T10:30:00Z",
+    },
+    {
+      id: 3, // sample event for admin notification
+      adminNotif: true,
+      eventTitle: "Admin Notification",
+      status: "accepted",
+      name: "User1",
+      reason: "Nag tatae",
       date: "Nov 23, 2023",
       created_at: "2023-11-23T10:30:00Z",
     },
