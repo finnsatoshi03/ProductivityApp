@@ -155,7 +155,7 @@ export default function NotificationCard({
           )}
         </View>
         {eventDate && eventLocation && eventTime && eventTitle && (
-          <View style={{ gap: 10 }}>
+          <View style={{ gap: 10, padding: 5 }}>
             <Button
               text={"Accept"}
               width={wp("20%")}
@@ -178,14 +178,15 @@ export default function NotificationCard({
         <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
           {formattedDate}
         </Text>
-        {eventDate && eventLocation && eventTime && eventTitle && (
+        {(eventDate && eventLocation && eventTime && eventTitle) ||
+        adminNotif ? (
           <Pressable onPress={onPressTrash}>
             <Image
               style={{ height: wp("5%"), width: wp("5%") }}
               source={require("./../../assets/trash.png")}
             />
           </Pressable>
-        )}
+        ) : null}
       </View>
     </View>
   );
