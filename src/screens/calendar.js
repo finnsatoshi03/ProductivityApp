@@ -98,7 +98,7 @@ export default function Calendar({ navigation, route }) {
 
   return (
     <>
-      <View style={[globalStyles.container, { paddingBottom: navbarHeight }]}>
+      <View style={globalStyles.container}>
         <View style={{ flex: 1 }}>
           <View style={{ height: hp("8%") }}>
             <Header

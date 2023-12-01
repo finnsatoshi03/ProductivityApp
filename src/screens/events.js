@@ -411,7 +411,7 @@ export default function EventsScreen({ navigation, route }) {
       console.log(date);
       hideDatePicker();
     } else {
-      setEndDate(date.toLocaleTimeString());
+      setEndDate(date);
       console.log(date.toLocaleTimeString());
       hideTimePicker();
     }
