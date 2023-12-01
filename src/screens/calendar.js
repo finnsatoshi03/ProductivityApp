@@ -26,6 +26,7 @@ import { useData } from "./../DataContext";
 
 import axios from "axios";
 import "../../global";
+import { format } from 'date-fns-tz';
 
 export default function Calendar({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
@@ -45,8 +46,9 @@ export default function Calendar({ navigation, route }) {
 
   const handleDayPress = (selectedDate) => {
     setSelectedDay(selectedDate);
+    const localSelectedDate = format(new Date(selectedDate), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
     const filtered = eventData.filter(
-      (event) => event.datetime.split("T")[0] === selectedDate
+      (event) => format(new Date(event.datetime), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' }) === localSelectedDate
     );
     setFilteredEvents(filtered);
   };
