@@ -48,10 +48,10 @@ const ViewEvent = ({ route, navigation }) => {
     navigation.goBack();
   };
 
-  const [isAdminModalVisible, setAdminModalVisible] = useState(false);
+  const [isAttendeesModalVisible, setAttendeesModalVisible] = useState(false);
 
   const showAdminModal = () => {
-    setAdminModalVisible(true);
+    setAttendeesModalVisible(true);
   };
 
   useEffect(() => {
@@ -286,11 +286,7 @@ const ViewEvent = ({ route, navigation }) => {
                   />
                   <Button
                     text={role === "admin" ? "Attendees" : "Attendance"}
-                    onPress={
-                      role === "admin"
-                        ? showAdminModal
-                        : () => console.log("Call Attendees API")
-                    }
+                    onPress={showAdminModal}
                     width={wp("35%")}
                   />
                 </View>
@@ -343,15 +339,20 @@ const ViewEvent = ({ route, navigation }) => {
         </View>
       </Modal>
       <Modal
-        isVisible={isAdminModalVisible}
-        onBackdropPress={() => setAdminModalVisible(false)}
+        isVisible={isAttendeesModalVisible}
+        onBackdropPress={() => setAttendeesModalVisible(false)}
       >
         <View
           style={{
-            height: hp("90%"),
+            // flex: role === "user" ? 1 : undefined,
+            height: role === "admin" ? hp("90%") : null,
           }}
         >
-          <Attendees />
+          <Attendees
+            role={role}
+            userName={role === "user" ? fullname : null}
+            userTag={role === "user" ? user : null}
+          />
         </View>
       </Modal>
     </View>
