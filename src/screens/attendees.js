@@ -1,14 +1,5 @@
 import React, { useState, useEffect } from "react";
-import {
-  Text,
-  View,
-  Pressable,
-  Image,
-  TouchableOpacity,
-  TextInput,
-  Alert,
-  ActivityIndicator,
-} from "react-native";
+import { Text, View, Pressable, Image, TouchableOpacity } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -21,10 +12,13 @@ import Button from "./../components/button";
 
 export default function Attendees({ navigation }) {
   return (
-    <>
-      <View>
-        <Text>Sample</Text>
+    <View style={[globalStyles.container, { borderRadius: wp("6%") }]}>
+      <View style={{ flex: 1 }}>
+        <View>
+          <Header icon={"back"} title={"Attendees"} subTitle={"Feed"} />
+        </View>
+        <Text>Attendees</Text>
       </View>
-    </>
+    </View>
   );
 }

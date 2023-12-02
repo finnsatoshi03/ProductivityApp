@@ -19,6 +19,7 @@ import Modal from "react-native-modal";
 import Header from "./header";
 import ListView from "./listView";
 import ProfileCard from "./profileCard";
+import Attendees from "../screens/attendees";
 import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 
@@ -47,6 +48,12 @@ const ViewEvent = ({ route, navigation }) => {
     navigation.goBack();
   };
 
+  const [isAdminModalVisible, setAdminModalVisible] = useState(false);
+
+  const showAdminModal = () => {
+    setAdminModalVisible(true);
+  };
+
   useEffect(() => {
     async function fetchImage() {
       try {
@@ -58,7 +65,7 @@ const ViewEvent = ({ route, navigation }) => {
     }
 
     fetchImage();
-  }, [title]);
+  }, []);
 
   const showParticipantsModal = () => {
     setParticipantsModalVisible(true);
@@ -278,8 +285,12 @@ const ViewEvent = ({ route, navigation }) => {
                     textColor="rgba(0, 0, 0, 0.5)"
                   />
                   <Button
-                    text={role === "user" ? "Attendance" : "Attendees"}
-                    onPress={() => console.log("Call Attendees API")}
+                    text={role === "admin" ? "Attendees" : "Attendance"}
+                    onPress={
+                      role === "admin"
+                        ? showAdminModal
+                        : () => console.log("Call Attendees API")
+                    }
                     width={wp("35%")}
                   />
                 </View>
@@ -288,7 +299,7 @@ const ViewEvent = ({ route, navigation }) => {
           </View>
         </View>
       </Modal>
-
+      {/* Pariticipants */}
       <Modal
         isVisible={isParticipantsModalVisible}
         onBackdropPress={hideParticipantsModal}
@@ -329,6 +340,18 @@ const ViewEvent = ({ route, navigation }) => {
             <Button text={"Remove"} 
             onPress={removeParticipant} /> 
           </View> */}
+        </View>
+      </Modal>
+      <Modal
+        isVisible={isAdminModalVisible}
+        onBackdropPress={() => setAdminModalVisible(false)}
+      >
+        <View
+          style={{
+            height: hp("90%"),
+          }}
+        >
+          <Attendees />
         </View>
       </Modal>
     </View>
