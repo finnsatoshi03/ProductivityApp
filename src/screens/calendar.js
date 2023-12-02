@@ -27,6 +27,7 @@ import { useData } from "./../DataContext";
 import axios from "axios";
 import "../../global";
 import { format } from 'date-fns-tz';
+import * as Notifications from 'expo-notifications';
 
 export default function Calendar({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
@@ -77,38 +78,21 @@ export default function Calendar({ navigation, route }) {
     }
   };
 
-  useEffect(() => {
-    
-    const fetchEventsData = async () => {
-      try {
-        setLoading(true);
-        const response =
-          role === "admin"
-            ? await axios.get(`${global.baseurl}:4000/getEvents`)
-            : await axios.get(`${global.baseurl}:4000/userViewEvents`, {
-                params: {
-                  user_id: user_id,
-                },
-              });
-             
-        if (response.status === 200) {
-          const { data } = response;
-          const events = data.events;
-          
-          setEventData(events);
-        }
-      } catch (error) {
-        console.log(error);
-      } finally {
-        setLoading(false);
-      }
-    };
+  Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+      shouldShowAlert: true,
+      shouldPlaySound: true,
+      shouldSetBadge: false,
+    }),
+  });
 
+  useEffect(() => {
+    requestNotificationPermission();
     fetchEventsData();
   }, []);
 
-  
   useEffect(() => {
+
     if (selectedDay !== "" && Array.isArray(eventData)) {
       const localSelectedDate = format(new Date(selectedDay), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
       const filtered = eventData.filter(
@@ -118,6 +102,93 @@ export default function Calendar({ navigation, route }) {
     }
   }, [selectedDay, eventData]);
 
+  const fetchEventsData = async () => {
+    try {
+      setLoading(true);
+      const response =
+        role === "admin"
+          ? await axios.get(`${global.baseurl}:4000/getEvents`)
+          : await axios.get(`${global.baseurl}:4000/userViewEvents`, {
+              params: {
+                user_id: user_id,
+              },
+            });
+      if (response.status === 200) {
+        const { data } = response;
+        const events = data.events;
+        setEventData(events);
+
+        // Check if there are events for today
+        const todayEvents = events.filter((event) => {
+          const eventDate = new Date(event.datetime);
+          const today = new Date();
+          return (
+            eventDate.getFullYear() === today.getFullYear() &&
+            eventDate.getMonth() === today.getMonth() &&
+            eventDate.getDate() === today.getDate()
+          );
+        });
+
+        // Schedule notifications for each event
+        todayEvents.forEach((event) => {
+          const eventTime = new Date(event.datetime);
+          scheduleNotificationOneHourBeforeEvent(eventTime, event.event); // Pass event time and event title
+        });
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+  
+  const requestNotificationPermission = async () => {
+    const { status } = await Notifications.requestPermissionsAsync();
+    if (status === 'granted') {
+      console.log('Notification permission granted.');
+    } else {
+      console.log('Notification permission denied.');
+    }
+  };
+
+  Notifications.addNotificationReceivedListener((notification) => {
+    console.log('Notification received:', notification);
+  });
+  
+  Notifications.addNotificationResponseReceivedListener((response) => {
+    console.log('Notification response received:', response);
+  });
+
+  const scheduleNotificationOneHourBeforeEvent = async (eventTime) => {
+    const currentTime = new Date(); // Current date/time
+  
+    // Calculate the time difference in milliseconds between current time and event time
+    const timeDiff = eventTime.getTime() - currentTime.getTime();
+  
+    // Calculate one hour in milliseconds
+    const oneHourInMilliseconds = 60 * 60 * 1000;
+  
+    // Calculate the trigger time by subtracting one hour from the event time
+    const triggerTime = new Date(eventTime.getTime() - oneHourInMilliseconds);
+  
+    // Check if the event is at least one hour from the current time
+    if (timeDiff > oneHourInMilliseconds) {
+      // Schedule the notification one hour before the event
+      await Notifications.scheduleNotificationAsync({
+        content: {
+          title: 'Event Reminder!',
+          body: 'Your event is starting in one hour!',
+        },
+        trigger: {
+          date: triggerTime,
+        },
+      });
+      console.log('Notification was scheduled')
+    } else {
+      console.log('Event is less than one hour away. Cannot schedule notification.');
+    }
+  };
+  
   
 
   return (

@@ -4,16 +4,20 @@ const DataContext = createContext();
 
 export const DataProvider = ({ children }) => {
   const [eventData, setEventData] = useState({
-    datetime: "", 
-    description: "", 
-    event: "", 
+    datetime: "",
+    description: "",
+    event: "",
     location: "",
-    id:"",        
+    id: "",
   });
+
+  const [reportData, setReportData] = useState([]);
 
   const value = {
     eventData,
     setEventData,
+    reportData,
+    setReportData,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;

@@ -1,5 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { Text, View, Pressable, TouchableOpacity, Image } from "react-native";
+import {
+  Text,
+  View,
+  Pressable,
+  TouchableOpacity,
+  Image,
+  TextInput,
+} from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Modal from "react-native-modal";
@@ -7,15 +14,21 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Header from "./../components/header";
 import Sidebar from "./../Layout/sidebar";
 import ListView from "./../components/listView";
-import Events from "./../components/eventCard";
+import ReportsCard from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 import DropdownComponent from "./../components/dropdown";
+import Button from "./../components/button";
 import { useData } from "./../DataContext";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
+import axios from "axios";
+import '../../global'
 
 export default function Reports({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
 
   const { eventData, setEventData } = useData();
+  const { reportData, setReportData } = useData({});
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
   const deleteEvent = (eventTitleToDelete) => {
@@ -24,7 +37,7 @@ export default function Reports({ navigation, route }) {
     );
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
-
+  
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedEventTitle, setSelectedEventTitle] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -35,6 +48,8 @@ export default function Reports({ navigation, route }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
+  const [text, setText] = useState("");
+  const maxChars = 500;
 
   const months = [
     { label: "January", value: "January" },
@@ -59,25 +74,26 @@ export default function Reports({ navigation, route }) {
     return str.split(" ").length;
   };
   const numberOfLines = calculateNumberOfWords(selectedEventTitle);
-  console.log("Number of lines:", numberOfLines);
+  // console.log("Number of lines:", numberOfLines);
   const dropdownHeight = numberOfLines >= 2 ? hp("10%") : hp("7%");
 
   const handleMonthChange = (selectedMonth) => {
-    console.log("Selected month:", selectedMonth);
+    // console.log("Selected month:", selectedMonth);
     setSelectedMonth(selectedMonth);
     setDropdownKey((prevKey) => prevKey + 1);
   };
 
   const handleEventTitleChange = (selectedEventTitle) => {
-    console.log("Selected event:", selectedEventTitle);
+    // console.log("Selected event:", selectedEventTitle);
     setSelectedEventTitle(selectedEventTitle);
     setDropdownKey((prevKey) => prevKey + 1);
 
     const selectedEvent = eventData.find(
       (event) => event.event === selectedEventTitle
     );
-    console.log("Selected event data:", selectedEvent);
-    console.log("Selected event location:", selectedEvent.location);
+    console.log(selectedEvent.id);
+    // console.log("Selected event data:", selectedEvent);
+    // console.log("Selected event location:", selectedEvent.location);
     setSelectedEvent(selectedEvent);
   };
 
@@ -87,29 +103,87 @@ export default function Reports({ navigation, route }) {
   };
 
   const handleConfirmEndTime = (time) => {
-    console.log("Selected end time:", time);
+    // console.log("Selected end time:", time);
     setSelectedEndTime(time);
     setEndTimePickerVisible(false);
 
-    // // Kung papasa mo yung endTime sa eventData comment out mo to
+    // Kung papasa mo yung endTime sa eventData comment out mo to
     // setEventData(prevState => ({
     //   ...prevState,
     //   endTime: time
     // }));
   };
+  
+  useEffect(() => {
+    const getReport = async() => {
 
-  console.log("Event data:", eventData);
-  eventData.map((event) => {
-    console.log(`Event Name: ${event.event}`);
-    console.log(`Event ID: ${event.id}`);
-    const eventDate = new Date(event.datetime);
-    console.log(`Event Date: ${eventDate.toLocaleDateString()}`);
-    console.log(`Event Time: ${eventDate.toLocaleTimeString()}`);
-    console.log(`Event Description: ${event.description}`);
-    console.log(`Event Location: ${event.location}`);
-    console.log(`Event Reminder: ${event.reminder}`);
-  });
+      const response = await axios.get(`${global.baseurl}:4000/getReports`)
 
+      if (response.status === 200) {
+        const {data} = response
+        const reports = data.reports
+
+        setReportData(reports)
+        console.log(reportData);
+      } else console.log('failed');
+    }
+
+    getReport()
+  }, [])
+  const handleCreateReport = async() => {
+    // Perform validation checks
+    // if (
+    //   !selectedEventTitle ||
+    //   !selectedEndTime ||
+    //   new Date(selectedEndTime) <= new Date(selectedEvent.datetime)
+    // ) {
+    //   // Display an error message or handle validation failure
+    //   return;
+    // }
+    try {
+
+      const newReport = {
+        event_id: selectedEvent.id,      
+        endTime: selectedEndTime,
+        narrative: text,
+      };
+      
+      const response = await axios.post(`${global.baseurl}:4000/createReport`,newReport)
+  
+      if (response.status === 200) {
+        console.log('tr');
+      } else {
+        console.log('false');
+      }
+  
+      
+      setReportData((prevData) => [...prevData, newReport]);
+      
+  
+      // setModalVisible(false);
+      // setSelectedEventTitle(null);
+      // setSelectedEvent(null);
+      // setSelectedEndTime(null);
+      // setText("");
+
+    } catch (error) {
+      console.log(error);
+    }
+    
+  };
+
+  // console.log("Event data:", eventData);
+  // eventData.map((event) => {
+  //   console.log(`Event Name: ${event.event}`);
+  //   console.log(`Event ID: ${event.id}`);
+  //   const eventDate = new Date(event.datetime);
+  //   console.log(`Event Date: ${eventDate.toLocaleDateString()}`);
+  //   console.log(`Event Time: ${eventDate.toLocaleTimeString()}`);
+  //   console.log(`Event Description: ${event.description}`);
+  //   console.log(`Event Location: ${event.location}`);
+  //   console.log(`Event Reminder: ${event.reminder}`);
+  // });
+  
   return (
     <>
       <View style={globalStyles.container}>
@@ -236,7 +310,7 @@ export default function Reports({ navigation, route }) {
               height: hp("62%"),
             }}
           >
-            {eventData.length === 0 ? (
+            {reportData.length === 0 ? (
               <View
                 style={{
                   flex: 1,
@@ -261,13 +335,13 @@ export default function Reports({ navigation, route }) {
               </View>
             ) : (
               <ListView
-                data={eventData}
+                data={reportData}
                 renderItem={({ item }) => (
-                  <Events
+                  <ReportsCard
                     navigation={navigation}
                     isInReportsScreen={true} // to hide the edit button
                     {...item}
-                    onDelete={() => deleteEvent(item.event)}
+                    // onDelete={() => deleteEvent(item.reportTitle)}
                     fullname={fullname}
                     user={user}
                     user_id={user_id}
@@ -306,140 +380,64 @@ export default function Reports({ navigation, route }) {
           }}
         >
           <Header title={"Events Report"} icon={"back"} />
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.regular,
-              color: "rgba(0,0,0,0.4)",
-            }}
-          >
-            Event Title
-          </Text>
-          <DropdownComponent
-            style={{
-              backgroundColor: "transparent",
-              borderWidth: 0,
-              paddingVertical: 0,
-              paddingHorizontal: 0,
-              color: globalStyles.colors.green,
-              width: "100%",
-              height: dropdownHeight,
-            }}
-            fontFamily={true}
-            selectedTextStyle={true}
-            placeholderStyleColor={{ color: globalStyles.colors.green }}
-            selectedTextStyleColor={{ color: globalStyles.colors.green }}
-            placeholderTextStyle={{
-              fontFamily: globalStyles.fontStyle.semiBold,
-            }}
-            lineHeight={numberOfLines > 1 ? true : undefined}
-            fontSize={hp("5%")}
-            height={dropdownHeight}
-            key={dropdownKey}
-            placeholder={
-              selectedEventTitle ? selectedEventTitle : "Select Event"
-            }
-            maxWidth={true}
-            data={eventTitles}
-            containerStyle={{
-              backgroundColor: "#f3fadc",
-              borderBottomRightRadius: 20,
-              borderBottomLeftRadius: 20,
-            }}
-            textStyle={{
-              fontFamily: globalStyles.fontStyle.regular,
-              fontSize: globalStyles.fontSize.description,
-            }}
-            labelField="label"
-            valueField="value"
-            onChange={handleEventTitleChange}
-          />
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.regular,
-              color: "rgba(0,0,0,0.4)",
-            }}
-          >
-            Event Location
-          </Text>
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.semiBold,
-              fontSize: globalStyles.fontSize.mediumDescription,
-              color: "black",
-            }}
-          >
-            {selectedEvent
-              ? selectedEvent.location
-                ? selectedEvent.location
-                : "No location provided"
-              : "No Selected Event"}
-          </Text>
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.regular,
-              color: "rgba(0,0,0,0.4)",
-            }}
-          >
-            Event Date
-          </Text>
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.semiBold,
-              fontSize: globalStyles.fontSize.mediumDescription,
-              color: "black",
-            }}
-          >
-            {selectedEvent
-              ? new Date(selectedEvent.datetime)
-                  .toLocaleDateString("en-GB", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })
-                  .replace(/\b(\d{1,2})(st|nd|rd|th)\b/g, "$1")
-              : "No Selected Event"}
-          </Text>
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.regular,
-              color: "rgba(0,0,0,0.4)",
-            }}
-          >
-            Start Time
-          </Text>
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.semiBold,
-              fontSize: globalStyles.fontSize.mediumDescription,
-              color: "black",
-            }}
-          >
-            {selectedEvent
-              ? new Date(selectedEvent.datetime)
-                  .toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "numeric",
-                    hour12: true,
-                  })
-                  .toLowerCase()
-                  .replace(/ /g, "")
-              : "No Selected Event"}
-          </Text>
-          <Text
-            style={{
-              fontFamily: globalStyles.fontStyle.regular,
-              color: "rgba(0,0,0,0.4)",
-            }}
-          >
-            End Time
-          </Text>
-          <DateTimePickerModal
-            isVisible={isEndTimePickerVisible}
-            mode="time"
-            onConfirm={handleConfirmEndTime}
-            onCancel={() => setEndTimePickerVisible(false)}
-          />
-          <TouchableOpacity onPress={() => setEndTimePickerVisible(true)}>
+          <View style={{ marginTop: 30 }}>
+            <Text
+              style={{
+                fontFamily: globalStyles.fontStyle.regular,
+                color: "rgba(0,0,0,0.4)",
+              }}
+            >
+              Event Title
+            </Text>
+            <DropdownComponent
+              style={{
+                backgroundColor: "transparent",
+                borderWidth: 0,
+                paddingVertical: 0,
+                paddingHorizontal: 0,
+                color: globalStyles.colors.green,
+                width: "100%",
+                height: dropdownHeight,
+              }}
+              fontFamily={true}
+              selectedTextStyle={true}
+              placeholderStyleColor={{ color: globalStyles.colors.green }}
+              selectedTextStyleColor={{ color: globalStyles.colors.green }}
+              placeholderTextStyle={{
+                fontFamily: globalStyles.fontStyle.semiBold,
+              }}
+              lineHeight={numberOfLines > 1 ? true : undefined}
+              fontSize={hp("5%")}
+              height={dropdownHeight}
+              key={dropdownKey}
+              placeholder={
+                selectedEventTitle ? selectedEventTitle : "Select Event"
+              }
+              maxWidth={true}
+              data={eventTitles}
+              containerStyle={{
+                backgroundColor: "#f3fadc",
+                borderBottomRightRadius: 20,
+                borderBottomLeftRadius: 20,
+              }}
+              textStyle={{
+                fontFamily: globalStyles.fontStyle.regular,
+                fontSize: globalStyles.fontSize.description,
+              }}
+              labelField="label"
+              valueField="value"
+              onChange={handleEventTitleChange}
+            />
+          </View>
+          <View style={{ marginTop: 20 }}>
+            <Text
+              style={{
+                fontFamily: globalStyles.fontStyle.regular,
+                color: "rgba(0,0,0,0.4)",
+              }}
+            >
+              Event Location
+            </Text>
             <Text
               style={{
                 fontFamily: globalStyles.fontStyle.semiBold,
@@ -447,18 +445,157 @@ export default function Reports({ navigation, route }) {
                 color: "black",
               }}
             >
-              {selectedEndTime
-                ? `${new Date(selectedEndTime)
-                    .toLocaleTimeString("en-US", {
-                      hour: "numeric",
-                      minute: "numeric",
-                      hour12: true,
-                    })
-                    .toLowerCase()
-                    .replace(/ /g, "")}`
-                : "Select End Time"}
+              {selectedEvent
+                ? selectedEvent.location
+                  ? selectedEvent.location
+                  : "No location provided"
+                : "No Selected Event"}
             </Text>
-          </TouchableOpacity>
+          </View>
+          <View style={{ marginTop: 15 }}>
+            <Text
+              style={{
+                fontFamily: globalStyles.fontStyle.regular,
+                color: "rgba(0,0,0,0.4)",
+              }}
+            >
+              Event Date
+            </Text>
+            <Text
+              style={{
+                fontFamily: globalStyles.fontStyle.semiBold,
+                fontSize: globalStyles.fontSize.mediumDescription,
+                color: "black",
+              }}
+            >
+              {selectedEvent
+                ? new Date(selectedEvent.datetime)
+                    .toLocaleDateString("en-GB", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric",
+                    })
+                    .replace(/\b(\d{1,2})(st|nd|rd|th)\b/g, "$1")
+                : "No Selected Event"}
+            </Text>
+          </View>
+          <View
+            style={{
+              marginVertical: 15,
+              flexDirection: "row",
+              justifyContent: "space-between",
+              alignItems: "center",
+              width: "70%",
+            }}
+          >
+            <View>
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.regular,
+                  color: "rgba(0,0,0,0.4)",
+                }}
+              >
+                Start Time
+              </Text>
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.semiBold,
+                  fontSize: globalStyles.fontSize.mediumDescription,
+                  color: "black",
+                }}
+              >
+                {selectedEvent
+                  ? new Date(selectedEvent.datetime)
+                      .toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "numeric",
+                        hour12: true,
+                      })
+                      .toLowerCase()
+                      .replace(/ /g, "")
+                  : "No Selected Event"}
+              </Text>
+            </View>
+            <View>
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.regular,
+                  color: "rgba(0,0,0,0.4)",
+                }}
+              >
+                End Time
+              </Text>
+              <DateTimePickerModal
+                isVisible={isEndTimePickerVisible}
+                mode="time"
+                onConfirm={handleConfirmEndTime}
+                onCancel={() => setEndTimePickerVisible(false)}
+              />
+              <TouchableOpacity onPress={() => setEndTimePickerVisible(true)}>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: globalStyles.fontSize.mediumDescription,
+                    color: "black",
+                  }}
+                >
+                  {selectedEndTime
+                    ? `${new Date(selectedEndTime)
+                        .toLocaleTimeString("en-US", {
+                          hour: "numeric",
+                          minute: "numeric",
+                          hour12: true,
+                        })
+                        .toLowerCase()
+                        .replace(/ /g, "")}`
+                    : "Select End Time"}
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View
+            style={{
+              marginBottom: 20,
+            }}
+          >
+            <Text
+              style={{
+                fontFamily: globalStyles.fontStyle.regular,
+                color: "rgba(0,0,0,0.4)",
+              }}
+            >
+              Event Narrative
+            </Text>
+            <TextInput
+              style={{
+                borderColor: "black",
+                borderWidth: 1,
+                borderRadius: 10,
+                marginTop: 5,
+                width: "100%",
+                paddingVertical: 10,
+                paddingHorizontal: 15,
+                fontFamily: globalStyles.fontStyle.regular,
+                fontSize: globalStyles.fontSize.description,
+                height: 100,
+              }}
+              placeholder="Craft your event's narrative here and let your story unfold in the hearts of the community."
+              multiline={true}
+              maxLength={maxChars}
+              onChangeText={setText}
+              value={text}
+            />
+            <Text
+              style={{
+                textAlign: "right",
+                fontFamily: globalStyles.fontStyle.regular,
+                fontSize: globalStyles.fontSize.description,
+              }}
+            >
+              {text.length}/{maxChars}
+            </Text>
+          </View>
+          <Button text={"Create Report"} onPress={() => handleCreateReport()} />
 
           {/* <Button title="Hide" onPress={() => setModalVisible(false)} /> */}
         </View>
