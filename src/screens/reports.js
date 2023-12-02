@@ -47,6 +47,8 @@ export default function Reports({ navigation, route }) {
   const [isModalVisible, setModalVisible] = useState(false);
   const [isEndTimePickerVisible, setEndTimePickerVisible] = useState(false);
   const [selectedEndTime, setSelectedEndTime] = useState(null);
+  const [sortOrder, setSortOrder] = useState("desc");
+  const [recentSort, setRecentSort] = useState(false);
   const [text, setText] = useState("");
   const maxChars = 500;
 
@@ -86,6 +88,38 @@ export default function Reports({ navigation, route }) {
     setDropdownKey((prevKey) => prevKey + 1);
   };
 
+  const getFilteredReports = () => {
+    let filteredReports = [...reportData];
+
+    if (recentSort) {
+      filteredReports.sort((a, b) => {
+        const dateA = new Date(a.datetime);
+        const dateB = new Date(b.datetime);
+        return sortOrder === "asc" ? dateA - dateB : dateB - dateA;
+      });
+    }
+
+    if (selectedMonth) {
+      const monthIndex = months.findIndex(
+        (month) => month.value === selectedMonth
+      );
+      const filteredMonthReports = filteredReports.filter((report) => {
+        const reportMonth = new Date(report.datetime).getMonth();
+        return reportMonth === monthIndex;
+      });
+      filteredReports = filteredMonthReports;
+    }
+
+    return filteredReports;
+  };
+
+  const handleRecentSort = () => {
+    setRecentSort((prevSort) => !prevSort);
+    if (!recentSort) {
+      setSortOrder("desc");
+    }
+  };
+
   const handleEventTitleChange = (selectedEventTitle) => {
     // console.log("Selected event:", selectedEventTitle);
     setSelectedEventTitle(selectedEventTitle);
@@ -108,12 +142,6 @@ export default function Reports({ navigation, route }) {
     console.log("Selected end time:", time);
     setSelectedEndTime(time);
     setEndTimePickerVisible(false);
-
-    // // Kung papasa mo yung endTime sa eventData comment out mo to
-    // setEventData(prevState => ({
-    //   ...prevState,
-    //   endTime: time
-    // }));
   };
 
   const showAlert = (message) => {
@@ -254,27 +282,18 @@ export default function Reports({ navigation, route }) {
                 paddingVertical: 13,
                 paddingHorizontal: 20,
                 alignSelf: "center",
-                backgroundColor: activeButtons.recent
+                backgroundColor: recentSort
                   ? globalStyles.colors.green
                   : "transparent",
                 borderRadius: 20,
                 height: hp("5%"),
               }}
-              onPress={() => {
-                setActiveButtons({
-                  ...activeButtons,
-                  recent: !activeButtons.recent,
-                });
-                // Toggle sorting order on button click
-                setSortOrder((prevOrder) =>
-                  prevOrder === "asc" ? "desc" : "asc"
-                );
-              }}
+              onPress={handleRecentSort}
             >
               <Text
                 style={{
                   fontFamily: globalStyles.fontStyle.semiBold,
-                  color: activeButtons.recent ? "white" : "grey",
+                  color: recentSort ? "white" : "grey",
                 }}
               >
                 Recent
@@ -331,11 +350,11 @@ export default function Reports({ navigation, route }) {
               </View>
             ) : (
               <ListView
-                data={reportData}
+                data={getFilteredReports()}
                 renderItem={({ item }) => (
                   <ReportsCard
                     navigation={navigation}
-                    isInReportsScreen={true} // to hide the edit button
+                    isInReportsScreen={true}
                     {...item}
                     onDelete={() => deleteReport(item.event)}
                     fullname={fullname}
