@@ -10,14 +10,20 @@ import Button from "./button";
 import ReadMore from "react-native-read-more-text";
 import moment from "moment";
 
-const images = [
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-];
+// const images = [
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+// ];
 
-export default function PostCards({ avatar, name, datetime, description }) {
+export default function PostCards({
+  avatar,
+  name,
+  datetime,
+  description,
+  images,
+}) {
   const [isPresent, setIsPresent] = useState(false);
   const [isAbsent, setIsAbsent] = useState(false);
 
@@ -33,7 +39,11 @@ export default function PostCards({ avatar, name, datetime, description }) {
 
   return (
     <View>
-      <View>
+      <View
+        style={{
+          marginVertical: 10,
+        }}
+      >
         <View
           style={{
             flexDirection: "row",
@@ -65,7 +75,8 @@ export default function PostCards({ avatar, name, datetime, description }) {
                 fontSize: globalStyles.fontSize.description,
               }}
             >
-              {moment(datetime, "MM/DD/YYYY").fromNow() || "1 hour ago"}
+              {moment(datetime, "MM/DD/YYYY HH:mm:ss").fromNow() ||
+                "1 hour ago"}
             </Text>
           </View>
         </View>
