@@ -6,6 +6,7 @@ import {
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
 import Header from "./../components/header";
+import PostCards from "./../components/postCard";
 import ListView from "../components/listView";
 import Modal from "react-native-modal";
 import Button from "./../components/button";
@@ -17,7 +18,10 @@ export default function Attendees({ navigation }) {
         <View>
           <Header icon={"back"} title={"Attendees"} subTitle={"Feed"} />
         </View>
-        <Text>Attendees</Text>
+        <View>
+          <PostCards />
+        </View>
+        {/* <Text>Attendees</Text> */}
       </View>
     </View>
   );
