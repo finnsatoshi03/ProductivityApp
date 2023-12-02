@@ -38,19 +38,22 @@ export default function Notifications({ navigation, route }) {
 
   const [data, setData] = useState(
     {
-      id: "",
-      user_id: "",
-      event_id: "",            
-      created_at: "",
-      invitation:"",
-      message:"",
-      read: "",
+      // id: "",
+      // user_id: "",
+      // fullname:"",
+      // event_id: "",            
+      // created_at: "",
+      // invitation:"",
+      // message:"",
+      // read: "",
 
-      eventTitle: "",
-      eventLocation: "",
-      eventDate: "",
-      eventTime: "TIME",
-      
+      // eventTitle: "",
+      // eventLocation: "",
+      // eventDate: "",
+      // eventTime: "TIME",
+
+      // adminNotif: true,
+      // reason: "",
     },
     // {
     //   id: 2, // sample event for normal notification
@@ -90,42 +93,53 @@ export default function Notifications({ navigation, route }) {
               user_id: user_id,
             },
           }
-        ) : await axios.get(`${global.baseurl}:4000/getAdminNotification`,
-        {
-          params: {
-            user_id: user_id,
-          },
-        });
+        ) : await axios.get(`${global.baseurl}:4000/getAdminNotification`);
+          
 
         if (response.status === 200) {
           const { data } = response;
           const notification = data.notifications;
-          console.log(notification);
+          
 
-          if (!notification.read) {
-             
-            const formattedNotifications = notification.map((notification) => {
-              const eventDetails = extractEventDetails(notification.message);
+          if (role === 'user') {
+            if (!notification.read) {
+              
+              const formattedNotifications = notification.map((notification) => {
+                const eventDetails = extractEventDetails(notification.message);
+                  return {
+                    ...notification,
+                    eventTitle: eventDetails.event,
+                    eventLocation: eventDetails.location,
+                    eventDate: eventDetails.date,
+                    reason: notification.comment
+                  };
+                });
+                          
+              setData(formattedNotifications);            
+            }
+          } else {
+                                                                  
+              const formattedNotifications = notification.map((notification) => {
                 return {
                   ...notification,
-                  eventTitle: eventDetails.event,
-                  eventLocation: eventDetails.location,
-                  eventDate: eventDetails.date,
-                  eventTime: "TIME",
+                  eventTitle: notification.event,
+                  eventLocation: notification.location,
+                  eventDate: notification.datetime,
+                  adminNotif: true,
                 };
-              });
-            
-            console.log(formattedNotifications);
-            setData(formattedNotifications);
+              })
+
+              setData(formattedNotifications);
+              console.log(data);
+              
+              
             
           }
-
-         
-          
-          
+                                       
           console.log("sucess");
           setIsLoading(false);
         } else console.log("failed");
+
       } catch (err) {
         console.log(err);
         setIsLoading(false);
@@ -135,7 +149,7 @@ export default function Notifications({ navigation, route }) {
     };
     getNotifications();
   }, []);
-
+  console.log(data);
   
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -159,13 +173,13 @@ export default function Notifications({ navigation, route }) {
         comment: buttonType === 'accept' ? "" : "false",
       }      
       if (buttonType === 'accept') {
-        // const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
+        const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
 
-        // if (response.status === 200) {
-        //   console.log('success');
-        // }else {
-        //   console.log('something went wrong')
-        // }
+        if (response.status === 200) {
+          console.log('success');
+        }else {
+          console.log('something went wrong')
+        }
       }
       
     } catch (error) {
@@ -209,7 +223,7 @@ export default function Notifications({ navigation, route }) {
     } catch (error) {
       console.log(error);
     }
-    console.log('yoe');
+    
     setModalVisible(false)
   }
   
@@ -218,6 +232,7 @@ export default function Notifications({ navigation, route }) {
   };
 
   const handleDeleteNotification = (notificationId) => {
+    console.log(notificationId);
     setNotificationsToDelete((prev) => [...prev, notificationId]);
   };
 
@@ -292,7 +307,7 @@ export default function Notifications({ navigation, route }) {
                       {...item}
                       onPressAccept={() => showModal(item, "accept")}
                       onPressReject={() => rejectModal(item, "reject")}
-                      onPressTrash={() => showModal(null, "trash")}
+                      onPressTrash={() => handleDeleteNotification(item.notification_id)}
                     />
                   )}
                 />

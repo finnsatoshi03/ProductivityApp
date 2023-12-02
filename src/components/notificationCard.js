@@ -5,14 +5,15 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Button from "./button";
 
 export default function NotificationCard({
-  name,
+  notification_id,
+  fullname,
   message,
   created_at,
   eventDate,
   eventLocation,
   eventTime,
   eventTitle,
-  status,
+  invitation,
   reason,
   read,
   adminNotif,
@@ -28,7 +29,7 @@ export default function NotificationCard({
     hour: "numeric",
     minute: "numeric",
   }).format(dateObject);
-
+  
   const eventTitles = [
     "Get ready for an electrifying event!",
     "Don't miss this exciting event!",
@@ -40,7 +41,7 @@ export default function NotificationCard({
   const [header] = useState(
     eventTitles[Math.floor(Math.random() * eventTitles.length)]
   );
-
+  
   return (
     <View
       style={{
@@ -130,29 +131,29 @@ export default function NotificationCard({
                   marginBottom: 5,
                 }}
               >
-                {status === "accepted" ? (
+                {invitation === true ? (
                   <>
-                    {name} is excited to{" "}
+                    {fullname} is excited to{" "}
                     <Text style={{ color: globalStyles.colors.green }}>
                       accept
                     </Text>{" "}
-                    your invitation for {eventTitle}! 🎉
+                    your invitation for {eventTitle} on {formattedDate} at {eventLocation}! 🎉
                   </>
                 ) : (
                   <>
                     <Text style={{ color: "#df5f4b" }}>Unfortunately</Text>,{" "}
-                    {name} won't be able to make it to {eventTitle} this time.
+                    {fullname} won't be able to make it to {eventTitle} this time.
                   </>
                 )}
               </Text>
-              {status !== "accepted" && (
+              {invitation !== true && (
                 <Text
                   style={{
                     fontFamily: globalStyles.fontStyle.regular,
                     fontSize: globalStyles.fontSize.description,
                   }}
                 >
-                  {name + ": " + reason}
+                  {fullname + ": " + reason}
                 </Text>
               )}
             </>

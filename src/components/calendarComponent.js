@@ -86,7 +86,7 @@ export default function CalendarComponent({ events, onDayPress }) {
     "#498F14", // medyo medyo dark green
   ];
 
-  console.log("events: ", events);
+  
 
   if (Array.isArray(events)) {
     events.forEach((event, index) => {
