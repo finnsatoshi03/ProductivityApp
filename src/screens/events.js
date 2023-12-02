@@ -9,7 +9,6 @@ import {
   Alert,
   ActivityIndicator,
 } from "react-native";
-import moment from "moment";
 import { globalStyles } from "./../styles/globalStyles";
 import {
   widthPercentageToDP as wp,
@@ -30,7 +29,7 @@ import Participants from "./participants";
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
 import "../../global";
-import { format } from 'date-fns-tz';
+import { format } from "date-fns-tz";
 
 export default function EventsScreen({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
@@ -666,7 +665,9 @@ export default function EventsScreen({ navigation, route }) {
                         fontSize: globalStyles.fontSize.mediumDescription,
                         color: "black",
                       }}
-                      >{`${format(startDate, 'dd MMMM yyyy', { timeZone: 'Asia/Manila' })}`}</Text>
+                    >{`${format(startDate, "dd MMMM yyyy", {
+                      timeZone: "Asia/Manila",
+                    })}`}</Text>
                   </Pressable>
                   <DateTimePickerModal
                     isVisible={isDatePickerVisible}
@@ -688,7 +689,9 @@ export default function EventsScreen({ navigation, route }) {
                         fontSize: globalStyles.fontSize.mediumDescription,
                         color: "black",
                       }}
-                      >{`${format(endDate, 'HH:mm', { timeZone: 'Asia/Manila' })}`}</Text>
+                    >{`${format(endDate, "HH:mm", {
+                      timeZone: "Asia/Manila",
+                    })}`}</Text>
                   </Pressable>
                   <DateTimePickerModal
                     isVisible={isTimePickerVisible}

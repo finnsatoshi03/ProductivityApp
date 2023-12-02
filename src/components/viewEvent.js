@@ -22,7 +22,6 @@ import ProfileCard from "./profileCard";
 import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 
-
 const ViewEvent = ({ route, navigation }) => {
   const {
     title,
@@ -32,7 +31,10 @@ const ViewEvent = ({ route, navigation }) => {
     joinReasons,
     id,
     participants,
-    fullname, user, user_id, role
+    fullname,
+    user,
+    user_id,
+    role,
   } = route.params;
 
   const [imageURL, setImageURL] = useState("");
@@ -259,14 +261,28 @@ const ViewEvent = ({ route, navigation }) => {
                     .join(", ")}
                   {/* {participants} */}
                 </Text>
-                <TouchableOpacity
-                  style={styles.attendeesButton}
-                  onPress={showParticipantsModal}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 15,
+                    marginTop: hp("3%"),
+                  }}
                 >
-                  <Text style={styles.attendeesButtonText}>
-                    View Participants
-                  </Text>
-                </TouchableOpacity>
+                  <Button
+                    text={"Participants"}
+                    onPress={showParticipantsModal}
+                    width={wp("35%")}
+                    bgColor="rgba(255, 255, 255, 0.5)"
+                    textColor="rgba(0, 0, 0, 0.5)"
+                  />
+                  <Button
+                    text={role === "user" ? "Attendance" : "Attendees"}
+                    onPress={() => console.log("Call Attendees API")}
+                    width={wp("35%")}
+                  />
+                </View>
               </View>
             </View>
           </View>
@@ -314,7 +330,6 @@ const ViewEvent = ({ route, navigation }) => {
             onPress={removeParticipant} /> 
           </View> */}
         </View>
-        {/* <Text style={styles.participantsModalTitle}>{participants}</Text> */}
       </Modal>
     </View>
   );
