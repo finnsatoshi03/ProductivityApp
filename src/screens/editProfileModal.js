@@ -14,48 +14,47 @@ import Input from "./../components/input";
 import Button from "./../components/button";
 
 import axios from "axios";
-import '../../global'
+import "../../global";
 
-export default function EditProfile({  navigation, route }) {  
+export default function EditProfile({ navigation, route }) {
+  const { fullname, user, user_id, role } = route.params;
 
-  const { fullname, user, user_id, role} = route.params;
-  
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isModalVisible, setModalVisible] = useState(true);
-  const [usernamefield, setUsername] = useState('')
-  const [emailfield, setEmail] = useState('')
-  const [contactfield, setContact] = useState('')
-  const [img, setImg] = useState('')
+  const [usernamefield, setUsername] = useState("");
+  const [emailfield, setEmail] = useState("");
+  const [contactfield, setContact] = useState("");
+  const [img, setImg] = useState("");
 
   const hideModal = () => {
-    setModalVisible(false);    
+    setModalVisible(false);
     navigation.goBack();
   };
-  
+
   const onSubmit = async (values) => {
-  
     const data = {
       image: img,
       username: usernamefield,
       email: emailfield,
-      contact: contactfield, 
-      user_id: user_id
-    }
-    
-    try {      
-      let baseurl = role === 'admin' ? `${global.baseurl}:4000/editAdmin` : `${global.baseurl}:4000/editUser`;
-      
+      contact: contactfield,
+      user_id: user_id,
+    };
+
+    try {
+      let baseurl =
+        role === "admin"
+          ? `${global.baseurl}:4000/editAdmin`
+          : `${global.baseurl}:4000/editUser`;
+
       const response = await axios.patch(baseurl, data);
 
-      if (response.status === 200) {        
-        console.log('SUCCESS');        
-      } else console.log('failed')
-
+      if (response.status === 200) {
+        console.log("SUCCESS");
+      } else console.log("failed");
     } catch (error) {
       console.log(error);
     }
-  }
-
+  };
 
   const requestPermission = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -80,14 +79,14 @@ export default function EditProfile({  navigation, route }) {
     }
   };
   const handlUsername = (text) => {
-    setUsername(text)
-  }
+    setUsername(text);
+  };
   const handlEmail = (text) => {
-    setEmail(text)
-  }
+    setEmail(text);
+  };
   const handlContact = (text) => {
-    setContact(text)
-  }
+    setContact(text);
+  };
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -168,14 +167,14 @@ export default function EditProfile({  navigation, route }) {
               marginTop: 30,
             }}
           >
-            <Button width={wp("50%")} text={"Update"} onPress={onSubmit}/>
+            <Button width={wp("50%")} text={"Update"} onPress={onSubmit} />
             <Button
               width={wp("22%")}
               text={"Discard"}
               bgColor={"rgba(0,0,0,0.2)"}
               textColor="rgba(0,0,0,0.5)"
               onPress={hideModal}
-              fnc='press'
+              fnc="press"
             />
           </View>
         </View>

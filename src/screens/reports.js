@@ -14,7 +14,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Header from "./../components/header";
 import Sidebar from "./../Layout/sidebar";
 import ListView from "./../components/listView";
-import Events from "./../components/eventCard";
+import ReportsCard from "./../components/eventCard";
 import Navbar from "./../Layout/navbar";
 import DropdownComponent from "./../components/dropdown";
 import Button from "./../components/button";
@@ -24,6 +24,7 @@ export default function Reports({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
 
   const { eventData, setEventData } = useData();
+  const { reportData, setReportData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
 
   const deleteEvent = (eventTitleToDelete) => {
@@ -106,6 +107,37 @@ export default function Reports({ navigation, route }) {
     //   ...prevState,
     //   endTime: time
     // }));
+  };
+
+  const handleCreateReport = () => {
+    // Perform validation checks
+    // if (
+    //   !selectedEventTitle ||
+    //   !selectedEndTime ||
+    //   new Date(selectedEndTime) <= new Date(selectedEvent.datetime)
+    // ) {
+    //   // Display an error message or handle validation failure
+    //   return;
+    // }
+    console.log("Selected event:", selectedEvent);
+    console.log("End Time:", selectedEndTime);
+
+    const newReport = {
+      event: selectedEventTitle,
+      location: selectedEvent.location,
+      datetime: selectedEvent.datetime,
+      endTime: selectedEndTime,
+      narrative: text,
+    };
+    setReportData((prevData) => [...prevData, newReport]);
+    console.log("New report:", newReport);
+    console.log("Report data:", reportData);
+
+    setModalVisible(false);
+    setSelectedEventTitle(null);
+    setSelectedEvent(null);
+    setSelectedEndTime(null);
+    setText("");
   };
 
   console.log("Event data:", eventData);
@@ -246,7 +278,7 @@ export default function Reports({ navigation, route }) {
               height: hp("62%"),
             }}
           >
-            {eventData.length === 0 ? (
+            {reportData.length === 0 ? (
               <View
                 style={{
                   flex: 1,
@@ -271,13 +303,13 @@ export default function Reports({ navigation, route }) {
               </View>
             ) : (
               <ListView
-                data={eventData}
+                data={reportData}
                 renderItem={({ item }) => (
-                  <Events
+                  <ReportsCard
                     navigation={navigation}
                     isInReportsScreen={true} // to hide the edit button
                     {...item}
-                    onDelete={() => deleteEvent(item.event)}
+                    // onDelete={() => deleteEvent(item.reportTitle)}
                     fullname={fullname}
                     user={user}
                     user_id={user_id}
@@ -531,7 +563,7 @@ export default function Reports({ navigation, route }) {
               {text.length}/{maxChars}
             </Text>
           </View>
-          <Button text={"Create Report"} />
+          <Button text={"Create Report"} onPress={() => handleCreateReport()} />
 
           {/* <Button title="Hide" onPress={() => setModalVisible(false)} /> */}
         </View>
