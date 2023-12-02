@@ -48,10 +48,10 @@ const ViewEvent = ({ route, navigation }) => {
     navigation.goBack();
   };
 
-  const [isAdminModalVisible, setAdminModalVisible] = useState(false);
+  const [isAttendeesModalVisible, setAttendeesModalVisible] = useState(false);
 
   const showAdminModal = () => {
-    setAdminModalVisible(true);
+    setAttendeesModalVisible(true);
   };
 
   useEffect(() => {
@@ -339,8 +339,8 @@ const ViewEvent = ({ route, navigation }) => {
         </View>
       </Modal>
       <Modal
-        isVisible={isAdminModalVisible}
-        onBackdropPress={() => setAdminModalVisible(false)}
+        isVisible={isAttendeesModalVisible}
+        onBackdropPress={() => setAttendeesModalVisible(false)}
       >
         <View
           style={{
