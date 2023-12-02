@@ -27,7 +27,7 @@ export default function sideBar({
   fullname,
   user,
   user_id,
-  role
+  role,
 }) {
   const { logout } = Authentication();
 
@@ -35,7 +35,7 @@ export default function sideBar({
   const [logoutText, setLogoutText] = useState(
     "Are you sure you want to logout?"
   );
-  
+
   const position = useRef(new Animated.Value(-wp("70%"))).current;
 
   const slideIn = () => {
@@ -62,8 +62,7 @@ export default function sideBar({
     }
   }, []);
 
-  
-  const handleLogout = () => {    
+  const handleLogout = () => {
     setModalVisible(true);
   };
 
@@ -165,27 +164,28 @@ export default function sideBar({
                 destination={"UserControl"}
                 fnc="navigate"
                 fullname={fullname}
-              user={user}
-              user_id={user_id}
-              role={role}
-              />
-            ) : (
-              <Button
-                text={"Notifications"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/notification.png")}
-                navigation={navigation}
-                destination={"Notifications"}
-                fnc="navigate"
-                fullname={fullname}
                 user={user}
                 user_id={user_id}
                 role={role}
               />
+            ) : (
+              <></>
             )}
+            <Button
+              text={"Notifications"}
+              flexStart={true}
+              transparent={true}
+              textColor={"black"}
+              fontSize={globalStyles.fontSize.mediumDescription}
+              iconSource={require("./../../assets/notification.png")}
+              navigation={navigation}
+              destination={"Notifications"}
+              fnc="navigate"
+              fullname={fullname}
+              user={role === "admin" ? null : user}
+              user_id={role === "admin" ? null : user_id}
+              role={role}
+            />
           </View>
           <View style={{ marginHorizontal: 30, marginTop: 20 }}>
             <Button
@@ -216,7 +216,7 @@ export default function sideBar({
               fullname={fullname}
               user={user}
               user_id={user_id}
-              role={role}              
+              role={role}
             />
             {role === "admin" ? (
               <Button

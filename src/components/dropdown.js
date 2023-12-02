@@ -7,6 +7,11 @@ const DropdownComponent = ({
   value: initialValue,
   style,
   onChange,
+  fontSize,
+  lineHeight,
+  height,
+  selectedTextStyleColor,
+  placeholderStyleColor,
   ...props
 }) => {
   const [value, setValue] = useState(initialValue);
@@ -28,14 +33,25 @@ const DropdownComponent = ({
         fontFamily: props.fontFamily
           ? globalStyles.fontStyle.semiBold
           : undefined,
-        color: props.selectedTextStyle ? "white" : "grey",
+        color: selectedTextStyleColor
+          ? selectedTextStyleColor.color
+          : props.selectedTextStyle
+          ? "white"
+          : "grey",
       }}
       placeholderStyle={{
-        color: props.selectedTextStyle ? "white" : "grey",
-        fontSize: 14,
+        color: placeholderStyleColor
+          ? placeholderStyleColor.color
+          : props.selectedTextStyle
+          ? "white"
+          : "grey",
+        fontSize: fontSize ? fontSize : 14,
         fontFamily: props.fontFamily
           ? globalStyles.fontStyle.semiBold
           : undefined,
+        height: height ? height : undefined,
+        lineHeight: lineHeight ? 33 : undefined,
+        paddingTop: lineHeight ? 20 : undefined,
       }}
       placeholder={props.placeholder}
       data={data}
