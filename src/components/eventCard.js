@@ -13,11 +13,14 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
 import Button from "./button";
 import Modal from "react-native-modal";
 import Header from "./header";
 import ListView from "./listView";
 import ProfileCard from "./profileCard";
+import { useData } from "./../DataContext";
 
 const commonStyles = {
   container: {
@@ -171,6 +174,22 @@ export default function eventCard({
     setIsExpanded(!isExpanded);
   };
 
+  const { getReportData } = useData();
+  const reportData = getReportData();
+  console.log("Reports Data: ", reportData);
+
+  const handleExportReportData = async () => {
+    try {
+      const htmlContent = generateHTMLReport(reportData);
+
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+
+      await Sharing.shareAsync(uri);
+    } catch (error) {
+      console.error("Error exporting report data:", error);
+    }
+  };
+
   return (
     <>
       <Pressable onPress={toggleExpand}>
@@ -279,6 +298,14 @@ export default function eventCard({
                     <Image
                       style={{ height: hp("4%"), width: hp("4%") }}
                       source={require("../../assets/edit.png")}
+                    />
+                  </Pressable>
+                )}
+                {isInReportsScreen && (
+                  <Pressable onPress={handleExportReportData}>
+                    <Image
+                      style={{ height: hp("4%"), width: hp("4%") }}
+                      source={require("../../assets/download.png")}
                     />
                   </Pressable>
                 )}
@@ -445,3 +472,74 @@ export default function eventCard({
     </>
   );
 }
+
+const generateHTMLReport = (reportData) => {
+  let reportContent = "";
+  let lastReportNarrative = "";
+
+  reportData.forEach((report, index) => {
+    const date = new Date(report.datetime).toLocaleDateString();
+    const startTime = new Date(report.datetime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const endTime = new Date(report.endTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    reportContent += `
+      <p>Date: ${date}</p>
+      <p>Event: ${report.event}</p>
+      <p>Location: ${report.location}</p>
+      <p>Start Time: ${startTime}</p>
+      <p>End Time: ${endTime}</p>
+      <hr />
+    `;
+
+    if (index === reportData.length - 1) {
+      lastReportNarrative = report.narrative;
+    }
+  });
+
+  const htmlContent = `
+    <html>
+      <head>
+        <style>
+          body {
+            font-family: "Century Gothic", sans-serif;
+            padding: 20px;
+          }
+          h1 {
+            color: #333;
+          }
+          .wrapper {
+            text-align: center;
+          }
+          .data-wrapper {
+            margin-top: 20px;
+            padding: 0 180px 0 180px ;
+            text-align: left;
+          }
+          .event-narrative {
+            margin-top: 20px;
+            padding: 0 100px 0 100px ;
+            text-align: left;
+          }
+        </style>
+      </head>
+      <body>
+        <div class="wrapper">
+          <h1>Reports Data</h1>
+          <div class="data-wrapper">
+            ${reportContent}
+          </div>
+          <div class="event-narrative">
+            <p>Event Narrative: </p>
+            <p>${lastReportNarrative}</p>
+          </div>
+        </div>
+      </body>
+    </html>
+  `;
+  return htmlContent;
+};

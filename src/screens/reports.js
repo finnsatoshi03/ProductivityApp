@@ -215,18 +215,6 @@ export default function Reports({ navigation, route }) {
     }
     
   };
-
-  // console.log("Event data:", eventData);
-  // eventData.map((event) => {
-  //   console.log(`Event Name: ${event.event}`);
-  //   console.log(`Event ID: ${event.id}`);
-  //   const eventDate = new Date(event.datetime);
-  //   console.log(`Event Date: ${eventDate.toLocaleDateString()}`);
-  //   console.log(`Event Time: ${eventDate.toLocaleTimeString()}`);
-  //   console.log(`Event Description: ${event.description}`);
-  //   console.log(`Event Location: ${event.location}`);
-  //   console.log(`Event Reminder: ${event.reminder}`);
-  // });
   
   return (
     <>

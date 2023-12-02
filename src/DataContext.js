@@ -13,11 +13,24 @@ export const DataProvider = ({ children }) => {
 
   const [reportData, setReportData] = useState([]);
 
+  const getAllData = () => {
+    return {
+      eventData,
+      reportData,
+    };
+  };
+
+  const getReportData = () => {
+    return reportData;
+  };
+
   const value = {
     eventData,
     setEventData,
     reportData,
     setReportData,
+    getAllData,
+    getReportData,
   };
 
   return <DataContext.Provider value={value}>{children}</DataContext.Provider>;
