@@ -10,7 +10,10 @@ import {
   Alert,
 } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
-import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  heightPercentageToDP as hp,
+  widthPercentageToDP as wp,
+} from "react-native-responsive-screen";
 import Modal from "react-native-modal";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Header from "./../components/header";
@@ -23,7 +26,7 @@ import Button from "./../components/button";
 import { useData } from "./../DataContext";
 
 export default function Reports({ navigation, route }) {
-  const { fullname, user, user_id, role } = route.params;
+  const { fullname, user, user_id, role, participants } = route.params;
 
   const { eventData, setEventData } = useData();
   const { reportData, setReportData } = useData();
@@ -195,18 +198,6 @@ export default function Reports({ navigation, route }) {
       setIsLoading(false);
     }
   };
-
-  // console.log("Event data:", eventData);
-  // eventData.map((event) => {
-  //   console.log(`Event Name: ${event.event}`);
-  //   console.log(`Event ID: ${event.id}`);
-  //   const eventDate = new Date(event.datetime);
-  //   console.log(`Event Date: ${eventDate.toLocaleDateString()}`);
-  //   console.log(`Event Time: ${eventDate.toLocaleTimeString()}`);
-  //   console.log(`Event Description: ${event.description}`);
-  //   console.log(`Event Location: ${event.location}`);
-  //   console.log(`Event Reminder: ${event.reminder}`);
-  // });
 
   return (
     <>
@@ -625,6 +616,7 @@ export default function Reports({ navigation, route }) {
           {/* <Button title="Hide" onPress={() => setModalVisible(false)} /> */}
         </View>
       </Modal>
+
       {isSidebarVisible && (
         <>
           <TouchableOpacity

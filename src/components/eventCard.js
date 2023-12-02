@@ -15,6 +15,9 @@ import {
 } from "react-native-responsive-screen";
 import Button from "./button";
 import Modal from "react-native-modal";
+import Header from "./header";
+import ListView from "./listView";
+import ProfileCard from "./profileCard";
 
 const commonStyles = {
   container: {
@@ -48,10 +51,8 @@ export default function eventCard({
   fullname,
   user,
   user_id,
-  role
+  role,
 }) {
-
-
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
   const rotateInterpolation = animationRef.interpolate({
@@ -62,6 +63,17 @@ export default function eventCard({
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [showSpinner, setShowSpinner] = useState(false);
+  const [isParticipantsModalVisible, setParticipantsModalVisible] =
+    useState(false);
+  const [activeButton, setActiveButton] = useState(null);
+
+  const showParticipantsModal = () => {
+    setParticipantsModalVisible(true);
+  };
+
+  const hideParticipantsModal = () => {
+    setParticipantsModalVisible(false);
+  };
 
   function formatDateTime(datetimeString) {
     const optionsDate = {
@@ -89,6 +101,8 @@ export default function eventCard({
   }
   datetime = formatDateTime(datetime);
 
+  const [participants, setParticipants] = useState([]);
+
   const viewEvent = async () => {
     const response = await axios.get(`${global.baseurl}:4000/getParticipant`, {
       params: {
@@ -100,10 +114,12 @@ export default function eventCard({
       const { data } = response;
       const users = data.users;
 
-      const participants = users.map((user) => ({
+      const participantsData = users.map((user) => ({
         fullname: user.fullname,
         id: user.id,
       }));
+
+      setParticipants(participantsData);
 
       navigation.navigate("ViewEvent", {
         title: event,
@@ -112,12 +128,12 @@ export default function eventCard({
         location: location,
         description: description,
         joinReasons: [reason],
-        participants: participants,
+        participants: participantsData,
 
-        fullname:fullname,
-        user:user,
-        user_id:user_id,
-        role:role,
+        fullname: fullname,
+        user: user,
+        user_id: user_id,
+        role: role,
       });
     } else {
       console.log("error");
@@ -156,207 +172,276 @@ export default function eventCard({
   };
 
   return (
-    <Pressable onPress={toggleExpand}>
-      <View
-        style={{
-          backgroundColor: globalStyles.colors.darkGreen,
-          borderRadius: 20,
-        }}
-      >
+    <>
+      <Pressable onPress={toggleExpand}>
         <View
           style={{
-            ...commonStyles.container,
-            backgroundColor: globalStyles.colors.green,
-            gap: 5,
-            borderTopLeftRadius: isExpanded ? 20 : 20,
-            borderTopRightRadius: isExpanded ? 20 : 20,
-            borderBottomLeftRadius: isExpanded ? 0 : 20,
-            borderBottomRightRadius: isExpanded ? 0 : 20,
-            paddingTop: isExpanded ? 10 : 20,
-            paddingBottom: isExpanded ? 10 : 20,
+            backgroundColor: globalStyles.colors.darkGreen,
+            borderRadius: 20,
           }}
         >
           <View
             style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            <Text
-              style={{
-                ...commonStyles.text,
-                color: "#fff",
-                opacity: 0.5,
-                fontFamily: globalStyles.fontStyle.regular,
-              }}
-            >
-              Schedule Event
-            </Text>
-            <Animated.Image
-              style={{
-                ...commonStyles.image,
-                transform: [{ rotate: rotateInterpolation }],
-              }}
-              source={require("../../assets/arrow-expand.png")}
-            />
-          </View>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
-            <Image
-              style={commonStyles.image}
-              source={
-                isExpanded
-                  ? require("../../assets/clock.png")
-                  : require("../../assets/event.png")
-              }
-            />
-            <Text
-              style={{
-                fontSize: globalStyles.fontSize.mediumDescription,
-                color: "#fff",
-                fontFamily: globalStyles.fontStyle.regular,
-              }}
-            >
-              {isExpanded ? `${datetime}` : event}
-            </Text>
-          </View>
-        </View>
-        {isExpanded && (
-          <View
-            style={{
               ...commonStyles.container,
-              backgroundColor: "white",
-              borderBottomLeftRadius: 20,
-              borderBottomRightRadius: 20,
+              backgroundColor: globalStyles.colors.green,
+              gap: 5,
+              borderTopLeftRadius: isExpanded ? 20 : 20,
+              borderTopRightRadius: isExpanded ? 20 : 20,
+              borderBottomLeftRadius: isExpanded ? 0 : 20,
+              borderBottomRightRadius: isExpanded ? 0 : 20,
+              paddingTop: isExpanded ? 10 : 20,
+              paddingBottom: isExpanded ? 10 : 20,
             }}
           >
             <View
               style={{
                 flexDirection: "row",
-                justifyContent: "space-between",
                 alignItems: "center",
+                justifyContent: "space-between",
               }}
             >
-              <View>
-                <Text
-                  style={{
-                    fontSize: globalStyles.fontSize.largeDescription,
-                    fontFamily: globalStyles.fontStyle.bold,
-                  }}
-                >
-                  {event}
-                </Text>
-                <Text
-                  style={
-                    ([commonStyles.text],
-                    { fontFamily: globalStyles.fontStyle.regular })
-                  }
-                >
-                  {location}
-                </Text>
-              </View>
-              {role === "admin" && !isInReportsScreen && (
-                <Pressable onPress={onEdit}>
-                  <Image
-                    style={{ height: hp("4%"), width: hp("4%") }}
-                    source={require("../../assets/edit.png")}
-                  />
-                </Pressable>
-              )}
+              <Text
+                style={{
+                  ...commonStyles.text,
+                  color: "#fff",
+                  opacity: 0.5,
+                  fontFamily: globalStyles.fontStyle.regular,
+                }}
+              >
+                Schedule Event
+              </Text>
+              <Animated.Image
+                style={{
+                  ...commonStyles.image,
+                  transform: [{ rotate: rotateInterpolation }],
+                }}
+                source={require("../../assets/arrow-expand.png")}
+              />
             </View>
             <View
+              style={{ flexDirection: "row", alignItems: "center", gap: 10 }}
+            >
+              <Image
+                style={commonStyles.image}
+                source={
+                  isExpanded
+                    ? require("../../assets/clock.png")
+                    : require("../../assets/event.png")
+                }
+              />
+              <Text
+                style={{
+                  fontSize: globalStyles.fontSize.mediumDescription,
+                  color: "#fff",
+                  fontFamily: globalStyles.fontStyle.regular,
+                }}
+              >
+                {isExpanded ? `${datetime}` : event}
+              </Text>
+            </View>
+          </View>
+          {isExpanded && (
+            <View
               style={{
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                gap: 15,
-                paddingVertical: 10,
+                ...commonStyles.container,
+                backgroundColor: "white",
+                borderBottomLeftRadius: 20,
+                borderBottomRightRadius: 20,
               }}
             >
               <View
-                style={{ width: role === "admin" ? "60%" : "100%" }}
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                }}
               >
-                <Button
-                  text="VIEW"
-                  bgColor={globalStyles.colors.green}
-                  onPress={viewEvent}
-                  fnc={"press"}
-                />
-              </View>
-              {role === "admin" && (
-                <Button
-                  text="DELETE"
-                  bgColor="#e2e6f0"
-                  textColor="#9198bc"
-                  width={wp("25%")}
-                  onPress={() => setShowModal(true)}
-                />
-              )}
-              <Modal isVisible={showModal}>
-                <View
-                  style={{
-                    backgroundColor: "white",
-                    padding: 22,
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: 30,
-                  }}
-                >
-                  {showSpinner ? (
-                    <ActivityIndicator
-                      size="large"
-                      color={globalStyles.colors.green}
-                    />
-                  ) : (
-                    <Image source={require("./../../assets/warning.png")} />
-                  )}
+                <View>
                   <Text
                     style={{
+                      fontSize: globalStyles.fontSize.largeDescription,
                       fontFamily: globalStyles.fontStyle.bold,
-                      fontSize: globalStyles.fontSize.subHeader,
                     }}
                   >
-                    {showSpinner ? "Deleting Event" : "Delete Event"}
+                    {event}
                   </Text>
                   <Text
-                    style={{
-                      textAlign: "center",
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                    }}
+                    style={
+                      ([commonStyles.text],
+                      { fontFamily: globalStyles.fontStyle.regular })
+                    }
                   >
-                    Are you sure you want to delete this event? Proceeding will
-                    permanently erase all associated details. Confirm to avoid
-                    unintended data loss.
+                    {location}
                   </Text>
+                </View>
+                {role === "admin" && !isInReportsScreen && (
+                  <Pressable onPress={onEdit}>
+                    <Image
+                      style={{ height: hp("4%"), width: hp("4%") }}
+                      source={require("../../assets/edit.png")}
+                    />
+                  </Pressable>
+                )}
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  gap: 15,
+                  paddingVertical: 10,
+                }}
+              >
+                <View style={{ width: role === "admin" ? "60%" : "100%" }}>
+                  <Button
+                    text={isInReportsScreen ? "ATTENDEES" : "VIEW"}
+                    bgColor={globalStyles.colors.green}
+                    onPress={
+                      isInReportsScreen ? showParticipantsModal : viewEvent
+                    }
+                    fnc={"press"}
+                  />
+                </View>
+                {role === "admin" && (
+                  <Button
+                    text="DELETE"
+                    bgColor="#e2e6f0"
+                    textColor="#9198bc"
+                    width={wp("25%")}
+                    onPress={() => setShowModal(true)}
+                  />
+                )}
+                <Modal isVisible={showModal}>
                   <View
                     style={{
-                      flexDirection: "row",
-                      padding: 20,
-                      justifyContent: "space-between",
+                      backgroundColor: "white",
+                      padding: 22,
+                      justifyContent: "center",
                       alignItems: "center",
-                      width: "100%",
+                      borderRadius: 30,
                     }}
                   >
-                    <Button
-                      text="Cancel"
-                      onPress={() => setShowModal(false)}
-                      width={wp("45%")}
-                    />
-                    <Button
-                      text="Confirm"
-                      onPress={handleDelete}
-                      bgColor="#e2e6f0"
-                      textColor="#9198bc"
-                      width={wp("20%")}
-                    />
+                    {showSpinner ? (
+                      <ActivityIndicator
+                        size="large"
+                        color={globalStyles.colors.green}
+                      />
+                    ) : (
+                      <Image source={require("./../../assets/warning.png")} />
+                    )}
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.bold,
+                        fontSize: globalStyles.fontSize.subHeader,
+                      }}
+                    >
+                      {showSpinner ? "Deleting Event" : "Delete Event"}
+                    </Text>
+                    <Text
+                      style={{
+                        textAlign: "center",
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.description,
+                      }}
+                    >
+                      Are you sure you want to delete this event? Proceeding
+                      will permanently erase all associated details. Confirm to
+                      avoid unintended data loss.
+                    </Text>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        padding: 20,
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                        width: "100%",
+                      }}
+                    >
+                      <Button
+                        text="Cancel"
+                        onPress={() => setShowModal(false)}
+                        width={wp("45%")}
+                      />
+                      <Button
+                        text="Confirm"
+                        onPress={handleDelete}
+                        bgColor="#e2e6f0"
+                        textColor="#9198bc"
+                        width={wp("20%")}
+                      />
+                    </View>
                   </View>
-                </View>
-              </Modal>
+                </Modal>
+              </View>
             </View>
+          )}
+        </View>
+      </Pressable>
+      {/* Pariticipants */}
+      <Modal
+        isVisible={isParticipantsModalVisible}
+        onBackdropPress={hideParticipantsModal}
+      >
+        <View
+          style={{
+            backgroundColor: globalStyles.colors.green200,
+            padding: 20,
+            height: hp("75%"),
+            borderRadius: wp("4%"),
+          }}
+        >
+          <View style={{ height: hp("5%"), marginBottom: hp("1%") }}>
+            <Header
+              title={"Participants"}
+              icon={"back"}
+              onBack={hideParticipantsModal}
+            />
           </View>
-        )}
-      </View>
-    </Pressable>
+          <View
+            style={{
+              flexDirection: "row",
+              justifyContent: "space-between",
+              hheight: hp("5%"),
+            }}
+          >
+            <Button
+              text={"Present"}
+              width={wp("37%")}
+              bgColor={
+                activeButton === "Present"
+                  ? globalStyles.colors.darkGreen
+                  : "transparent"
+              }
+              textColor={activeButton === "Present" ? "white" : "black"}
+              onPress={() => setActiveButton("Present")}
+            />
+            <Button
+              text={"Absent"}
+              width={wp("37%")}
+              bgColor={
+                activeButton === "Absent"
+                  ? globalStyles.colors.darkGreen
+                  : "transparent"
+              }
+              textColor={activeButton === "Absent" ? "white" : "black"}
+              onPress={() => setActiveButton("Absent")}
+            />
+          </View>
+          <View style={{ height: hp("59%"), marginBottom: hp("1%") }}>
+            <ListView
+              data={participants}
+              renderItem={({ item }) => (
+                <ProfileCard
+                  fullname={item.fullname}
+                  id={item.id}
+                  verify={true}
+                  purpose={"view"}
+                />
+              )}
+            />
+          </View>
+        </View>
+      </Modal>
+    </>
   );
 }
