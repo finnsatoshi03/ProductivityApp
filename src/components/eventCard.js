@@ -13,11 +13,14 @@ import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
+import * as Print from "expo-print";
+import * as Sharing from "expo-sharing";
 import Button from "./button";
 import Modal from "react-native-modal";
 import Header from "./header";
 import ListView from "./listView";
 import ProfileCard from "./profileCard";
+import { useData } from "./../DataContext";
 
 const commonStyles = {
   container: {
@@ -171,6 +174,22 @@ export default function eventCard({
     setIsExpanded(!isExpanded);
   };
 
+  const { getReportData } = useData();
+  const reportData = getReportData();
+  console.log("Reports Data: ", reportData);
+
+  const handleExportReportData = async () => {
+    try {
+      const htmlContent = generateHTMLReport(reportData);
+
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
+
+      await Sharing.shareAsync(uri);
+    } catch (error) {
+      console.error("Error exporting report data:", error);
+    }
+  };
+
   return (
     <>
       <Pressable onPress={toggleExpand}>
@@ -279,6 +298,14 @@ export default function eventCard({
                     <Image
                       style={{ height: hp("4%"), width: hp("4%") }}
                       source={require("../../assets/edit.png")}
+                    />
+                  </Pressable>
+                )}
+                {isInReportsScreen && (
+                  <Pressable onPress={handleExportReportData}>
+                    <Image
+                      style={{ height: hp("4%"), width: hp("4%") }}
+                      source={require("../../assets/download.png")}
                     />
                   </Pressable>
                 )}
@@ -445,3 +472,29 @@ export default function eventCard({
     </>
   );
 }
+
+const generateHTMLReport = (reportData) => {
+  // Customize this based on your report data structure
+  const htmlContent = `
+    <html>
+      <head>
+        <style>
+          /* Add your custom styles here */
+          body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+          }
+          h1 {
+            color: #333;
+          }
+          /* Add more styles as needed */
+        </style>
+      </head>
+      <body>
+        <h1>Reports Data</h1>
+        <pre>${JSON.stringify(reportData, null, 2)}</pre>
+      </body>
+    </html>
+  `;
+  return htmlContent;
+};

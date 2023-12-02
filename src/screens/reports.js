@@ -199,6 +199,8 @@ export default function Reports({ navigation, route }) {
     }
   };
 
+  console.log("Selected Data Participants: ", selectedEvent?.participants);
+
   return (
     <>
       <View style={globalStyles.container}>
