@@ -474,25 +474,70 @@ export default function eventCard({
 }
 
 const generateHTMLReport = (reportData) => {
-  // Customize this based on your report data structure
+  let reportContent = "";
+  let lastReportNarrative = "";
+
+  reportData.forEach((report, index) => {
+    const date = new Date(report.datetime).toLocaleDateString();
+    const startTime = new Date(report.datetime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    const endTime = new Date(report.endTime).toLocaleTimeString([], {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+    reportContent += `
+      <p>Date: ${date}</p>
+      <p>Event: ${report.event}</p>
+      <p>Location: ${report.location}</p>
+      <p>Start Time: ${startTime}</p>
+      <p>End Time: ${endTime}</p>
+      <hr />
+    `;
+
+    if (index === reportData.length - 1) {
+      lastReportNarrative = report.narrative;
+    }
+  });
+
   const htmlContent = `
     <html>
       <head>
         <style>
-          /* Add your custom styles here */
           body {
-            font-family: Arial, sans-serif;
+            font-family: "Century Gothic", sans-serif;
             padding: 20px;
           }
           h1 {
             color: #333;
           }
-          /* Add more styles as needed */
+          .wrapper {
+            text-align: center;
+          }
+          .data-wrapper {
+            margin-top: 20px;
+            padding: 0 180px 0 180px ;
+            text-align: left;
+          }
+          .event-narrative {
+            margin-top: 20px;
+            padding: 0 100px 0 100px ;
+            text-align: left;
+          }
         </style>
       </head>
       <body>
-        <h1>Reports Data</h1>
-        <pre>${JSON.stringify(reportData, null, 2)}</pre>
+        <div class="wrapper">
+          <h1>Reports Data</h1>
+          <div class="data-wrapper">
+            ${reportContent}
+          </div>
+          <div class="event-narrative">
+            <p>Event Narrative: </p>
+            <p>${lastReportNarrative}</p>
+          </div>
+        </div>
       </body>
     </html>
   `;
