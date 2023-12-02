@@ -6,6 +6,8 @@ import {
   TouchableOpacity,
   Image,
   TextInput,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -26,12 +28,13 @@ export default function Reports({ navigation, route }) {
   const { eventData, setEventData } = useData();
   const { reportData, setReportData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  const deleteEvent = (eventTitleToDelete) => {
-    setEventData(
-      eventData.filter((event) => event.event !== eventTitleToDelete)
+  const deleteReport = (reportTitleToDelete) => {
+    setReportData(
+      reportData.filter((event) => event.event !== reportTitleToDelete)
     );
-    console.log(`Event ${eventTitleToDelete} has been deleted.`);
+    console.log(`Report ${reportTitleToDelete} has been deleted.`);
   };
 
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -61,34 +64,38 @@ export default function Reports({ navigation, route }) {
     { label: "November", value: "November" },
     { label: "December", value: "December" },
   ];
-  const eventTitles = eventData.map((event) => ({
-    label: event.event,
-    value: event.event,
-  }));
+  const eventTitles = eventData
+    .filter(
+      (event) => !reportData.some((report) => report.event === event.event)
+    )
+    .map((event) => ({
+      label: event.event,
+      value: event.event,
+    }));
   const calculateNumberOfWords = (str) => {
     if (!str) return 0;
     return str.split(" ").length;
   };
-  const numberOfLines = calculateNumberOfWords(selectedEventTitle);
-  console.log("Number of lines:", numberOfLines);
-  const dropdownHeight = numberOfLines >= 2 ? hp("10%") : hp("7%");
+  const numberOfWords = calculateNumberOfWords(selectedEventTitle);
+  // console.log("Number of Words:", numberOfWords);
+  const dropdownHeight = numberOfWords >= 2 ? hp("10%") : hp("7%");
 
   const handleMonthChange = (selectedMonth) => {
-    console.log("Selected month:", selectedMonth);
+    // console.log("Selected month:", selectedMonth);
     setSelectedMonth(selectedMonth);
     setDropdownKey((prevKey) => prevKey + 1);
   };
 
   const handleEventTitleChange = (selectedEventTitle) => {
-    console.log("Selected event:", selectedEventTitle);
+    // console.log("Selected event:", selectedEventTitle);
     setSelectedEventTitle(selectedEventTitle);
     setDropdownKey((prevKey) => prevKey + 1);
 
     const selectedEvent = eventData.find(
       (event) => event.event === selectedEventTitle
     );
-    console.log("Selected event data:", selectedEvent);
-    console.log("Selected event location:", selectedEvent.location);
+    // console.log("Selected event data:", selectedEvent);
+    // console.log("Selected event location:", selectedEvent.location);
     setSelectedEvent(selectedEvent);
   };
 
@@ -109,48 +116,69 @@ export default function Reports({ navigation, route }) {
     // }));
   };
 
-  const handleCreateReport = () => {
-    // Perform validation checks
-    // if (
-    //   !selectedEventTitle ||
-    //   !selectedEndTime ||
-    //   new Date(selectedEndTime) <= new Date(selectedEvent.datetime)
-    // ) {
-    //   // Display an error message or handle validation failure
-    //   return;
-    // }
-    console.log("Selected event:", selectedEvent);
-    console.log("End Time:", selectedEndTime);
-
-    const newReport = {
-      event: selectedEventTitle,
-      location: selectedEvent.location,
-      datetime: selectedEvent.datetime,
-      endTime: selectedEndTime,
-      narrative: text,
-    };
-    setReportData((prevData) => [...prevData, newReport]);
-    console.log("New report:", newReport);
-    console.log("Report data:", reportData);
-
-    setModalVisible(false);
-    setSelectedEventTitle(null);
-    setSelectedEvent(null);
-    setSelectedEndTime(null);
-    setText("");
+  const showAlert = (message) => {
+    Alert.alert(undefined, message, [
+      { text: "OK", onPress: () => setIsLoading(false) },
+    ]);
   };
 
-  console.log("Event data:", eventData);
-  eventData.map((event) => {
-    console.log(`Event Name: ${event.event}`);
-    console.log(`Event ID: ${event.id}`);
-    const eventDate = new Date(event.datetime);
-    console.log(`Event Date: ${eventDate.toLocaleDateString()}`);
-    console.log(`Event Time: ${eventDate.toLocaleTimeString()}`);
-    console.log(`Event Description: ${event.description}`);
-    console.log(`Event Location: ${event.location}`);
-    console.log(`Event Reminder: ${event.reminder}`);
-  });
+  const handleCreateReport = async () => {
+    try {
+      setIsLoading(true);
+
+      if (!selectedEvent) {
+        showAlert("Event is required");
+        return;
+      } else if (
+        new Date(selectedEndTime).toLocaleTimeString("en-US") <=
+        new Date(selectedEvent.datetime).toLocaleTimeString("en-US")
+      ) {
+        showAlert("Invalid start or end time");
+        setIsLoading(false);
+        return;
+      } else if (!selectedEventTitle || !selectedEndTime) {
+        showAlert("Please fill out all fields");
+        return;
+      }
+
+      console.log("Selected event:", selectedEvent);
+      console.log("End Time:", selectedEndTime);
+
+      const newReport = {
+        event: selectedEventTitle,
+        location: selectedEvent.location,
+        datetime: selectedEvent.datetime,
+        endTime: selectedEndTime,
+        narrative: text,
+      };
+      setReportData((prevData) => [...prevData, newReport]);
+      console.log("New report:", newReport);
+      console.log("Report data:", reportData);
+
+      setModalVisible(false);
+      setSelectedEventTitle(null);
+      setSelectedEvent(null);
+      setSelectedEndTime(null);
+      setText("");
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error("Error creating report:", error);
+      setIsLoading(false);
+    }
+  };
+
+  // console.log("Event data:", eventData);
+  // eventData.map((event) => {
+  //   console.log(`Event Name: ${event.event}`);
+  //   console.log(`Event ID: ${event.id}`);
+  //   const eventDate = new Date(event.datetime);
+  //   console.log(`Event Date: ${eventDate.toLocaleDateString()}`);
+  //   console.log(`Event Time: ${eventDate.toLocaleTimeString()}`);
+  //   console.log(`Event Description: ${event.description}`);
+  //   console.log(`Event Location: ${event.location}`);
+  //   console.log(`Event Reminder: ${event.reminder}`);
+  // });
 
   return (
     <>
@@ -309,7 +337,7 @@ export default function Reports({ navigation, route }) {
                     navigation={navigation}
                     isInReportsScreen={true} // to hide the edit button
                     {...item}
-                    // onDelete={() => deleteEvent(item.reportTitle)}
+                    onDelete={() => deleteReport(item.event)}
                     fullname={fullname}
                     user={user}
                     user_id={user_id}
@@ -374,7 +402,7 @@ export default function Reports({ navigation, route }) {
               placeholderTextStyle={{
                 fontFamily: globalStyles.fontStyle.semiBold,
               }}
-              lineHeight={numberOfLines > 1 ? true : undefined}
+              lineHeight={numberOfWords > 1 ? true : undefined}
               fontSize={hp("5%")}
               height={dropdownHeight}
               key={dropdownKey}
@@ -384,7 +412,7 @@ export default function Reports({ navigation, route }) {
               maxWidth={true}
               data={eventTitles}
               containerStyle={{
-                backgroundColor: "#f3fadc",
+                backgroundColor: globalStyles.colors.lightGreen,
                 borderBottomRightRadius: 20,
                 borderBottomLeftRadius: 20,
               }}
@@ -563,7 +591,17 @@ export default function Reports({ navigation, route }) {
               {text.length}/{maxChars}
             </Text>
           </View>
-          <Button text={"Create Report"} onPress={() => handleCreateReport()} />
+          {isLoading ? (
+            <ActivityIndicator
+              size="large"
+              color={globalStyles.colors.darkGreen}
+            />
+          ) : (
+            <Button
+              text={"Create Report"}
+              onPress={() => handleCreateReport()}
+            />
+          )}
 
           {/* <Button title="Hide" onPress={() => setModalVisible(false)} /> */}
         </View>
