@@ -6,6 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
+  Pressable
 } from "react-native";
 import fetchSquareImage from "./imagefetchAPI";
 import {
@@ -111,6 +112,31 @@ const ViewEvent = ({ route, navigation }) => {
                 </View>
               </View>
             )}
+              <View style={{ position: 'absolute', top: 10, left: 10 }}>
+                <View
+                  style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    borderRadius: 15,
+                    padding: 5,
+                  }}
+                >
+                  <Pressable
+                    onPress={() => {
+                      navigation.goBack();
+                    }}
+                  >
+                    <Image
+                      style={{
+                        height: 40,
+                        width: 40,
+                        // Add other styles as needed
+                      }}
+                      source={require('../../assets/back.png')}
+                      // Replace 'back.png' with your actual return button icon
+                    />
+                  </Pressable>
+                </View>
+              </View>
             <LinearGradient
               colors={["rgba(247,249,248,0)", "rgba(125,156,101,1)"]}
               start={{ x: 0.5, y: 0 }}
