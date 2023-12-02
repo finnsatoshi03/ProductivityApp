@@ -24,12 +24,16 @@ import Navbar from "./../Layout/navbar";
 import DropdownComponent from "./../components/dropdown";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
+import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+
+import axios from "axios";
+import '../../global'
 
 export default function Reports({ navigation, route }) {
   const { fullname, user, user_id, role, participants } = route.params;
 
   const { eventData, setEventData } = useData();
-  const { reportData, setReportData } = useData();
+  const { reportData, setReportData } = useData({});
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,7 +43,7 @@ export default function Reports({ navigation, route }) {
     );
     console.log(`Report ${reportTitleToDelete} has been deleted.`);
   };
-
+  
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedEventTitle, setSelectedEventTitle] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -125,6 +129,7 @@ export default function Reports({ navigation, route }) {
 
   const handleEventTitleChange = (selectedEventTitle) => {
     // console.log("Selected event:", selectedEventTitle);
+    // console.log("Selected event:", selectedEventTitle);
     setSelectedEventTitle(selectedEventTitle);
     setDropdownKey((prevKey) => prevKey + 1);
 
@@ -142,7 +147,7 @@ export default function Reports({ navigation, route }) {
   };
 
   const handleConfirmEndTime = (time) => {
-    console.log("Selected end time:", time);
+    // console.log("Selected end time:", time);
     setSelectedEndTime(time);
     setEndTimePickerVisible(false);
   };
@@ -152,55 +157,65 @@ export default function Reports({ navigation, route }) {
       { text: "OK", onPress: () => setIsLoading(false) },
     ]);
   };
+  
+  useEffect(() => {
+    const getReport = async() => {
 
-  const handleCreateReport = async () => {
+      const response = await axios.get(`${global.baseurl}:4000/getReports`)
+
+      if (response.status === 200) {
+        const {data} = response
+        const reports = data.reports
+
+        setReportData(reports)
+        console.log(reportData);
+      } else console.log('failed');
+    }
+
+    getReport()
+  }, [])
+  const handleCreateReport = async() => {
+    // Perform validation checks
+    // if (
+    //   !selectedEventTitle ||
+    //   !selectedEndTime ||
+    //   new Date(selectedEndTime) <= new Date(selectedEvent.datetime)
+    // ) {
+    //   // Display an error message or handle validation failure
+    //   return;
+    // }
     try {
-      setIsLoading(true);
-
-      if (!selectedEvent) {
-        showAlert("Event is required");
-        return;
-      } else if (
-        new Date(selectedEndTime).toLocaleTimeString("en-US") <=
-        new Date(selectedEvent.datetime).toLocaleTimeString("en-US")
-      ) {
-        showAlert("Invalid start or end time");
-        setIsLoading(false);
-        return;
-      } else if (!selectedEventTitle || !selectedEndTime) {
-        showAlert("Please fill out all fields");
-        return;
-      }
-
-      console.log("Selected event:", selectedEvent);
-      console.log("End Time:", selectedEndTime);
 
       const newReport = {
-        event: selectedEventTitle,
-        location: selectedEvent.location,
-        datetime: selectedEvent.datetime,
+        event_id: selectedEvent.id,      
         endTime: selectedEndTime,
         narrative: text,
       };
+      
+      const response = await axios.post(`${global.baseurl}:4000/createReport`,newReport)
+  
+      if (response.status === 200) {
+        console.log('tr');
+      } else {
+        console.log('false');
+      }
+  
+      
       setReportData((prevData) => [...prevData, newReport]);
-      console.log("New report:", newReport);
-      console.log("Report data:", reportData);
-
+      
+  
       setModalVisible(false);
       setSelectedEventTitle(null);
       setSelectedEvent(null);
       setSelectedEndTime(null);
       setText("");
 
-      setIsLoading(false);
     } catch (error) {
-      console.error("Error creating report:", error);
-      setIsLoading(false);
+      console.log(error);
     }
+    
   };
-
-  console.log("Selected Data Participants: ", selectedEvent?.participants);
-
+  
   return (
     <>
       <View style={globalStyles.container}>

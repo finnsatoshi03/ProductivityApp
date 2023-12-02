@@ -10,31 +10,74 @@ import Button from "./button";
 import ReadMore from "react-native-read-more-text";
 import moment from "moment";
 
-// const images = [
-//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-// ];
+import axios from "axios";
+import "../../global";
+import { format } from "date-fns-tz";
+
+const images = [
+  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+];
 
 export default function PostCards({
   avatar,
-  name,
+  fullname,
   datetime,
-  description,
-  images,
+  description,  
+  user_id,
+  id
 }) {
   const [isPresent, setIsPresent] = useState(false);
   const [isAbsent, setIsAbsent] = useState(false);
-
-  const handlePresentPress = () => {
+  
+  const handlePresentPress = async () => {
     setIsPresent(!isPresent);
     setIsAbsent(false);
-  };
 
-  const handleAbsentPress = () => {
+    const data = {
+      user_id: user_id,
+      event_id: id,
+      attend: true,
+    }
+    
+    try {
+      const response = await axios.patch(`${global.baseurl}:4000/updateAttendee`, data)
+
+      if (response.status === 200) {
+        console.log('success');
+      } else {
+        console.log('sad');
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    
+  };
+  const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").format("MM/DD/YYYY HH:mm:ss");
+  
+  const handleAbsentPress = async () => {
     setIsAbsent(!isAbsent);
     setIsPresent(false);
+
+    const data = {
+      user_id: user_id,
+      event_id: id,
+      attend: false,
+    }
+    
+    try {
+      const response = await axios.patch(`${global.baseurl}:4000/updateAttendee`, data)
+
+      if (response.status === 200) {
+        console.log('success');
+      } else {
+        console.log('sad');
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -54,7 +97,7 @@ export default function PostCards({
         >
           <Avatar
             avatar={avatar}
-            firstName={name}
+            firstName={fullname}
             // style={{ height: hp("7%"), width: hp("7%") }}
             customHeight={hp("3.5%")}
             customWidth={hp("3.5%")}
@@ -67,7 +110,7 @@ export default function PostCards({
                 fontSize: globalStyles.fontSize.mediumDescription,
               }}
             >
-              {name || "Name of the Poster"}
+              {fullname || "Name of the Poster"}
             </Text>
             <Text
               style={{
@@ -75,10 +118,10 @@ export default function PostCards({
                 fontSize: globalStyles.fontSize.description,
               }}
             >
-              {moment(datetime, "MM/DD/YYYY HH:mm:ss").fromNow() ||
+              {formattedDate ||
                 "1 hour ago"}
             </Text>
-          </View>
+          </View> 
         </View>
         <View
           style={{

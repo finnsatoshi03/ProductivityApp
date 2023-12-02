@@ -22,50 +22,58 @@ import Avatar from "./../components/avatar";
 import Modal from "react-native-modal";
 import Button from "./../components/button";
 
-export default function Attendees({ role, userName, userTag }) {
-  const posts = [
-    {
-      name: "John Doe",
-      datetime: "11/23/2023",
-      images: [
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-      ],
-      description: "Angas netong si John Doe",
-    },
-    {
-      name: "Petter Griffin",
-      datetime: "12/2/2023 11:00:00",
-      images: [
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-      ],
-    },
-    {
-      name: "Joe Mama",
-      datetime: "12/2/2023 14:00:00",
-      images: [
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-      ],
-    },
-    {
-      name: "Joe Tita",
-      datetime: "11/2/2023 01:00:00",
-      images: [
-        "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-      ],
-    },
-  ];
+import axios from "axios";
+import "../../global";
 
-  posts.sort(
-    (a, b) =>
-      moment(b.datetime, "MM/DD/YYYY HH:mm:ss") -
-      moment(a.datetime, "MM/DD/YYYY HH:mm:ss")
-  );
+export default function Attendees({ role, userName, userTag, event_id, user_id }) {
+
+  const [post, setPost] = useState({
+    fullname:"",
+    datetime:"",
+    images: [
+      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+    ],
+    description:"",
+    id:"",
+    user_id:"",
+  })
+
+
+  useEffect(() => {
+    
+    const getAttendees = async() => {
+
+      const response = await axios.get(`${global.baseurl}:4000/getAttendees`, {
+        params: {
+          event_id: event_id,
+        }
+      })
+
+      if (response.status === 200) {
+        const {data} = response
+        const attendees = data.users
+
+        console.log(attendees);
+        setPost(attendees)
+      }
+    };
+    if (role === 'admin') {
+      getAttendees()
+    }
+  
+  }, [])
+
+  
+  if (post && Array.isArray(post)) {
+    post.sort(
+      (a, b) =>
+        moment(b.datetime, "MM/DD/YYYY HH:mm:ss") -
+        moment(a.datetime, "MM/DD/YYYY HH:mm:ss")
+    );
+  }
 
   const [text, setText] = useState("");
   const maxChars = 200;
@@ -89,13 +97,31 @@ export default function Attendees({ role, userName, userTag }) {
     }
   };
 
-  const submitPost = () => {
+  const submitPost = async() => {
     if (text.trim() === "" || images.length === 0) {
       alert("Please add some text and at least one image before posting.");
       return;
     }
 
-    // dito mo na save sa database
+    try {
+      console.log('yo');
+      const data = {
+        user_id: user_id,
+        events_id: event_id,
+        comments: text,    
+      }
+      const response = await axios.post(`${global.baseurl}:4000/createAttendance`, data)
+
+      if (response.status === 200) {
+        console.log('happy');
+      } else {
+        console.log('sad');
+      }
+
+    } catch (error) {
+      console.log(error);
+    }
+  
   };
 
   return (
@@ -125,7 +151,7 @@ export default function Attendees({ role, userName, userTag }) {
         {role === "admin" ? (
           // Display for admin
           <ListView
-            data={posts}
+            data={post}
             renderItem={({ item }) => <PostCards {...item} />}
           />
         ) : (

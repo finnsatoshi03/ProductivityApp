@@ -5,15 +5,17 @@ import { widthPercentageToDP as wp } from "react-native-responsive-screen";
 import Button from "./button";
 
 export default function NotificationCard({
-  name,
+  notification_id,
+  fullname,
   message,
   created_at,
   eventDate,
   eventLocation,
   eventTime,
   eventTitle,
-  status,
+  invitation,
   reason,
+  read,
   adminNotif,
   onPressAccept,
   onPressReject,
@@ -27,7 +29,7 @@ export default function NotificationCard({
     hour: "numeric",
     minute: "numeric",
   }).format(dateObject);
-
+  
   const eventTitles = [
     "Get ready for an electrifying event!",
     "Don't miss this exciting event!",
@@ -39,7 +41,7 @@ export default function NotificationCard({
   const [header] = useState(
     eventTitles[Math.floor(Math.random() * eventTitles.length)]
   );
-
+  
   return (
     <View
       style={{
@@ -70,42 +72,55 @@ export default function NotificationCard({
           }}
         >
           {eventDate && eventLocation && eventTime && eventTitle ? (
-            <>
-              <View style={{ marginBottom: 5 }}>
+            !read ? (
+              <>
+                <View style={{ marginBottom: 5 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.bold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                    }}
+                  >
+                    🎉 {header} 🎉
+                  </Text>
+                </View>
                 <Text
                   style={{
                     fontFamily: globalStyles.fontStyle.bold,
-                    fontSize: globalStyles.fontSize.mediumDescription,
+                    fontSize: globalStyles.fontSize.description,
+                    flexShrink: 1,
                   }}
                 >
-                  🎉 {header} 🎉
+                  <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
+                    You're invited to the
+                  </Text>{" "}
+                  {eventTitle || "Event Title"}{" "}
+                  <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
+                    event on{" "}
+                  </Text>
+                  {eventDate || "Month Day, Year"}
+                  <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
+                    , at{" "}
+                  </Text>
+                  {eventLocation || "Location"}
+                  
                 </Text>
-              </View>
-              <Text
-                style={{
-                  fontFamily: globalStyles.fontStyle.bold,
-                  fontSize: globalStyles.fontSize.description,
-                  flexShrink: 1,
-                }}
-              >
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  You're invited to the
-                </Text>{" "}
-                {eventTitle || "Event Title"}{" "}
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  event on{" "}
-                </Text>
-                {eventDate || "Month Day, Year"}
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  , at{" "}
-                </Text>
-                {eventLocation || "Location"}
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  , starting at{" "}
-                </Text>
-                {eventTime || "TI:ME AM" + "."}
-              </Text>
-            </>
+              </>
+            ) : (
+              <>
+                <View style={{ marginBottom: 5 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.bold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                    }}
+                  >
+                    🎉 {message} 🎉
+                  </Text>
+                </View>
+              </>
+            )
+            
           ) : adminNotif ? (
             <>
               <Text
@@ -116,29 +131,29 @@ export default function NotificationCard({
                   marginBottom: 5,
                 }}
               >
-                {status === "accepted" ? (
+                {invitation === true ? (
                   <>
-                    {name} is excited to{" "}
+                    {fullname} is excited to{" "}
                     <Text style={{ color: globalStyles.colors.green }}>
                       accept
                     </Text>{" "}
-                    your invitation for {eventTitle}! 🎉
+                    your invitation for {eventTitle} on {formattedDate} at {eventLocation}! 🎉
                   </>
                 ) : (
                   <>
                     <Text style={{ color: "#df5f4b" }}>Unfortunately</Text>,{" "}
-                    {name} won't be able to make it to {eventTitle} this time.
+                    {fullname} won't be able to make it to {eventTitle} this time.
                   </>
                 )}
               </Text>
-              {status !== "accepted" && (
+              {invitation !== true && (
                 <Text
                   style={{
                     fontFamily: globalStyles.fontStyle.regular,
                     fontSize: globalStyles.fontSize.description,
                   }}
                 >
-                  {name + ": " + reason}
+                  {fullname + ": " + reason}
                 </Text>
               )}
             </>
@@ -154,7 +169,7 @@ export default function NotificationCard({
             </Text>
           )}
         </View>
-        {eventDate && eventLocation && eventTime && eventTitle && (
+        {eventDate && eventLocation && eventTime && eventTitle && !read ? (
           <View style={{ gap: 10, padding: 5 }}>
             <Button
               text={"Accept"}
@@ -171,7 +186,7 @@ export default function NotificationCard({
               onPress={onPressReject}
             />
           </View>
-        )}
+        ) : ( <></> )}
       </View>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
