@@ -144,7 +144,7 @@ export default function EventsScreen({ navigation, route }) {
       id: selectedEvent === "" ? null : selectedEvent,
     };
 
-    console.log("Date: ", newEvent.datetime);
+    // console.log("Date: ", newEvent.datetime);
     // console.log(new Date(newEvent.datetime).toLocaleString());
 
     try {
@@ -156,14 +156,16 @@ export default function EventsScreen({ navigation, route }) {
       if (response.status === 200) {
         const { data } = response;
         const user_ids = participants;
-
         const event_id = data.id;
         const userEvent = {
           user_ids,
           event_id,
+          event_title: eventTitle,
+          datetime: formattedDate,
+          location: location,
         };
         newEvent.id = event_id;
-
+        
         const request =
           btnFnc === "create"
             ? await axios.post(

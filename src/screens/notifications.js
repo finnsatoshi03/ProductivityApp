@@ -22,95 +22,200 @@ import Button from "./../components/button";
 import axios from "axios";
 import "../../global";
 
+// Helper function to extract event details from the message
+const extractEventDetails = (message) => {
+  const lines = message.split('\n');
+                              
+  return {
+    event: lines[1]?.trim().replace('Event: ', ''),
+    location: lines[3]?.trim().replace('Location: ', ''),
+    date: lines[2]?.trim().replace('Date: ', ''),   
+  };
+};
+
 export default function Notifications({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
 
-  const [data, setData] = useState([
+  const [data, setData] = useState(
     {
-      // name: "",
-      // message: "",
-      // date: "",
-      // created_at: "",
-      // read: "",
-      id: 1,
-      // message: "You're Invited",
-      date: "Nov 23, 2023", // sample event for event notification
-      created_at: "2023-11-23T10:30:00Z",
-      eventTitle: "MONEY",
-      eventLocation: "Location",
-      eventDate: "Date",
-      eventTime: "Time",
+      id: "",
+      user_id: "",
+      event_id: "",            
+      created_at: "",
+      invitation:"",
+      message:"",
+      read: "",
+
+      eventTitle: "",
+      eventLocation: "",
+      eventDate: "",
+      eventTime: "TIME",
+      
     },
-    {
-      id: 2, // sample event for normal notification
-      message: "MONEY MONEY",
-      date: "Nov 23, 2023",
-      created_at: "2023-11-23T10:30:00Z",
-    },
-    {
-      id: 3, // sample event for admin notification
-      adminNotif: true,
-      eventTitle: "Admin Notification",
-      name: "User1",
-      reason: "Nag tatae",
-      date: "Nov 23, 2023",
-      created_at: "2023-11-23T10:30:00Z",
-    },
-    {
-      id: 3, // sample event for admin notification
-      adminNotif: true,
-      eventTitle: "Admin Notification",
-      status: "accepted",
-      name: "User1",
-      reason: "Nag tatae",
-      date: "Nov 23, 2023",
-      created_at: "2023-11-23T10:30:00Z",
-    },
-  ]);
+    // {
+    //   id: 2, // sample event for normal notification
+    //   message: "MONEY MONEY",
+    //   date: "Nov 23, 2023",
+    //   created_at: "2023-11-23T10:30:00Z",
+    // },
+    // {
+    //   id: 3, // sample event for admin notification
+    //   adminNotif: true,
+    //   eventTitle: "Admin Notification",
+    //   name: "User1",
+    //   reason: "Nag tatae",
+    //   date: "Nov 23, 2023",
+    //   created_at: "2023-11-23T10:30:00Z",
+    // },
+    // {
+    //   id: 3, // sample event for admin notification
+    //   adminNotif: true,
+    //   eventTitle: "Admin Notification",
+    //   status: "accepted",
+    //   name: "User1",
+    //   reason: "Nag tatae",
+    //   date: "Nov 23, 2023",
+    //   created_at: "2023-11-23T10:30:00Z",
+    // },
+  );
 
-  // useEffect(() => {
-  //   const getNotifications = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       const response = await axios.get(
-  //         `${global.baseurl}:4000/getNotifications`,
-  //         {
-  //           params: {
-  //             user_id: user_id,
-  //           },
-  //         }
-  //       );
+  useEffect(() => {
+    const getNotifications = async () => {
+      try {
+        setIsLoading(true);
+        const response = role === 'user' ? 
+        await axios.get(`${global.baseurl}:4000/getNotifications`,
+          {
+            params: {
+              user_id: user_id,
+            },
+          }
+        ) : await axios.get(`${global.baseurl}:4000/getAdminNotification`,
+        {
+          params: {
+            user_id: user_id,
+          },
+        });
 
-  //       if (response.status === 200) {
-  //         const { data } = response;
-  //         const notification = data.notifications;
+        if (response.status === 200) {
+          const { data } = response;
+          const notification = data.notifications;
+          console.log(notification);
 
-  //         setData(notification);
+          if (!notification.read) {
+             
+            const formattedNotifications = notification.map((notification) => {
+              const eventDetails = extractEventDetails(notification.message);
+                return {
+                  ...notification,
+                  eventTitle: eventDetails.event,
+                  eventLocation: eventDetails.location,
+                  eventDate: eventDetails.date,
+                  eventTime: "TIME",
+                };
+              });
+            
+            console.log(formattedNotifications);
+            setData(formattedNotifications);
+            
+          }
 
-  //         console.log("sucess");
-  //         setIsLoading(false);
-  //       } else console.log("failed");
-  //     } catch (err) {
-  //       console.log(err);
-  //       setIsLoading(false);
-  //     }
-  //   };
-  //   getNotifications();
-  // }, []);
+         
+          
+          
+          console.log("sucess");
+          setIsLoading(false);
+        } else console.log("failed");
+      } catch (err) {
+        console.log(err);
+        setIsLoading(false);
+      }
 
+      
+    };
+    getNotifications();
+  }, []);
+
+  
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEventTitle, setSelectedEventTitle] = useState(null);
   const [buttonPressed, setButtonPressed] = useState(null);
   const [notificationsToDelete, setNotificationsToDelete] = useState([]);
+  const [comment, setComment] = useState();
+  const [rejectData, setRejectData] = useState({})
 
-  const showModal = (eventTitle, buttonType) => {
-    setSelectedEventTitle(eventTitle);
+  const showModal = async (notification, buttonType) => {
+    setSelectedEventTitle(notification.eventTitle);
+
+    console.log(notification);
     setButtonPressed(buttonType);
+    try {
+      const data = {
+        user_id: notification.user_id,
+        event_id: notification.event_id,
+        invitation: buttonType === 'accept' ? true : false,
+        comment: buttonType === 'accept' ? "" : "false",
+      }      
+      if (buttonType === 'accept') {
+        // const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
+
+        // if (response.status === 200) {
+        //   console.log('success');
+        // }else {
+        //   console.log('something went wrong')
+        // }
+      }
+      
+    } catch (error) {
+      console.log(error);
+    }
+         
     setModalVisible(true);
   };
-  const hideModal = () => setModalVisible(false);
+
+  const rejectModal = async (notification, buttonType) => {
+ 
+    const data = {
+      user_id: notification.user_id,
+      event_id: notification.event_id,
+      invitation: buttonType === 'accept' ? true : false,      
+    }      
+    setRejectData(data)      
+ 
+    setModalVisible(true);
+    console.log(comment);
+  }
+  const sendReject = async() => {
+    try {
+          
+        const data = {
+          user_id: rejectData.user_id,
+          event_id: rejectData.event_id,
+          invitation: rejectData.invitation,  
+          comment: comment
+        }
+        console.log(data);
+        const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
+
+        if (response.status === 200) {
+          console.log('success');
+          setComment('');
+        }else {
+          console.log('something went wrong')
+        }
+        
+    } catch (error) {
+      console.log(error);
+    }
+    console.log('yoe');
+    setModalVisible(false)
+  }
+  
+  const hideModal = () => {      
+    setModalVisible(false)
+  };
 
   const handleDeleteNotification = (notificationId) => {
     setNotificationsToDelete((prev) => [...prev, notificationId]);
@@ -185,8 +290,8 @@ export default function Notifications({ navigation, route }) {
                   renderItem={({ item }) => (
                     <NotificationCard
                       {...item}
-                      onPressAccept={() => showModal(item.eventTitle, "accept")}
-                      onPressReject={() => showModal(item.eventTitle, "reject")}
+                      onPressAccept={() => showModal(item, "accept")}
+                      onPressReject={() => rejectModal(item, "reject")}
                       onPressTrash={() => showModal(null, "trash")}
                     />
                   )}
@@ -312,8 +417,9 @@ export default function Notifications({ navigation, route }) {
                 }}
                 placeholder="Please tell us why you rejected"
                 multiline={true}
+                onChange={(e) => setComment(e.nativeEvent.text)}
               />
-              <Button text="Send" onPress={hideModal} width={wp("20%")} />
+              <Button text="Send" onPress={sendReject} width={wp("20%")} />
             </>
           )}
         </View>

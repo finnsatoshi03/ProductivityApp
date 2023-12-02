@@ -30,7 +30,7 @@ import { format } from 'date-fns-tz';
 
 export default function Calendar({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
-
+  
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
   const [loading, setLoading] = useState(true);
@@ -38,19 +38,25 @@ export default function Calendar({ navigation, route }) {
   const [selectedDay, setSelectedDay] = useState(moment().format('YYYY-MM-DD'));
 
   const deleteEvent = (eventTitleToDelete) => {
-    setEventData(
-      eventData.filter((event) => event.event !== eventTitleToDelete)
-    );
+    if (eventData.length != 0) {
+      setEventData(
+        eventData.filter((event) => event.event !== eventTitleToDelete)
+      );
+    }
     console.log(`Event ${eventTitleToDelete} has been deleted.`);
   };
 
   const handleDayPress = (selectedDate) => {
     setSelectedDay(selectedDate);
     const localSelectedDate = format(new Date(selectedDate), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
-    const filtered = eventData.filter(
-      (event) => format(new Date(event.datetime), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' }) === localSelectedDate
-    );
-    setFilteredEvents(filtered);
+    if (eventData.length != 0) {
+      const filtered = eventData.filter(
+        (event) => format(new Date(event.datetime), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' }) === localSelectedDate
+      );
+      setFilteredEvents(filtered);
+    }
+   
+    
   };
 
   const formatDate = (date) => {
@@ -72,17 +78,7 @@ export default function Calendar({ navigation, route }) {
   };
 
   useEffect(() => {
-    // This useEffect will trigger whenever selectedDay changes
-    if (selectedDay !== "") {
-      const localSelectedDate = format(new Date(selectedDay), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
-      const filtered = eventData.filter(
-        (event) => format(new Date(event.datetime), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' }) === localSelectedDate
-      );
-      setFilteredEvents(filtered);
-    }
-  }, [selectedDay, eventData]);
-
-  useEffect(() => {
+    
     const fetchEventsData = async () => {
       try {
         setLoading(true);
@@ -94,9 +90,11 @@ export default function Calendar({ navigation, route }) {
                   user_id: user_id,
                 },
               });
+             
         if (response.status === 200) {
           const { data } = response;
           const events = data.events;
+          
           setEventData(events);
         }
       } catch (error) {
@@ -108,6 +106,19 @@ export default function Calendar({ navigation, route }) {
 
     fetchEventsData();
   }, []);
+
+  
+  useEffect(() => {
+    if (selectedDay !== "" && Array.isArray(eventData)) {
+      const localSelectedDate = format(new Date(selectedDay), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
+      const filtered = eventData.filter(
+        (event) => format(new Date(event.datetime), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' }) === localSelectedDate
+      );
+      setFilteredEvents(filtered);
+    }
+  }, [selectedDay, eventData]);
+
+  
 
   return (
     <>

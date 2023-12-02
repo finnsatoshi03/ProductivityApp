@@ -14,6 +14,7 @@ export default function NotificationCard({
   eventTitle,
   status,
   reason,
+  read,
   adminNotif,
   onPressAccept,
   onPressReject,
@@ -70,42 +71,55 @@ export default function NotificationCard({
           }}
         >
           {eventDate && eventLocation && eventTime && eventTitle ? (
-            <>
-              <View style={{ marginBottom: 5 }}>
+            !read ? (
+              <>
+                <View style={{ marginBottom: 5 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.bold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                    }}
+                  >
+                    🎉 {header} 🎉
+                  </Text>
+                </View>
                 <Text
                   style={{
                     fontFamily: globalStyles.fontStyle.bold,
-                    fontSize: globalStyles.fontSize.mediumDescription,
+                    fontSize: globalStyles.fontSize.description,
+                    flexShrink: 1,
                   }}
                 >
-                  🎉 {header} 🎉
+                  <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
+                    You're invited to the
+                  </Text>{" "}
+                  {eventTitle || "Event Title"}{" "}
+                  <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
+                    event on{" "}
+                  </Text>
+                  {eventDate || "Month Day, Year"}
+                  <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
+                    , at{" "}
+                  </Text>
+                  {eventLocation || "Location"}
+                  
                 </Text>
-              </View>
-              <Text
-                style={{
-                  fontFamily: globalStyles.fontStyle.bold,
-                  fontSize: globalStyles.fontSize.description,
-                  flexShrink: 1,
-                }}
-              >
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  You're invited to the
-                </Text>{" "}
-                {eventTitle || "Event Title"}{" "}
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  event on{" "}
-                </Text>
-                {eventDate || "Month Day, Year"}
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  , at{" "}
-                </Text>
-                {eventLocation || "Location"}
-                <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
-                  , starting at{" "}
-                </Text>
-                {eventTime || "TI:ME AM" + "."}
-              </Text>
-            </>
+              </>
+            ) : (
+              <>
+                <View style={{ marginBottom: 5 }}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.bold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                    }}
+                  >
+                    🎉 {message} 🎉
+                  </Text>
+                </View>
+              </>
+            )
+            
           ) : adminNotif ? (
             <>
               <Text
@@ -154,7 +168,7 @@ export default function NotificationCard({
             </Text>
           )}
         </View>
-        {eventDate && eventLocation && eventTime && eventTitle && (
+        {eventDate && eventLocation && eventTime && eventTitle && !read ? (
           <View style={{ gap: 10, padding: 5 }}>
             <Button
               text={"Accept"}
@@ -171,7 +185,7 @@ export default function NotificationCard({
               onPress={onPressReject}
             />
           </View>
-        )}
+        ) : ( <></> )}
       </View>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
