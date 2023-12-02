@@ -15,6 +15,7 @@ export default function Button({
   transparent,
   fontSize,
   flexStart,
+  borderRadius,
   iconSource,
   padding,
   onPress,
@@ -23,13 +24,13 @@ export default function Button({
   fullname,
   user,
   user_id,
-  role
+  role,
 }) {
   return (
     <View
       style={{
         backgroundColor: transparent ? "transparent" : bgColor || "#32620e",
-        borderRadius: 20,
+        borderRadius: borderRadius ? borderRadius : 20,
       }}
     >
       <Pressable
@@ -43,11 +44,11 @@ export default function Button({
             navigation.navigate(destination, {
               fullname: fullname,
               user: user,
-              user_id:user_id,
+              user_id: user_id,
               role: role,
             });
           } else if (fnc == "press") {
-            onPress();            
+            onPress();
           } else if (onPress) {
             onPress();
           } else

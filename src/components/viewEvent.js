@@ -19,9 +19,9 @@ import Modal from "react-native-modal";
 import Header from "./header";
 import ListView from "./listView";
 import ProfileCard from "./profileCard";
+import Attendees from "../screens/attendees";
 import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
-
 
 const ViewEvent = ({ route, navigation }) => {
   const {
@@ -32,7 +32,10 @@ const ViewEvent = ({ route, navigation }) => {
     joinReasons,
     id,
     participants,
-    fullname, user, user_id, role
+    fullname,
+    user,
+    user_id,
+    role,
   } = route.params;
 
   const [imageURL, setImageURL] = useState("");
@@ -43,6 +46,12 @@ const ViewEvent = ({ route, navigation }) => {
   const hideModal = () => {
     setModalVisible(false);
     navigation.goBack();
+  };
+
+  const [isAdminModalVisible, setAdminModalVisible] = useState(false);
+
+  const showAdminModal = () => {
+    setAdminModalVisible(true);
   };
 
   useEffect(() => {
@@ -56,7 +65,7 @@ const ViewEvent = ({ route, navigation }) => {
     }
 
     fetchImage();
-  }, [title]);
+  }, []);
 
   const showParticipantsModal = () => {
     setParticipantsModalVisible(true);
@@ -259,20 +268,38 @@ const ViewEvent = ({ route, navigation }) => {
                     .join(", ")}
                   {/* {participants} */}
                 </Text>
-                <TouchableOpacity
-                  style={styles.attendeesButton}
-                  onPress={showParticipantsModal}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 15,
+                    marginTop: hp("3%"),
+                  }}
                 >
-                  <Text style={styles.attendeesButtonText}>
-                    View Participants
-                  </Text>
-                </TouchableOpacity>
+                  <Button
+                    text={"Participants"}
+                    onPress={showParticipantsModal}
+                    width={wp("35%")}
+                    bgColor="rgba(255, 255, 255, 0.5)"
+                    textColor="rgba(0, 0, 0, 0.5)"
+                  />
+                  <Button
+                    text={role === "admin" ? "Attendees" : "Attendance"}
+                    onPress={
+                      role === "admin"
+                        ? showAdminModal
+                        : () => console.log("Call Attendees API")
+                    }
+                    width={wp("35%")}
+                  />
+                </View>
               </View>
             </View>
           </View>
         </View>
       </Modal>
-
+      {/* Pariticipants */}
       <Modal
         isVisible={isParticipantsModalVisible}
         onBackdropPress={hideParticipantsModal}
@@ -314,7 +341,18 @@ const ViewEvent = ({ route, navigation }) => {
             onPress={removeParticipant} /> 
           </View> */}
         </View>
-        {/* <Text style={styles.participantsModalTitle}>{participants}</Text> */}
+      </Modal>
+      <Modal
+        isVisible={isAdminModalVisible}
+        onBackdropPress={() => setAdminModalVisible(false)}
+      >
+        <View
+          style={{
+            height: hp("90%"),
+          }}
+        >
+          <Attendees />
+        </View>
       </Modal>
     </View>
   );

@@ -8,6 +8,7 @@ import {
 } from "react-native-calendars";
 import { globalStyles } from "../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
+import { format } from 'date-fns-tz';
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -89,18 +90,20 @@ export default function CalendarComponent({ events, onDayPress }) {
 
   if (Array.isArray(events)) {
     events.forEach((event, index) => {
-      const date = event.datetime.split("T")[0];
+      const eventDate = new Date(event.datetime); // Convert the datetime string to a Date object
+      const localDate = format(eventDate, 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
+    
       const color = colors[index % colors.length];
       const eventMarking = {
         key: event.id,
         color: color,
         selectedDotColor: color,
       };
-
-      if (markedDates[date]) {
-        markedDates[date].dots.push(eventMarking);
+    
+      if (markedDates[localDate]) {
+        markedDates[localDate].dots.push(eventMarking);
       } else {
-        markedDates[date] = {
+        markedDates[localDate] = {
           dots: [eventMarking],
           selected: true,
           selectedColor: "transparent",

@@ -51,14 +51,71 @@ export default function SignupForm({ navigation }) {
   const [isLoading, setLoading] = useState(false);
 
   const data = [
-    { label: "Department of Health", value: "health" },
-    { label: "Department of Education", value: "education" },
-    { label: "Department of Defense", value: "defense" },
-    { label: "Department of Justice", value: "justice" },
-    { label: "Department of Agriculture", value: "agriculture" },
-    { label: "Department of Commerce", value: "commerce" },
-    { label: "Department of Labor", value: "labor" },
-    { label: "Department of Homeland Security", value: "homeland_security" },
+    { label: "Office of the Municipal Mayor", value: "municipal_mayor" },
+    {
+      label: "Office of the Municipal Vice Mayor",
+      value: "municipal_vice_mayor",
+    },
+    {
+      label: "Office of the Sangguniang Bayan Legislative",
+      value: "sangguniang_bayan_legislative",
+    },
+    {
+      label: "Office of the Sangguniang Bayan Secretariat",
+      value: "sangguniang_bayan_secretariat",
+    },
+    {
+      label: "Business Permit and Licensing Office",
+      value: "business_permit_licensing",
+    },
+    {
+      label: "Human Resource Management Office",
+      value: "human_resource_management",
+    },
+    { label: "Municipal Accounting Office", value: "municipal_accounting" },
+    { label: "Municipal Agriculture Office", value: "municipal_agriculture" },
+    { label: "Municipal Assessor's Office", value: "municipal_assessors" },
+    { label: "Municipal Budget Office", value: "municipal_budget" },
+    {
+      label: "Office of the Municipal Civil Registrar",
+      value: "municipal_civil_registrar",
+    },
+    {
+      label: "Municipal Disaster Risk Reduction and Management Office",
+      value: "municipal_drrmo",
+    },
+    { label: "Municipal Engineering Office", value: "municipal_engineering" },
+    { label: "Municipal Health Office", value: "municipal_health" },
+    {
+      label: "Municipal Planning & Development Office",
+      value: "municipal_planning_development",
+    },
+    {
+      label: "Municipal Social Welfare and Development Office",
+      value: "municipal_social_welfare",
+    },
+    {
+      label: "Municipal Traffic and Public Safety Office",
+      value: "municipal_traffic_safety",
+    },
+    { label: "Municipal Treasurer's Office", value: "municipal_treasurer" },
+    { label: "Municipal Tourism Office", value: "municipal_tourism" },
+    {
+      label: "Municipal Environment and Natural Resources (MENRO)",
+      value: "municipal_menro",
+    },
+    {
+      label: "Municipal Disaster Risk Reduction and Management Office (MDRRMO)",
+      value: "municipal_drrmo",
+    },
+    {
+      label: "Municipal Property and Supply Office",
+      value: "municipal_property_supply",
+    },
+    {
+      label: "Municipal Human Resource Office",
+      value: "municipal_human_resource",
+    },
   ];
 
   const SignUpLabel = ({ text, error }) => (
