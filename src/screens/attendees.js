@@ -12,6 +12,13 @@ import Modal from "react-native-modal";
 import Button from "./../components/button";
 
 export default function Attendees({ navigation }) {
+  const posts = [
+    {
+      name: "John Doe",
+      datetime: "11/23/2023",
+    },
+  ];
+
   return (
     <View style={[globalStyles.container, { borderRadius: wp("6%") }]}>
       <View style={{ flex: 1 }}>
@@ -19,7 +26,10 @@ export default function Attendees({ navigation }) {
           <Header icon={"back"} title={"Attendees"} subTitle={"Feed"} />
         </View>
         <View>
-          <PostCards />
+          <ListView
+            data={posts}
+            renderItem={({ item }) => <PostCards {...item} />}
+          />
         </View>
         {/* <Text>Attendees</Text> */}
       </View>
