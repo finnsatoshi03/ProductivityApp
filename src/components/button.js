@@ -17,6 +17,8 @@ export default function Button({
   flexStart,
   borderRadius,
   iconSource,
+  iconWidth,
+  iconHeight,
   padding,
   onPress,
   fnc,
@@ -65,7 +67,11 @@ export default function Button({
           {iconSource && (
             <Image
               source={iconSource}
-              style={{ marginRight: 10, width: hp("2%"), height: hp("2%") }}
+              style={{
+                marginRight: 10,
+                width: iconWidth || hp("2%"),
+                height: iconHeight || hp("2%"),
+              }}
             />
           )}
           <Text
