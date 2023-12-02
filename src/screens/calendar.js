@@ -35,7 +35,7 @@ export default function Calendar({ navigation, route }) {
   const { eventData, setEventData } = useData();
   const [loading, setLoading] = useState(true);
   const [filteredEvents, setFilteredEvents] = useState([]);
-  const [selectedDay, setSelectedDay] = useState("");
+  const [selectedDay, setSelectedDay] = useState(moment().format('YYYY-MM-DD'));
 
   const deleteEvent = (eventTitleToDelete) => {
     setEventData(
@@ -70,6 +70,17 @@ export default function Calendar({ navigation, route }) {
       return `${formatDate(selectedDate)}'s Events`;
     }
   };
+
+  useEffect(() => {
+    // This useEffect will trigger whenever selectedDay changes
+    if (selectedDay !== "") {
+      const localSelectedDate = format(new Date(selectedDay), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
+      const filtered = eventData.filter(
+        (event) => format(new Date(event.datetime), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' }) === localSelectedDate
+      );
+      setFilteredEvents(filtered);
+    }
+  }, [selectedDay, eventData]);
 
   useEffect(() => {
     const fetchEventsData = async () => {
