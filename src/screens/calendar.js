@@ -72,8 +72,7 @@ export default function Calendar({ navigation, route }) {
   };
 
   useEffect(() => {
-    // This useEffect will trigger whenever selectedDay changes
-    if (selectedDay !== "") {
+    if (selectedDay !== "" && Array.isArray(eventData)) {
       const localSelectedDate = format(new Date(selectedDay), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
       const filtered = eventData.filter(
         (event) => format(new Date(event.datetime), 'yyyy-MM-dd', { timeZone: 'Asia/Manila' }) === localSelectedDate
