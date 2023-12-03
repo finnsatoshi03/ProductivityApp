@@ -81,13 +81,13 @@ export default function Reports({ navigation, route }) {
       label: event.event,
       value: event.event,
     }));
-  const calculateNumberOfWords = (str) => {
-    if (!str) return 0;
-    return str.split(" ").length;
-  };
-  const numberOfWords = calculateNumberOfWords(selectedEventTitle);
-  // console.log("Number of Words:", numberOfWords);
-  const dropdownHeight = numberOfWords >= 2 ? hp("10%") : hp("7%");
+    const calculateNumberOfWords = (str) => {
+      if (!str) return 0;
+      return str.split(" ").length;
+    };
+    const numberOfWords = calculateNumberOfWords(selectedEventTitle);
+    // console.log("Number of Words:", numberOfWords);
+    const dropdownHeight = numberOfWords >= 2 ? hp("10%") : hp("7%");
 
   const handleMonthChange = (selectedMonth) => {
     // console.log("Selected month:", selectedMonth);
@@ -152,12 +152,6 @@ export default function Reports({ navigation, route }) {
     setEndTimePickerVisible(false);
   };
 
-  const showAlert = (message) => {
-    Alert.alert(undefined, message, [
-      { text: "OK", onPress: () => setIsLoading(false) },
-    ]);
-  };
-  
   useEffect(() => {
     const getReport = async() => {
 
@@ -175,19 +169,32 @@ export default function Reports({ navigation, route }) {
     getReport()
   }, [])
 
-  
+  const showAlert = (message) => {
+    Alert.alert(undefined, message, [
+      { text: "OK", onPress: () => setIsLoading(false) },
+    ]);
+  };
 
   const handleCreateReport = async() => {
-    // Perform validation checks
-    // if (
-    //   !selectedEventTitle ||
-    //   !selectedEndTime ||
-    //   new Date(selectedEndTime) <= new Date(selectedEvent.datetime)
-    // ) {
-    //   // Display an error message or handle validation failure
-    //   return;
-    // }
     try {
+      setIsLoading(true);
+
+      if (!selectedEvent) {
+        showAlert("Event is required");
+        return;
+      } else if (
+        new Date(selectedEndTime).toLocaleTimeString("en-US") <=
+        new Date(selectedEvent.datetime).toLocaleTimeString("en-US")
+      ) {
+        showAlert("Invalid start or end time");
+        return;
+      } else if (!selectedEventTitle || !selectedEndTime) {
+        showAlert("Please fill out all fields");
+        return;
+      }
+
+      console.log("Selected event:", selectedEvent);
+      console.log("End Time:", selectedEndTime);
 
       const newReport = {
         event_id: selectedEvent.id,      
@@ -206,9 +213,10 @@ export default function Reports({ navigation, route }) {
         console.log('false');
       }
   
-      
       setReportData((prevData) => [...prevData, newReport]);
       
+      console.log("New report:", newReport);
+      console.log("Report data:", reportData);
   
       setModalVisible(false);
       setSelectedEventTitle(null);
@@ -216,8 +224,10 @@ export default function Reports({ navigation, route }) {
       setSelectedEndTime(null);
       setText("");
 
+      setIsLoading(false);
     } catch (error) {
       console.log(error);
+      setIsLoading(false);
     }
     
   };
