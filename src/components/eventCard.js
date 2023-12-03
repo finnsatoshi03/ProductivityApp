@@ -49,6 +49,8 @@ export default function eventCard({
   onDelete,
   onEdit,
   id,
+  narrative,
+  endtime,
   isInReportsScreen,
 
   fullname,
@@ -219,12 +221,21 @@ export default function eventCard({
     setIsExpanded(!isExpanded);
   };
 
-  const { getReportData } = useData();
-  const reportData = getReportData();
-  console.log("Reports Data: ", reportData);
+  // const { getReportData } = useData();
+  // const reportData = getReportData();
+  // console.log("Reports Data: ", reportData);
 
   const handleExportReportData = async () => {
     try {
+      const reportData = {
+        datetime: datetime,
+        endTime: endtime,
+        event:event,
+        location:location,
+        narrative:narrative,
+      }
+
+      console.log(reportData);
       const htmlContent = generateHTMLReport(reportData);
 
       const { uri } = await Print.printToFileAsync({ html: htmlContent });
@@ -521,30 +532,29 @@ export default function eventCard({
 const generateHTMLReport = (reportData) => {
   let reportContent = "";
   let lastReportNarrative = "";
-
-  reportData.forEach((report, index) => {
-    const date = new Date(report.datetime).toLocaleDateString();
-    const startTime = new Date(report.datetime).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    const endTime = new Date(report.endTime).toLocaleTimeString([], {
-      hour: "2-digit",
-      minute: "2-digit",
-    });
-    reportContent += `
-      <p>Date: ${date}</p>
-      <p>Event: ${report.event}</p>
-      <p>Location: ${report.location}</p>
-      <p>Start Time: ${startTime}</p>
-      <p>End Time: ${endTime}</p>
-      <hr />
-    `;
-
-    if (index === reportData.length - 1) {
-      lastReportNarrative = report.narrative;
-    }
+  
+  
+  
+  const startTime = new Date(reportData.datetime).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
   });
+  const endTime = new Date(reportData.endTime).toLocaleTimeString([], {
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+  reportContent += `
+    <p>Date: ${reportData.datetime}</p>
+    <p>Event: ${reportData.event}</p>
+    <p>Location: ${reportData.location}</p>
+    <p>Start Time: ${startTime}</p>
+    <p>End Time: ${endTime}</p>
+    <hr />
+  `;
+  
+  lastReportNarrative = reportData.narrative;
+  
+  
 
   const htmlContent = `
     <html>

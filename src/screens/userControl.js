@@ -80,6 +80,7 @@ export default function UserControl({ navigation, route }) {
   };
 
   const handleApprove = async (id) => {
+    
     try {
       const data = {
         user_id: id,

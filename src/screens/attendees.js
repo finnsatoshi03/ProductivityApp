@@ -98,13 +98,13 @@ export default function Attendees({ role, userName, userTag, event_id, user_id }
   };
 
   const submitPost = async() => {
-    if (text.trim() === "" || images.length === 0) {
+    if (text.trim() === "" ) {
       alert("Please add some text and at least one image before posting.");
       return;
     }
 
     try {
-      console.log('yo');
+      
       const data = {
         user_id: user_id,
         events_id: event_id,
@@ -255,12 +255,12 @@ export default function Attendees({ role, userName, userTag, event_id, user_id }
                   justifyContent: "space-between",
                 }}
               >
-                <TouchableOpacity onPress={selectImage}>
+                {/* <TouchableOpacity onPress={selectImage}>
                   <Image
                     style={{ height: hp("3%"), width: hp("3%") }}
                     source={require("./../../assets/gallery.png")}
                   />
-                </TouchableOpacity>
+                </TouchableOpacity> */}
                 <Button
                   text={"Post"}
                   borderRadius={10}

@@ -36,51 +36,7 @@ const extractEventDetails = (message) => {
 export default function Notifications({ navigation, route }) {
   const { fullname, user, user_id, role } = route.params;
 
-  const [data, setData] = useState(
-    {
-      // id: "",
-      // user_id: "",
-      // fullname:"",
-      // event_id: "",            
-      // created_at: "",
-      // invitation:"",
-      // message:"",
-      // read: "",
-
-      // eventTitle: "",
-      // eventLocation: "",
-      // eventDate: "",
-      // eventTime: "TIME",
-
-      // adminNotif: true,
-      // reason: "",
-    },
-    // {
-    //   id: 2, // sample event for normal notification
-    //   message: "MONEY MONEY",
-    //   date: "Nov 23, 2023",
-    //   created_at: "2023-11-23T10:30:00Z",
-    // },
-    // {
-    //   id: 3, // sample event for admin notification
-    //   adminNotif: true,
-    //   eventTitle: "Admin Notification",
-    //   name: "User1",
-    //   reason: "Nag tatae",
-    //   date: "Nov 23, 2023",
-    //   created_at: "2023-11-23T10:30:00Z",
-    // },
-    // {
-    //   id: 3, // sample event for admin notification
-    //   adminNotif: true,
-    //   eventTitle: "Admin Notification",
-    //   status: "accepted",
-    //   name: "User1",
-    //   reason: "Nag tatae",
-    //   date: "Nov 23, 2023",
-    //   created_at: "2023-11-23T10:30:00Z",
-    // },
-  );
+  const [data, setData] = useState({},);
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -130,12 +86,10 @@ export default function Notifications({ navigation, route }) {
               })
 
               setData(formattedNotifications);
-              console.log(data);
               
-              
+                        
             
-          }
-                                       
+          }                                      
           console.log("sucess");
           setIsLoading(false);
         } else console.log("failed");
@@ -194,7 +148,7 @@ export default function Notifications({ navigation, route }) {
     const data = {
       user_id: notification.user_id,
       event_id: notification.event_id,
-      invitation: buttonType === 'accept' ? true : false,      
+      invitation: buttonType === 'accept' ? true : null,      
     }      
     setRejectData(data)      
  

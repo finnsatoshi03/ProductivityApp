@@ -168,12 +168,15 @@ export default function Reports({ navigation, route }) {
         const reports = data.reports
 
         setReportData(reports)
-        console.log(reportData);
+        console.log(reports);
       } else console.log('failed');
     }
 
     getReport()
   }, [])
+
+  
+
   const handleCreateReport = async() => {
     // Perform validation checks
     // if (
@@ -190,6 +193,9 @@ export default function Reports({ navigation, route }) {
         event_id: selectedEvent.id,      
         endTime: selectedEndTime,
         narrative: text,
+        event: selectedEvent.event,
+        location:selectedEvent.location,
+        datetime:selectedEvent.datetime,
       };
       
       const response = await axios.post(`${global.baseurl}:4000/createReport`,newReport)

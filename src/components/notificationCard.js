@@ -41,7 +41,7 @@ export default function NotificationCard({
   const [header] = useState(
     eventTitles[Math.floor(Math.random() * eventTitles.length)]
   );
-  
+  console.log(invitation);
   return (
     <View
       style={{
@@ -66,13 +66,13 @@ export default function NotificationCard({
             marginBottom: 3,
             flexWrap: "wrap",
             width:
-              eventDate && eventLocation && eventTime && eventTitle
+              eventDate && eventLocation 
                 ? wp("55%")
                 : "100%",
           }}
         >
-          {eventDate && eventLocation && eventTime && eventTitle ? (
-            !read ? (
+          {eventDate && eventLocation ? (
+            read === false ? (
               <>
                 <View style={{ marginBottom: 5 }}>
                   <Text
@@ -169,7 +169,7 @@ export default function NotificationCard({
             </Text>
           )}
         </View>
-        {eventDate && eventLocation && eventTime && eventTitle && !read ? (
+        {eventDate && eventLocation && !read ? (
           <View style={{ gap: 10, padding: 5 }}>
             <Button
               text={"Accept"}
