@@ -27,8 +27,7 @@ import { useNavigation } from "@react-navigation/native";
 // import InputFields from "../components/input";
 
 export default function Chats({ route }) {
-
-  const { fullname, user, user_id, role} = route.params;
+  const { fullname, user, user_id, role } = route.params;
 
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -38,66 +37,66 @@ export default function Chats({ route }) {
   const [communityAvatar, setCommunityAvatar] = useState(null);
 
   const [data, setData] = useState([
-    {
-      avatar: undefined,
-      name: "John Doe",
-      time: "6:69PM",
-      lastMessage: "Hello World! Kumain ka na ba?",
-    },
-    {
-      avatar: undefined,
-      name: "Jane Doe",
-      time: "7:30PM",
-      lastMessage: "Hi there!",
-    },
-    {
-      avatar: undefined,
-      name: "Bob Smith",
-      time: "8:15PM",
-      lastMessage: "Good evening!",
-    },
-    {
-      avatar: undefined,
-      name: "Alice Johnson",
-      time: "9:00PM",
-      lastMessage: "How's it going?",
-    },
-    {
-      avatar: undefined,
-      name: "Charlie Brown",
-      time: "9:45PM",
-      lastMessage: "See you tomorrow!",
-    },
-    {
-      avatar: undefined,
-      name: "David Williams",
-      time: "10:30PM",
-      lastMessage: "Good night!",
-    },
-    {
-      avatar: undefined,
-      name: "Eva Davis",
-      time: "11:15PM",
-      lastMessage: "Take care!",
-    },
-    {
-      avatar: undefined,
-      name: "Frank Miller",
-      time: "12:00AM",
-      lastMessage: "Happy New Year!",
-    },
-    {
-      avatar: undefined,
-      name: "Grace Lee",
-      time: "12:45AM",
-      lastMessage: "Nice to meet you!",
-    },
-    {
-      avatar: undefined,
-      name: "Henry Wilson",
-      time: "1:30AM",
-      lastMessage: "Goodbye!",
-    },
+    // {
+    //   avatar: undefined,
+    //   name: "John Doe",
+    //   time: "6:69PM",
+    //   lastMessage: "Hello World! Kumain ka na ba?",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Jane Doe",
+    //   time: "7:30PM",
+    //   lastMessage: "Hi there!",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Bob Smith",
+    //   time: "8:15PM",
+    //   lastMessage: "Good evening!",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Alice Johnson",
+    //   time: "9:00PM",
+    //   lastMessage: "How's it going?",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Charlie Brown",
+    //   time: "9:45PM",
+    //   lastMessage: "See you tomorrow!",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "David Williams",
+    //   time: "10:30PM",
+    //   lastMessage: "Good night!",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Eva Davis",
+    //   time: "11:15PM",
+    //   lastMessage: "Take care!",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Frank Miller",
+    //   time: "12:00AM",
+    //   lastMessage: "Happy New Year!",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Grace Lee",
+    //   time: "12:45AM",
+    //   lastMessage: "Nice to meet you!",
+    // },
+    // {
+    //   avatar: undefined,
+    //   name: "Henry Wilson",
+    //   time: "1:30AM",
+    //   lastMessage: "Goodbye!",
+    // },
   ]);
 
   // const data = [
@@ -283,23 +282,55 @@ export default function Chats({ route }) {
             </View>
           </Modal>
           <View style={{ height: hp("74%") }}>
-            <ListView
-              data={data.filter((item) =>
-                item.name.toLowerCase().includes(searchTerm.toLowerCase())
-              )}
-              renderItem={({ item }) => (
-                <ChatCard
-                  {...item}
-                  onPress={() => {
-                    navigateToConversation(item);
-                    console.log("Navigating to Conversation:", item);
+            {data.length === 0 ? (
+              <>
+                <View
+                  style={{
+                    justifyContent: "center",
+                    alignItems: "center",
+                    flex: 1,
                   }}
-                />
-              )}
-            />
+                >
+                  <Text
+                    style={{
+                      textAlign: "center",
+                      fontSize: 18,
+                      color: "gray",
+                    }}
+                  >
+                    👷 Coming Soon! {"\n"}Stay tuned as we prepare the canvas
+                    for you to share your event stories when our chat screen is
+                    ready to unfold the magic. 🚀✨
+                  </Text>
+                </View>
+              </>
+            ) : (
+              <ListView
+                data={data.filter((item) =>
+                  item.name.toLowerCase().includes(searchTerm.toLowerCase())
+                )}
+                renderItem={({ item }) => (
+                  <ChatCard
+                    {...item}
+                    onPress={() => {
+                      navigateToConversation(item);
+                      console.log("Navigating to Conversation:", item);
+                    }}
+                  />
+                )}
+              />
+            )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
+            <Navbar
+              notifCounts={6}
+              icon={"Chat"}
+              navigation={navigation}
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
+            />
           </View>
           {/* <Text>Chats Screen</Text> */}
         </View>
@@ -314,7 +345,7 @@ export default function Chats({ route }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
-            fullname={fullname} 
+            fullname={fullname}
             user={user}
             user_id={user_id}
             role={role}

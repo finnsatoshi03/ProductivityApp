@@ -21,7 +21,7 @@ import Header from "./header";
 import ListView from "./listView";
 import ProfileCard from "./profileCard";
 import { useData } from "./../DataContext";
-import Chart from "chart.js/auto";
+import moment from "moment";
 
 const commonStyles = {
   container: {
@@ -72,10 +72,10 @@ export default function eventCard({
   const [isParticipantsModalVisible, setParticipantsModalVisible] =
     useState(false);
   const [activeButton, setActiveButton] = useState(null);
-  const [present,setPresent] = useState({})
-  const [absent,setAbsent] = useState({})
-  
-  const showParticipantsModal = async() => {
+  const [present, setPresent] = useState({});
+  const [absent, setAbsent] = useState({});
+
+  const showParticipantsModal = async () => {
     setParticipantsModalVisible(true);
 
     try {
@@ -85,20 +85,20 @@ export default function eventCard({
         },
       });
 
-      if (response.status === 200 ) {
-        const {data} = response
-        const presents = data.users
-        
-        setPresent(presents)
+      if (response.status === 200) {
+        const { data } = response;
+        const presents = data.users;
 
-        console.log('success');
+        setPresent(presents);
+
+        console.log("success");
       } else {
-        console.log('failed');
+        console.log("failed");
       }
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
-    
+
     try {
       const response = await axios.get(`${global.baseurl}:4000/getAbsents`, {
         params: {
@@ -106,20 +106,19 @@ export default function eventCard({
         },
       });
 
-      if (response.status === 200 ) {
-        const {data} = response
-        const absents = data.users
-        
-        setAbsent(absents)
+      if (response.status === 200) {
+        const { data } = response;
+        const absents = data.users;
 
-        console.log('success');
+        setAbsent(absents);
+
+        console.log("success");
       } else {
-        console.log('failed');
+        console.log("failed");
       }
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
-   
   };
 
   const hideParticipantsModal = () => {
@@ -235,33 +234,43 @@ export default function eventCard({
         location: location,
         narrative: narrative,
       };
-  
+
       console.log(reportData);
-  
+
       // Fetch present and absent data
-      const presentResponse = await axios.get(`${global.baseurl}:4000/getPresents`, {
-        params: {
-          event_id: id,
-        },
-      });
-  
-      const absentResponse = await axios.get(`${global.baseurl}:4000/getAbsents`, {
-        params: {
-          event_id: id,
-        },
-      });
-  
+      const presentResponse = await axios.get(
+        `${global.baseurl}:4000/getPresents`,
+        {
+          params: {
+            event_id: id,
+          },
+        }
+      );
+
+      const absentResponse = await axios.get(
+        `${global.baseurl}:4000/getAbsents`,
+        {
+          params: {
+            event_id: id,
+          },
+        }
+      );
+
       if (presentResponse.status === 200 && absentResponse.status === 200) {
         const presentData = presentResponse.data.users;
         const absentData = absentResponse.data.users;
-  
-        const htmlContent = generateHTMLReport(reportData, presentData, absentData);
-  
+
+        const htmlContent = generateHTMLReport(
+          reportData,
+          presentData,
+          absentData
+        );
+
         const { uri } = await Print.printToFileAsync({ html: htmlContent });
-  
+
         await Sharing.shareAsync(uri);
       } else {
-        console.log('Failed to fetch present or absent data');
+        console.log("Failed to fetch present or absent data");
       }
     } catch (error) {
       console.error("Error exporting report data:", error);
@@ -535,7 +544,7 @@ export default function eventCard({
           </View>
           <View style={{ height: hp("58%"), marginBottom: hp("1%") }}>
             <ListView
-              data={activeButton === 'Present' ? present : absent}
+              data={activeButton === "Present" ? present : absent}
               renderItem={({ item }) => (
                 <ProfileCard
                   fullname={item.fullname}
@@ -556,7 +565,9 @@ const generateHTMLReport = (reportData, present, absent) => {
   let reportContent = "";
   let lastReportNarrative = "";
 
-  const startTime = new Date(reportData.datetime).toLocaleTimeString([], {
+  const startTime = new Date(
+    moment(reportData.datetime, "D MMMM YYYY h:mm A").toISOString()
+  ).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
   });
@@ -564,6 +575,7 @@ const generateHTMLReport = (reportData, present, absent) => {
     hour: "2-digit",
     minute: "2-digit",
   });
+  console.log("Reports Data: ", reportData);
   reportContent += `
     <p>Date: ${reportData.datetime}</p>
     <p>Event: ${reportData.event}</p>
