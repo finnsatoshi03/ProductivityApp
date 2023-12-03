@@ -46,7 +46,7 @@ export default function Attendees({
       "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
     ],
-    description: "",
+    comments: "",
     id: "",
     user_id: "",
   });
@@ -65,6 +65,9 @@ export default function Attendees({
 
         console.log(attendees);
         setPost(attendees);
+        attendees.forEach((attendee) => {
+          console.log("Comments: ", attendee.comments);
+        });
       }
     };
     if (role === "admin") {
