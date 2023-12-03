@@ -21,6 +21,7 @@ import Header from "./header";
 import ListView from "./listView";
 import ProfileCard from "./profileCard";
 import { useData } from "./../DataContext";
+import Chart from "chart.js/auto";
 
 const commonStyles = {
   container: {
@@ -230,17 +231,38 @@ export default function eventCard({
       const reportData = {
         datetime: datetime,
         endTime: endtime,
-        event:event,
-        location:location,
-        narrative:narrative,
-      }
-
+        event: event,
+        location: location,
+        narrative: narrative,
+      };
+  
       console.log(reportData);
-      const htmlContent = generateHTMLReport(reportData);
-
-      const { uri } = await Print.printToFileAsync({ html: htmlContent });
-
-      await Sharing.shareAsync(uri);
+  
+      // Fetch present and absent data
+      const presentResponse = await axios.get(`${global.baseurl}:4000/getPresents`, {
+        params: {
+          event_id: id,
+        },
+      });
+  
+      const absentResponse = await axios.get(`${global.baseurl}:4000/getAbsents`, {
+        params: {
+          event_id: id,
+        },
+      });
+  
+      if (presentResponse.status === 200 && absentResponse.status === 200) {
+        const presentData = presentResponse.data.users;
+        const absentData = absentResponse.data.users;
+  
+        const htmlContent = generateHTMLReport(reportData, presentData, absentData);
+  
+        const { uri } = await Print.printToFileAsync({ html: htmlContent });
+  
+        await Sharing.shareAsync(uri);
+      } else {
+        console.log('Failed to fetch present or absent data');
+      }
     } catch (error) {
       console.error("Error exporting report data:", error);
     }
@@ -484,7 +506,8 @@ export default function eventCard({
             style={{
               flexDirection: "row",
               justifyContent: "space-between",
-              hheight: hp("5%"),
+              height: hp("5%"),
+              marginBottom: hp("1%"),
             }}
           >
             <Button
@@ -510,7 +533,7 @@ export default function eventCard({
               onPress={() => setActiveButton("Absent")}
             />
           </View>
-          <View style={{ height: hp("59%"), marginBottom: hp("1%") }}>
+          <View style={{ height: hp("58%"), marginBottom: hp("1%") }}>
             <ListView
               data={activeButton === 'Present' ? present : absent}
               renderItem={({ item }) => (
@@ -529,12 +552,10 @@ export default function eventCard({
   );
 }
 
-const generateHTMLReport = (reportData) => {
+const generateHTMLReport = (reportData, present, absent) => {
   let reportContent = "";
   let lastReportNarrative = "";
-  
-  
-  
+
   const startTime = new Date(reportData.datetime).toLocaleTimeString([], {
     hour: "2-digit",
     minute: "2-digit",
@@ -551,10 +572,28 @@ const generateHTMLReport = (reportData) => {
     <p>End Time: ${endTime}</p>
     <hr />
   `;
-  
+
   lastReportNarrative = reportData.narrative;
-  
-  
+
+  // Table for Attendance Chart
+  const tableContent = `
+    <table border="1" style="width:100%; margin-top: 20px;">
+      <tr>
+        <th colspan="3">Attendance Chart</th>
+      </tr>
+      <tr>
+        <td style="width: 33.33%; padding: 10px;">
+          Presentees:<br>${present.map((p) => p.fullname).join("<br>")}
+        </td>
+        <td style="width: 33.33%; padding: 10px;">
+          Absentees:<br>${absent.map((a) => a.fullname).join("<br>")}
+        </td>
+        <td style="width: 33.33%; padding: 10px;">
+          <canvas id="attendanceChart" width="150" height="150"></canvas>
+        </td>
+      </tr>
+    </table>
+  `;
 
   const htmlContent = `
     <html>
@@ -590,11 +629,29 @@ const generateHTMLReport = (reportData) => {
           </div>
           <div class="event-narrative">
             <p>Event Narrative: </p>
-            <p>${lastReportNarrative}</p>
+            <p style="padding-left: 30px">${lastReportNarrative}</p>
           </div>
+          ${tableContent}
         </div>
+
+        <script>
+          // Draw Pie Chart
+          const ctx = document.getElementById('attendanceChart').getContext('2d');
+          const chartData = {
+            labels: ['Presentees', 'Absentees'],
+            datasets: [{
+              data: [${present.length}, ${absent.length}],
+              backgroundColor: ['#36A2EB', '#FF6384'],
+            }],
+          };
+          new Chart(ctx, {
+            type: 'pie',
+            data: chartData,
+          });
+        </script>
       </body>
     </html>
   `;
+
   return htmlContent;
 };

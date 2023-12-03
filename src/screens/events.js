@@ -59,6 +59,7 @@ export default function EventsScreen({ navigation, route }) {
   const [btnFnc, setBtnFnc] = useState("create");
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isCreatingEvent, setCreatingEvent] = useState(false);
+  const [starredFilter, setStarredFilter] = useState(false);
 
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -165,7 +166,7 @@ export default function EventsScreen({ navigation, route }) {
           location: location,
         };
         newEvent.id = event_id;
-        
+
         const request =
           btnFnc === "create"
             ? await axios.post(
@@ -296,6 +297,11 @@ export default function EventsScreen({ navigation, route }) {
       });
     }
 
+    // Filter starred events if the starred filter is active
+    if (starredFilter) {
+      sortedData = sortedData.filter((event) => event.starred);
+    }
+
     // Sort the data based on the datetime property only if "Recent" is toggled
     if (activeButtons.recent) {
       sortedData.sort((a, b) => {
@@ -311,7 +317,13 @@ export default function EventsScreen({ navigation, route }) {
     }
 
     return sortedData;
-  }, [eventData, sortOrder, activeButtons.recent, selectedMonth]);
+  }, [
+    eventData,
+    sortOrder,
+    activeButtons.recent,
+    selectedMonth,
+    starredFilter,
+  ]);
 
   const getParticipants = async (event_id) => {
     try {
@@ -534,12 +546,16 @@ export default function EventsScreen({ navigation, route }) {
                   borderRadius: 20,
                   height: hp("5%"),
                 }}
-                onPress={() =>
+                onPress={() => {
                   setActiveButtons({
                     ...activeButtons,
                     starred: !activeButtons.starred,
-                  })
-                }
+                  });
+                  setStarredFilter(!starredFilter);
+                  setSortOrder((prevOrder) =>
+                    prevOrder === "asc" ? "desc" : "asc"
+                  );
+                }}
               >
                 <Text
                   style={{

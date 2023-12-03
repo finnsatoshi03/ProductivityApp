@@ -29,7 +29,7 @@ export default function NotificationCard({
     hour: "numeric",
     minute: "numeric",
   }).format(dateObject);
-  
+
   const eventTitles = [
     "Get ready for an electrifying event!",
     "Don't miss this exciting event!",
@@ -41,6 +41,12 @@ export default function NotificationCard({
   const [header] = useState(
     eventTitles[Math.floor(Math.random() * eventTitles.length)]
   );
+  const [isAccepted, setIsAccepted] = useState(false);
+  const handleAccept = () => {
+    onPressAccept();
+    setIsAccepted(true);
+  };
+
   console.log(invitation);
   return (
     <View
@@ -65,10 +71,11 @@ export default function NotificationCard({
             flexDirection: "row",
             marginBottom: 3,
             flexWrap: "wrap",
-            width:
-              eventDate && eventLocation 
-                ? wp("55%")
-                : "100%",
+            width: isAccepted
+              ? "100%"
+              : eventDate && eventLocation
+              ? wp("55%")
+              : "100%",
           }}
         >
           {eventDate && eventLocation ? (
@@ -103,7 +110,6 @@ export default function NotificationCard({
                     , at{" "}
                   </Text>
                   {eventLocation || "Location"}
-                  
                 </Text>
               </>
             ) : (
@@ -120,7 +126,6 @@ export default function NotificationCard({
                 </View>
               </>
             )
-            
           ) : adminNotif ? (
             <>
               <Text
@@ -137,12 +142,14 @@ export default function NotificationCard({
                     <Text style={{ color: globalStyles.colors.green }}>
                       accept
                     </Text>{" "}
-                    your invitation for {eventTitle} on {formattedDate} at {eventLocation}! 🎉
+                    your invitation for {eventTitle} on {formattedDate} at{" "}
+                    {eventLocation}! 🎉
                   </>
                 ) : (
                   <>
                     <Text style={{ color: "#df5f4b" }}>Unfortunately</Text>,{" "}
-                    {fullname} won't be able to make it to {eventTitle} this time.
+                    {fullname} won't be able to make it to {eventTitle} this
+                    time.
                   </>
                 )}
               </Text>
@@ -169,13 +176,13 @@ export default function NotificationCard({
             </Text>
           )}
         </View>
-        {eventDate && eventLocation && !read ? (
+        {eventDate && eventLocation && !read && !isAccepted ? (
           <View style={{ gap: 10, padding: 5 }}>
             <Button
               text={"Accept"}
               width={wp("20%")}
               borderRadius={10}
-              onPress={onPressAccept}
+              onPress={handleAccept}
             />
             <Button
               text={"Reject"}
@@ -186,7 +193,7 @@ export default function NotificationCard({
               onPress={onPressReject}
             />
           </View>
-        ) : ( <></> )}
+        ) : null}
       </View>
 
       <View style={{ flexDirection: "row", justifyContent: "space-between" }}>

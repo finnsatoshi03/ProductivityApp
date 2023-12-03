@@ -6,6 +6,8 @@ import {
   FlatList,
   Image,
   TouchableOpacity,
+  ActivityIndicator,
+  Alert,
 } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
 import {
@@ -25,48 +27,51 @@ import Button from "./../components/button";
 import axios from "axios";
 import "../../global";
 
-export default function Attendees({ role, userName, userTag, event_id, user_id }) {
+export default function Attendees({
+  role,
+  userName,
+  userTag,
+  event_id,
+  user_id,
 
+  modalVisible,
+  setModalVisible,
+}) {
   const [post, setPost] = useState({
-    fullname:"",
-    datetime:"",
+    fullname: "",
+    datetime: "",
     images: [
       "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
       "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
     ],
-    description:"",
-    id:"",
-    user_id:"",
-  })
-
+    description: "",
+    id: "",
+    user_id: "",
+  });
 
   useEffect(() => {
-    
-    const getAttendees = async() => {
-
+    const getAttendees = async () => {
       const response = await axios.get(`${global.baseurl}:4000/getAttendees`, {
         params: {
           event_id: event_id,
-        }
-      })
+        },
+      });
 
       if (response.status === 200) {
-        const {data} = response
-        const attendees = data.users
+        const { data } = response;
+        const attendees = data.users;
 
         console.log(attendees);
-        setPost(attendees)
+        setPost(attendees);
       }
     };
-    if (role === 'admin') {
-      getAttendees()
+    if (role === "admin") {
+      getAttendees();
     }
-  
-  }, [])
+  }, []);
 
-  
   if (post && Array.isArray(post)) {
     post.sort(
       (a, b) =>
@@ -78,6 +83,7 @@ export default function Attendees({ role, userName, userTag, event_id, user_id }
   const [text, setText] = useState("");
   const maxChars = 200;
   const [images, setImages] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
 
   const selectImage = async () => {
     if (images.length >= 4) {
@@ -97,44 +103,54 @@ export default function Attendees({ role, userName, userTag, event_id, user_id }
     }
   };
 
-  const submitPost = async() => {
-    if (text.trim() === "" ) {
+  const submitPost = async () => {
+    if (text.trim() === "") {
       alert("Please add some text and at least one image before posting.");
       return;
     }
 
-    try {
-      
-      const data = {
-        user_id: user_id,
-        events_id: event_id,
-        comments: text,    
-      }
-      const response = await axios.post(`${global.baseurl}:4000/createAttendance`, data)
+    setIsLoading(true);
 
-      if (response.status === 200) {
-        console.log('happy');
-      } else {
-        console.log('sad');
-      }
+    setTimeout(async () => {
+      try {
+        const data = {
+          user_id: user_id,
+          events_id: event_id,
+          comments: text,
+        };
+        const response = await axios.post(
+          `${global.baseurl}:4000/createAttendance`,
+          data
+        );
 
-    } catch (error) {
-      console.log(error);
-    }
-  
+        if (response.status === 200) {
+          Alert.alert("Success", "Post submitted successfully");
+          setIsLoading(false);
+          setModalVisible(false);
+        } else {
+          Alert.alert("Error", "Failed to submit post");
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+        Alert.alert("Error", "Failed to submit post");
+        setIsLoading(false);
+      }
+    }, 1000);
   };
 
   return (
-    <View
-      style={{
-        // flex: 1,
-        backgroundColor: globalStyles.colors.green,
-        borderRadius: 30,
-        paddingHorizontal: 30,
-        paddingVertical: 20,
-      }}
-    >
-      {/* comment in to kapag need or want ng header, comment out nalang ng baba
+    <>
+      <View
+        style={{
+          // flex: 1,
+          backgroundColor: globalStyles.colors.green,
+          borderRadius: 30,
+          paddingHorizontal: 30,
+          paddingVertical: 20,
+        }}
+      >
+        {/* comment in to kapag need or want ng header, comment out nalang ng baba
       <View style={{ height: role === "admin" ? hp("8%") : "auto" }}>
         <Header
           icon={"back"}
@@ -142,137 +158,157 @@ export default function Attendees({ role, userName, userTag, event_id, user_id }
           subTitle={role === "admin" ? "Feed" : "Attendance"}
         />
       </View> */}
-      {role === "admin" && (
-        <View style={{ height: hp("8%") }}>
-          <Header icon={"back"} title={"Attendees"} subTitle={"Feed"} />
-        </View>
-      )}
-      <View style={{ height: role === "admin" ? hp("75%") : "auto" }}>
-        {role === "admin" ? (
-          // Display for admin
-          <ListView
-            data={post}
-            renderItem={({ item }) => <PostCards {...item} />}
-          />
-        ) : (
-          <>
-            <View style={{ marginVertical: 20 }}>
-              <View
-                style={{ flexDirection: "row", alignItems: "center", gap: 15 }}
-              >
-                <Avatar firstName={userName} size={6} />
-                <View>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.bold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                    }}
-                  >
-                    {userName}
-                  </Text>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      lineHeight: 15,
-                    }}
-                  >
-                    {"@" + userTag}
-                  </Text>
-                </View>
-              </View>
-              <View
-                style={{
-                  marginVertical: 15,
-                  borderColor: "grey",
-                  borderBottomWidth: 1,
-                  paddingBottom: 20,
-                }}
-              >
-                <TextInput
+        {role === "admin" && (
+          <View style={{ height: hp("8%") }}>
+            <Header icon={"back"} title={"Attendees"} subTitle={"Feed"} />
+          </View>
+        )}
+        <View style={{ height: role === "admin" ? hp("73%") : "auto" }}>
+          {role === "admin" ? (
+            // Display for admin
+            <ListView
+              data={post}
+              renderItem={({ item }) => <PostCards {...item} />}
+            />
+          ) : (
+            <>
+              <View style={{ marginVertical: 20 }}>
+                <View
                   style={{
-                    // borderColor: "black",
-                    // borderWidth: 1,
-                    width: "100%",
-                    // paddingVertical: 20,
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                  }}
-                  placeholder="Share your experience: What happened at the event? 📸✨"
-                  multiline={true}
-                  maxLength={maxChars}
-                  onChangeText={setText}
-                  value={text}
-                />
-                <Text
-                  style={{
-                    textAlign: "right",
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: 15,
                   }}
                 >
-                  {text.length}/{maxChars}
-                </Text>
-              </View>
-              <View style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}>
-                <FlatList
-                  data={images}
-                  renderItem={({ item: imageUri, index }) => (
-                    <View>
-                      <Image
-                        source={{ uri: imageUri }}
-                        style={{
-                          height: hp("10%"),
-                          width: hp("10%"),
-                          borderRadius: 15,
-                          marginRight: 10,
-                        }}
-                      />
-                      <TouchableOpacity
-                        style={{
-                          position: "absolute",
-                          top: 0,
-                          right: 0,
-                        }}
-                        onPress={() => {
-                          const newImages = [...images];
-                          newImages.splice(index, 1);
-                          setImages(newImages);
-                        }}
-                      >
-                        <Ionicons name="close-circle" size={24} color="black" />
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  keyExtractor={(item, index) => index.toString()}
-                  horizontal
-                />
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                }}
-              >
-                {/* <TouchableOpacity onPress={selectImage}>
+                  <Avatar firstName={userName} size={6} />
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.bold,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                      }}
+                    >
+                      {userName}
+                    </Text>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.description,
+                        lineHeight: 15,
+                      }}
+                    >
+                      {"@" + userTag}
+                    </Text>
+                  </View>
+                </View>
+                <View
+                  style={{
+                    marginVertical: 15,
+                    borderColor: "grey",
+                    borderBottomWidth: 1,
+                    paddingBottom: 20,
+                  }}
+                >
+                  <TextInput
+                    style={{
+                      // borderColor: "black",
+                      // borderWidth: 1,
+                      width: "100%",
+                      // paddingVertical: 20,
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                    }}
+                    placeholder="Share your experience: What happened at the event? 📸✨"
+                    multiline={true}
+                    maxLength={maxChars}
+                    onChangeText={setText}
+                    value={text}
+                  />
+                  <Text
+                    style={{
+                      textAlign: "right",
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                    }}
+                  >
+                    {text.length}/{maxChars}
+                  </Text>
+                </View>
+                <View
+                  style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}
+                >
+                  <FlatList
+                    data={images}
+                    renderItem={({ item: imageUri, index }) => (
+                      <View>
+                        <Image
+                          source={{ uri: imageUri }}
+                          style={{
+                            height: hp("10%"),
+                            width: hp("10%"),
+                            borderRadius: 15,
+                            marginRight: 10,
+                          }}
+                        />
+                        <TouchableOpacity
+                          style={{
+                            position: "absolute",
+                            top: 0,
+                            right: 0,
+                          }}
+                          onPress={() => {
+                            const newImages = [...images];
+                            newImages.splice(index, 1);
+                            setImages(newImages);
+                          }}
+                        >
+                          <Ionicons
+                            name="close-circle"
+                            size={24}
+                            color="black"
+                          />
+                        </TouchableOpacity>
+                      </View>
+                    )}
+                    keyExtractor={(item, index) => index.toString()}
+                    horizontal
+                  />
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                  }}
+                >
+                  {/* <TouchableOpacity onPress={selectImage}>
                   <Image
                     style={{ height: hp("3%"), width: hp("3%") }}
                     source={require("./../../assets/gallery.png")}
                   />
                 </TouchableOpacity> */}
-                <Button
-                  text={"Post"}
-                  borderRadius={10}
-                  width={wp("40%")}
-                  onPress={submitPost}
-                />
+                  {isLoading ? (
+                    <ActivityIndicator
+                      size="large"
+                      color={globalStyles.colors.darkGreen}
+                    />
+                  ) : (
+                    <>
+                      <Button
+                        text={"Submit"}
+                        borderRadius={10}
+                        width={wp("40%")}
+                        onPress={submitPost}
+                      />
+                    </>
+                  )}
+                </View>
               </View>
-            </View>
-          </>
-        )}
+            </>
+          )}
+        </View>
+        {/* <Text>Attendees</Text> */}
       </View>
-      {/* <Text>Attendees</Text> */}
-    </View>
+    </>
   );
 }
