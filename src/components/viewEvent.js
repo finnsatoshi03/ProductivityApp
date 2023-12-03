@@ -84,6 +84,7 @@ const ViewEvent = ({ route, navigation }) => {
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
   const [iconType, setIconType] = useState("outlined-star");
+  const [starred, setStarred] = useState(false);
 
   const handleIconButtonPress = async () => {
     setIconType((prevIconType) =>
@@ -94,7 +95,7 @@ const ViewEvent = ({ route, navigation }) => {
       const data = {
         user_id: user_id,
         event_id: id,
-        starred: iconType === "outlined-star" ? true : false,
+        starred: !starred,
       };
 
       const response = await axios.patch(
@@ -103,7 +104,9 @@ const ViewEvent = ({ route, navigation }) => {
       );
 
       if (response.status === 200) {
-        console.log("happy");
+        setStarred((prevStarred) => !prevStarred);
+        const action = starred ? "unstarred" : "starred";
+        console.log(`Event ${action} successfully`);
       } else {
         console.log("sad");
       }
