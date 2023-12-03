@@ -8,7 +8,7 @@ import {
 } from "react-native-calendars";
 import { globalStyles } from "../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
-import { format } from 'date-fns-tz';
+import { format } from "date-fns-tz";
 
 LocaleConfig.locales["en"] = {
   monthNames: [
@@ -72,6 +72,56 @@ export default function CalendarComponent({ events, onDayPress }) {
   // } else {
   //   console.log("events is not an array");
   // }
+  // 2023-2024 Philippine Holidays only lang to, kailangan update ulit next 2 years
+  const holidays = [
+    "2023-01-01", // New Year’s Day
+    "2023-04-06", // Maundy Thursday
+    "2023-04-07", // Good Friday
+    "2023-04-10", // Day of Valor (Araw ng Kagitingan)
+    "2023-04-21", // Eid'l Fitr (Feast of Ramadhan)
+    "2023-05-01", // Labor Day
+    "2023-06-12", // Independence Day
+    "2023-06-28", // Eid'l Adha (Feast of Sacrifice)
+    "2023-08-28", // National Heroes Day
+    "2023-11-27", // Bonifacio Day
+    "2023-12-25", // Christmas Day
+    "2023-12-30", // Rizal Day
+    "2023-02-24", // EDSA People Power Revolution Anniversary
+    "2023-04-08", // Black Saturday
+    "2023-08-21", // Ninoy Aquino Day
+    "2023-11-01", // All Saints’ Day
+    "2023-12-08", // Feast of the Immaculate Conception of Mary
+    "2023-12-31", // Last Day of the Year
+    "2023-10-30", // (Barangay and SK Elections)
+    "2023-11-02", // (Thursday)
+    "2023-01-02", // (Monday)
+    "2023-10-30", // (Barangay and SK Elections)
+    "2023-11-02", // (Thursday)
+    "2023-01-02", // (Monday)
+    "2023-11-01", // All Saints' Day & All Souls' Day (Take a leave on November 3)
+    "2023-11-25", // Bonifacio Day
+    "2023-12-08", // Feast of the Immaculate Concepcion
+    "2023-12-23", // Christmas Day
+    "2023-12-30", // Rizal Day, Last Day of the Year, and New Year's Day (Take a leave on November 3)
+    "2024-01-01", // New Year’s Day
+    "2024-03-28", // Maundy Thursday
+    "2024-03-29", // Good Friday
+    "2024-04-09", // Day of Valor (Araw ng Kagitingan)
+    "2024-05-01", // Labor Day
+    "2024-06-12", // Independence Day
+    "2024-08-26", // National Heroes Day
+    "2024-11-30", // Bonifacio Day
+    "2024-12-25", // Christmas Day
+    "2024-12-30", // Rizal Day
+    "2024-02-10", // Chinese New Year
+    "2024-03-30", // Black Saturday
+    "2024-08-21", // Ninoy Aquino Day
+    "2024-11-01", // All Saints’ Day
+    "2024-11-02", // All Souls’ Day
+    "2024-12-08", // Feast of the Immaculate Conception of Mary
+    "2024-12-24", // Christmas Eve
+    "2024-12-31", // Last Day of the Year
+  ];
 
   let markedDates = {};
 
@@ -86,20 +136,22 @@ export default function CalendarComponent({ events, onDayPress }) {
     "#498F14", // medyo medyo dark green
   ];
 
-  
-
   if (Array.isArray(events)) {
     events.forEach((event, index) => {
       const eventDate = new Date(event.datetime); // Convert the datetime string to a Date object
-      const localDate = format(eventDate, 'yyyy-MM-dd', { timeZone: 'Asia/Manila' });
-    
+      const localDate = format(eventDate, "yyyy-MM-dd", {
+        timeZone: "Asia/Manila",
+      });
+      console.log("localDate", eventDate, localDate);
+      console.log("Holdays", holidays.includes(localDate));
+
       const color = colors[index % colors.length];
       const eventMarking = {
         key: event.id,
         color: color,
         selectedDotColor: color,
       };
-    
+
       if (markedDates[localDate]) {
         markedDates[localDate].dots.push(eventMarking);
       } else {
@@ -116,6 +168,17 @@ export default function CalendarComponent({ events, onDayPress }) {
     console.log("events is not an array");
   }
 
+  holidays.forEach((holiday) => {
+    if (!markedDates[holiday]) {
+      markedDates[holiday] = {
+        selected: true,
+        selectedColor: "transparent",
+        selectedTextColor: "red",
+        activeOpacity: 0,
+      };
+    }
+  });
+
   const handleDayPress = (day) => {
     setSelected(day.dateString);
     onDayPress(day.dateString);
@@ -126,7 +189,7 @@ export default function CalendarComponent({ events, onDayPress }) {
       {/* <ExpandableCalendar/> */}
       <Calendar
         current={currentDate.toISOString().split("T")[0]}
-        minDate={minDate}
+        minDate={"2000-01-01"}
         maxDate={maxDate}
         // Handler which gets executed on day press. Default = undefined
         onDayPress={(day) => {
