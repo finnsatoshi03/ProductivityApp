@@ -66,9 +66,54 @@ export default function eventCard({
   const [isParticipantsModalVisible, setParticipantsModalVisible] =
     useState(false);
   const [activeButton, setActiveButton] = useState(null);
-
-  const showParticipantsModal = () => {
+  const [present,setPresent] = useState({})
+  const [absent,setAbsent] = useState({})
+  
+  const showParticipantsModal = async() => {
     setParticipantsModalVisible(true);
+
+    try {
+      const response = await axios.get(`${global.baseurl}:4000/getPresents`, {
+        params: {
+          event_id: id,
+        },
+      });
+
+      if (response.status === 200 ) {
+        const {data} = response
+        const presents = data.users
+        
+        setPresent(presents)
+
+        console.log('success');
+      } else {
+        console.log('failed');
+      }
+    } catch(error) {
+      console.log(error);
+    }
+    
+    try {
+      const response = await axios.get(`${global.baseurl}:4000/getAbsents`, {
+        params: {
+          event_id: id,
+        },
+      });
+
+      if (response.status === 200 ) {
+        const {data} = response
+        const absents = data.users
+        
+        setAbsent(absents)
+
+        console.log('success');
+      } else {
+        console.log('failed');
+      }
+    } catch(error) {
+      console.log(error);
+    }
+   
   };
 
   const hideParticipantsModal = () => {
@@ -429,7 +474,7 @@ export default function eventCard({
           </View>
           <View style={{ height: hp("59%"), marginBottom: hp("1%") }}>
             <ListView
-              data={participants}
+              data={activeButton === 'Present' ? present : absent}
               renderItem={({ item }) => (
                 <ProfileCard
                   fullname={item.fullname}
