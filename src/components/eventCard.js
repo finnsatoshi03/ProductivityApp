@@ -21,6 +21,7 @@ import Header from "./header";
 import ListView from "./listView";
 import ProfileCard from "./profileCard";
 import { useData } from "./../DataContext";
+import Chart from "chart.js/auto";
 
 const commonStyles = {
   container: {
@@ -577,16 +578,19 @@ const generateHTMLReport = (reportData, present, absent) => {
   // Table for Attendance Chart
   const tableContent = `
     <table border="1" style="width:100%; margin-top: 20px;">
-      <tr><th colspan="3">Attendance Chart</th></tr>
       <tr>
-        <th style="padding: 10px;">Presentees</th>
-        <th style="padding: 10px;">Absentees</th>
-        <th style="padding: 10px;">Chart</th>
+        <th colspan="3">Attendance Chart</th>
       </tr>
       <tr>
-        <td style="padding: 10px;">${present.map((p) => p.fullname).join("<br>")}</td>
-        <td style="padding: 10px;">${absent.map((a) => a.fullname).join("<br>")}</td>
-        <td style="padding: 10px; padding-left: 30px;"></td>
+        <td style="width: 33.33%; padding: 10px;">
+          Presentees:<br>${present.map((p) => p.fullname).join("<br>")}
+        </td>
+        <td style="width: 33.33%; padding: 10px;">
+          Absentees:<br>${absent.map((a) => a.fullname).join("<br>")}
+        </td>
+        <td style="width: 33.33%; padding: 10px;">
+          <canvas id="attendanceChart" width="150" height="150"></canvas>
+        </td>
       </tr>
     </table>
   `;
@@ -629,8 +633,25 @@ const generateHTMLReport = (reportData, present, absent) => {
           </div>
           ${tableContent}
         </div>
+
+        <script>
+          // Draw Pie Chart
+          const ctx = document.getElementById('attendanceChart').getContext('2d');
+          const chartData = {
+            labels: ['Presentees', 'Absentees'],
+            datasets: [{
+              data: [${present.length}, ${absent.length}],
+              backgroundColor: ['#36A2EB', '#FF6384'],
+            }],
+          };
+          new Chart(ctx, {
+            type: 'pie',
+            data: chartData,
+          });
+        </script>
       </body>
     </html>
   `;
+
   return htmlContent;
 };
