@@ -18,13 +18,13 @@ import '../../global'
 
 export default function EditProfile({  navigation, route }) {  
 
-  const { fullname, user, user_id, role} = route.params;
+  const { user, user_id, role, contact, email} = route.params;
   
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isModalVisible, setModalVisible] = useState(true);
-  const [usernamefield, setUsername] = useState('')
-  const [emailfield, setEmail] = useState('')
-  const [contactfield, setContact] = useState('')
+  const [usernamefield, setUsername] = useState(user); 
+  const [emailfield, setEmail] = useState(email);
+  const [contactfield, setContact] = useState(contact); 
   const [img, setImg] = useState('')
 
   const hideModal = () => {
@@ -88,6 +88,11 @@ export default function EditProfile({  navigation, route }) {
   const handlContact = (text) => {
     setContact(text)
   }
+
+  useEffect(() => {
+    console.log(route.params);
+  }, []);
+
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>

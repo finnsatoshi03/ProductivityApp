@@ -28,6 +28,8 @@ export default function sideBar({
   user,
   user_id,
   role,
+  email, 
+  contact
 }) {
   const { logout } = Authentication();
 
@@ -75,6 +77,11 @@ export default function sideBar({
       setLogoutText("Are you sure you want to logout?");
     }, 2000);
   };
+
+  useEffect(() => {
+    console.log(route.params);
+  }, []);
+
 
   return (
     <Modal
@@ -151,6 +158,8 @@ export default function sideBar({
               user={user}
               user_id={user_id}
               role={role}
+              email={email}
+              contact={contact}
             />
             {role === "admin" ? (
               <Button

@@ -29,7 +29,7 @@ import "../../global";
 import { format } from 'date-fns-tz';
 
 export default function Calendar({ navigation, route }) {
-  const { fullname, user, user_id, role } = route.params;
+  const { fullname, user, user_id, role, email, contact } = route.params;
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
@@ -107,6 +107,11 @@ export default function Calendar({ navigation, route }) {
 
     fetchEventsData();
   }, []);
+
+  useEffect(() => {
+    console.log(route.params);
+  }, []);
+
 
   return (
     <>
@@ -222,6 +227,8 @@ export default function Calendar({ navigation, route }) {
             fullname={fullname}
             user={user}
             user_id={user_id}
+            email={email}
+            contact={contact}
             role={role}
           />
         </>

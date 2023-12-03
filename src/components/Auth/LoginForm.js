@@ -23,6 +23,7 @@ import axios from "axios";
 import { Authentication } from "../../Auth/Authentication";
 
 import "../../../global"; // holds the url
+import { response } from "express";
 export default function AdminLogin({
   navigation,
   header,
@@ -57,6 +58,7 @@ export default function AdminLogin({
     // Clear previous errors prints
     setUsernameError(null);
     setPasswordError(null);
+    
 
     try {
       let baseurl = `${global.baseurl}:4000/adminlogin`;
@@ -74,8 +76,12 @@ export default function AdminLogin({
           user_id: response.data.user_id,
           role: response.data.role,
           fullname: response.data.fullname,
+          contact: response.data.contact,
+          email: response.data.email,
         });
         setIsLoading(false);
+        console.log(response.data.contact);
+        console.log(response.data.email);
         
         setErrorMessage("Login successful");
         navigation.navigate("Calendar", {
@@ -83,6 +89,8 @@ export default function AdminLogin({
           user: response.data.username,
           user_id:response.data.user_id,
           role: response.data.role,
+          contact: response.data.contact,
+          email: response.data.email,
         });
        
       }
@@ -119,6 +127,7 @@ export default function AdminLogin({
       return;
     }
   };
+  
 
   const handleUsernameChange = (text) => {
     setUsername(text);
@@ -181,6 +190,7 @@ export default function AdminLogin({
       keyboardDidHideListener.remove();
     };
   }, []);
+
 
   return (
     <KeyboardAvoidingView
