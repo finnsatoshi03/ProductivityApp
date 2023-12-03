@@ -89,6 +89,56 @@ export default function EventsScreen({ navigation, route }) {
     { label: "December", value: "December" },
   ];
 
+  const holidays = [
+    "2023-01-01",
+    "2023-04-06",
+    "2023-04-07",
+    "2023-04-10",
+    "2023-04-21",
+    "2023-05-01",
+    "2023-06-12",
+    "2023-06-28",
+    "2023-08-28",
+    "2023-11-27",
+    "2023-12-25",
+    "2023-12-30",
+    "2023-02-24",
+    "2023-04-08",
+    "2023-08-21",
+    "2023-11-01",
+    "2023-12-08",
+    "2023-12-31",
+    "2023-10-30",
+    "2023-11-02",
+    "2023-01-02",
+    "2023-10-30",
+    "2023-11-02",
+    "2023-01-02",
+    "2023-11-01",
+    "2023-11-25",
+    "2023-12-08",
+    "2023-12-23",
+    "2023-12-30",
+    "2024-01-01",
+    "2024-03-28",
+    "2024-03-29",
+    "2024-04-09",
+    "2024-05-01",
+    "2024-06-12",
+    "2024-08-26",
+    "2024-11-30",
+    "2024-12-25",
+    "2024-12-30",
+    "2024-02-10",
+    "2024-03-30",
+    "2024-08-21",
+    "2024-11-01",
+    "2024-11-02",
+    "2024-12-08",
+    "2024-12-24",
+    "2024-12-31",
+  ];
+
   const addEvent = async (
     eventTitle,
     participants,
@@ -97,7 +147,27 @@ export default function EventsScreen({ navigation, route }) {
     location,
     description
   ) => {
+    const isHoliday = holidays.includes(startDate.toISOString().split("T")[0]);
+
+    if (isHoliday) {
+      Alert.alert(
+        "Holiday Error",
+        "You cannot create an event on a holiday.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+      return;
+    }
+
     setCreatingEvent(true);
+
     const datetime = new Date(
       startDate.getFullYear(),
       startDate.getMonth(),
