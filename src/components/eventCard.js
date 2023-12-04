@@ -47,6 +47,7 @@ export default function eventCard({
   reason,
   description,
   onDelete,
+  starred,
   onEdit,
   id,
   narrative,
@@ -57,7 +58,11 @@ export default function eventCard({
   user,
   user_id,
   role,
+  contact,
+  email,
+  image
 }) {
+  
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
   const rotateInterpolation = animationRef.interpolate({
@@ -70,7 +75,7 @@ export default function eventCard({
   const [showSpinner, setShowSpinner] = useState(false);
   const [isParticipantsModalVisible, setParticipantsModalVisible] =
     useState(false);
-  const [activeButton, setActiveButton] = useState(null);
+  const [activeButton, setActiveButton] = useState("Present");
   const [present,setPresent] = useState({})
   const [absent,setAbsent] = useState({})
   
@@ -89,7 +94,7 @@ export default function eventCard({
         const presents = data.users
         
         setPresent(presents)
-
+        console.log(presents);
         console.log('success');
       } else {
         console.log('failed');
@@ -179,11 +184,15 @@ export default function eventCard({
         description: description,
         joinReasons: [reason],
         participants: participantsData,
+        starred:starred,
 
         fullname: fullname,
         user: user,
         user_id: user_id,
         role: role,
+        contact:contact,
+        email: email,
+        image: image
       });
     } else {
       console.log("error");

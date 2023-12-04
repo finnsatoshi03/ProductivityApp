@@ -24,6 +24,7 @@ import Attendees from "../screens/attendees";
 import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 import axios from "axios";
+import { useData } from "./../DataContext";
 
 const ViewEvent = ({ route, navigation }) => {
   const {
@@ -32,14 +33,20 @@ const ViewEvent = ({ route, navigation }) => {
     description,
     dateTime,
     joinReasons,
+    starred,
     id,
     participants,
     fullname,
     user,
     user_id,
     role,
+    contact,
+    email,
+    image
   } = route.params;
-  
+  console.log(starred);
+  const { eventData, setEventData } = useData();
+
   const [imageURL, setImageURL] = useState("");
   const [isModalVisible, setModalVisible] = useState(true);
   const [isParticipantsModalVisible, setParticipantsModalVisible] =
@@ -82,7 +89,7 @@ const ViewEvent = ({ route, navigation }) => {
   const time = dateTimeArray.slice(3).join(" ");
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
-  const [iconType, setIconType] = useState("outlined-star");
+  const [iconType, setIconType] = useState(starred === true ? "solid-star" : "outlined-star");
 
   const handleIconButtonPress = async () => {
     
@@ -91,16 +98,24 @@ const ViewEvent = ({ route, navigation }) => {
     );
 
     try {
-
       const data = {
         user_id: user_id,
         event_id: id,
         starred: iconType === "outlined-star" ? true : false
       }
-
+      
       const response = await axios.patch(`${global.baseurl}:4000/starredEvent`, data)
 
       if (response.status === 200) {
+        setEventData(prevEventData => {
+          // Update the starred status for the specific event in your state
+          return prevEventData.map(event => {
+            if (event.id === id) {
+              return { ...event, starred: data.starred };
+            }
+            return event;
+          });
+        });
         console.log('happy');
       } else {
         console.log('sad');

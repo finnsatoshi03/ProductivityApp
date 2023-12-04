@@ -30,7 +30,7 @@ import { format } from 'date-fns-tz';
 import * as Notifications from 'expo-notifications';
 
 export default function Calendar({ navigation, route }) {
-  const { fullname, user, user_id, role } = route.params;
+  const { fullname, user, user_id, role, contact, email, image } = route.params;
   
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
@@ -144,11 +144,11 @@ export default function Calendar({ navigation, route }) {
   
   const requestNotificationPermission = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
-    if (status === 'granted') {
-      console.log('Notification permission granted.');
-    } else {
-      console.log('Notification permission denied.');
-    }
+    // if (status === 'granted') {
+    //   console.log('Notification permission granted.');
+    // } else {
+    //   console.log('Notification permission denied.');
+    // }
   };
 
   Notifications.addNotificationReceivedListener((notification) => {
@@ -183,7 +183,7 @@ export default function Calendar({ navigation, route }) {
           date: triggerTime,
         },
       });
-      console.log('Notification was scheduled')
+      // console.log('Notification was scheduled')
     } else {
       console.log('Event is less than one hour away. Cannot schedule notification.');
     }
@@ -287,6 +287,9 @@ export default function Calendar({ navigation, route }) {
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
           </View>
           {/* <Text>Tite</Text> */}
@@ -306,6 +309,9 @@ export default function Calendar({ navigation, route }) {
             user={user}
             user_id={user_id}
             role={role}
+            contact={contact}
+            email={email}
+            image={image}
           />
         </>
       )}

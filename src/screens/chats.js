@@ -28,7 +28,7 @@ import { useNavigation } from "@react-navigation/native";
 
 export default function Chats({ route }) {
 
-  const { fullname, user, user_id, role} = route.params;
+  const { fullname, user, user_id, role, contact, email, image} = route.params;
 
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -299,7 +299,9 @@ export default function Chats({ route }) {
             />
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
+            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} 
+            fullname={fullname} user={user} user_id={user_id} role={role}
+            contact={contact} email={email}  image={image}/>
           </View>
           {/* <Text>Chats Screen</Text> */}
         </View>
@@ -318,6 +320,9 @@ export default function Chats({ route }) {
             user={user}
             user_id={user_id}
             role={role}
+            contact={contact}
+            email={email}
+            image={image}
           />
         </>
       )}

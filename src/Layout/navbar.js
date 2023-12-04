@@ -8,8 +8,8 @@ import {
   widthPercentageToDP as wp,
 } from "react-native-responsive-screen";
 
-export default function Navbar({ navigation, notifCounts, icon, fullname, user, user_id, role }) {
-  console.log(fullname);
+export default function Navbar({ navigation, notifCounts, icon, fullname, user, user_id, role, contact, email }) {
+  
   const [selectedIcon, setSelectedIcon] = useState(icon);
   const isFocused = useIsFocused();
   
@@ -98,6 +98,8 @@ export default function Navbar({ navigation, notifCounts, icon, fullname, user, 
                 user: user,
                 user_id:user_id,
                 role: role,
+                contact: contact,
+                email: email
               });
             }}
           >

@@ -28,9 +28,12 @@ export default function sideBar({
   user,
   user_id,
   role,
+  contact,
+  email,
+  image
 }) {
   const { logout } = Authentication();
-
+  
   const [isModalVisible, setModalVisible] = useState(false);
   const [logoutText, setLogoutText] = useState(
     "Are you sure you want to logout?"
@@ -151,6 +154,9 @@ export default function sideBar({
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
             {role === "admin" ? (
               <Button
@@ -167,6 +173,9 @@ export default function sideBar({
                 user={user}
                 user_id={user_id}
                 role={role}
+                contact={contact}
+                email={email}
+                image={image}
               />
             ) : (
               <></>
@@ -185,6 +194,9 @@ export default function sideBar({
               user={role === "admin" ? null : user}
               user_id={role === "admin" ? null : user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
           </View>
           <View style={{ marginHorizontal: 30, marginTop: 20 }}>
@@ -202,6 +214,9 @@ export default function sideBar({
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
             <Button
               text={"Events"}
@@ -217,6 +232,9 @@ export default function sideBar({
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
             {role === "admin" ? (
               <Button
@@ -233,6 +251,9 @@ export default function sideBar({
                 user={user}
                 user_id={user_id}
                 role={role}
+                contact={contact}
+                email={email}
+                image={image}
               />
             ) : (
               <></>
@@ -251,6 +272,9 @@ export default function sideBar({
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
           </View>
         </View>

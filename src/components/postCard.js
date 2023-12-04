@@ -9,7 +9,7 @@ import Avatar from "./avatar";
 import Button from "./button";
 import ReadMore from "react-native-read-more-text";
 import moment from "moment";
-
+import { useData } from "./../DataContext";
 import axios from "axios";
 import "../../global";
 import { format } from "date-fns-tz";
@@ -29,6 +29,7 @@ export default function PostCards({
   user_id,
   id
 }) {
+  const { eventData, setEventData } = useData();
   const [isPresent, setIsPresent] = useState(false);
   const [isAbsent, setIsAbsent] = useState(false);
   
@@ -46,14 +47,14 @@ export default function PostCards({
       const response = await axios.patch(`${global.baseurl}:4000/updateAttendee`, data)
 
       if (response.status === 200) {
-        console.log('success');
+        console.log('success');        
       } else {
         console.log('sad');
       }
     } catch (error) {
       console.log(error);
     }
-    
+        
   };
   const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").format("MM/DD/YYYY HH:mm:ss");
   

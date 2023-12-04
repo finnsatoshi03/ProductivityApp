@@ -27,7 +27,7 @@ import "../../global";
 
 export default function UserControl({ navigation, route }) {
 
-  const { fullname, user, user_id, role} = route.params;
+  const { fullname, user, user_id, role, contact, email, image} = route.params;
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [notVerifiedUsers, setNotVerifiedUsers] = useState({
@@ -181,7 +181,11 @@ export default function UserControl({ navigation, route }) {
               icon="none"
               navigation={navigation}
               eventsData={notVerifiedUsers}
-              fullname={fullname} user={user} user_id={user_id} role={role} 
+              fullname={fullname} user={user} user_id={user_id} 
+              role={role}
+              contact={contact}
+              email={email} 
+              image={image}
             />
             
           </View>
@@ -201,6 +205,9 @@ export default function UserControl({ navigation, route }) {
             user={user}
             user_id={user_id}
             role={role}
+            contact={contact}
+            email={email}
+            image={image}
           />
         </>
       )}

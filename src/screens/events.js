@@ -32,7 +32,7 @@ import "../../global";
 import { format } from "date-fns-tz";
 
 export default function EventsScreen({ navigation, route }) {
-  const { fullname, user, user_id, role } = route.params;
+  const { fullname, user, user_id, role, contact, email, image } = route.params;
 
   const { eventData, setEventData } = useData();
 
@@ -422,6 +422,7 @@ export default function EventsScreen({ navigation, route }) {
   const handleCloseNewModal = () => {
     setNewModalVisible(false);
   };
+  console.log(eventData);
   return (
     <>
       <View style={globalStyles.container}>
@@ -1075,6 +1076,7 @@ export default function EventsScreen({ navigation, route }) {
                       user={user}
                       user_id={user_id}
                       role={role}
+
                     />
                   ) : (
                     <></>
@@ -1092,6 +1094,9 @@ export default function EventsScreen({ navigation, route }) {
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
           </View>
           {/* <Text>Events Screen</Text> */}
@@ -1111,6 +1116,9 @@ export default function EventsScreen({ navigation, route }) {
             user={user}
             user_id={user_id}
             role={role}
+            contact={contact}
+            email={email}
+            image={image}
           />
         </>
       )}

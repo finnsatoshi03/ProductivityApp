@@ -73,7 +73,7 @@ export default function AdminLogin({
           token: response.data.token,
           user_id: response.data.user_id,
           role: response.data.role,
-          fullname: response.data.fullname,
+          fullname: response.data.fullname,         
         });
         setIsLoading(false);
         
@@ -83,8 +83,10 @@ export default function AdminLogin({
           user: response.data.username,
           user_id:response.data.user_id,
           role: response.data.role,
-        });
-       
+          contact: response.data.contact,
+          email: response.data.email,
+          image: response.data.i
+        });       
       }
     } catch (error) {
       setIsLoading(false);

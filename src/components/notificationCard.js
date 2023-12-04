@@ -40,8 +40,7 @@ export default function NotificationCard({
 
   const [header] = useState(
     eventTitles[Math.floor(Math.random() * eventTitles.length)]
-  );
-  console.log(invitation);
+  );  
   return (
     <View
       style={{
@@ -71,7 +70,7 @@ export default function NotificationCard({
                 : "100%",
           }}
         >
-          {eventDate && eventLocation ? (
+          {eventDate && eventLocation && !adminNotif? (
             read === false ? (
               <>
                 <View style={{ marginBottom: 5 }}>
@@ -169,7 +168,7 @@ export default function NotificationCard({
             </Text>
           )}
         </View>
-        {eventDate && eventLocation && !read ? (
+        {eventDate && eventLocation && !read && !adminNotif ? (
           <View style={{ gap: 10, padding: 5 }}>
             <Button
               text={"Accept"}
@@ -195,12 +194,13 @@ export default function NotificationCard({
         </Text>
         {(eventDate && eventLocation && eventTime && eventTitle) ||
         adminNotif ? (
-          <Pressable onPress={onPressTrash}>
-            <Image
-              style={{ height: wp("5%"), width: wp("5%") }}
-              source={require("./../../assets/trash.png")}
-            />
-          </Pressable>
+          <></>
+          // <Pressable onPress={onPressTrash}>
+          //   <Image
+          //     style={{ height: wp("5%"), width: wp("5%") }}
+          //     source={require("./../../assets/trash.png")}
+          //   />
+          // </Pressable>
         ) : null}
       </View>
     </View>

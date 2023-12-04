@@ -18,7 +18,7 @@ import Navbar from "../Layout/navbar";
 import Sidebar from "./../Layout/sidebar";
 import Modal from "react-native-modal";
 import Button from "./../components/button";
-
+import { useData } from "./../DataContext";
 import axios from "axios";
 import "../../global";
 
@@ -34,8 +34,8 @@ const extractEventDetails = (message) => {
 };
 
 export default function Notifications({ navigation, route }) {
-  const { fullname, user, user_id, role } = route.params;
-
+  const { fullname, user, user_id, role, contact, email, image } = route.params;
+  const { eventData, setEventData } = useData();
   const [data, setData] = useState({},);
 
   useEffect(() => {
@@ -55,7 +55,7 @@ export default function Notifications({ navigation, route }) {
         if (response.status === 200) {
           const { data } = response;
           const notification = data.notifications;
-          
+          console.log(notification);
 
           if (role === 'user') {
             if (!notification.read) {
@@ -73,20 +73,20 @@ export default function Notifications({ navigation, route }) {
                           
               setData(formattedNotifications);            
             }
-          } else {
-                                                                  
-              const formattedNotifications = notification.map((notification) => {
-                return {
-                  ...notification,
-                  eventTitle: notification.event,
-                  eventLocation: notification.location,
-                  eventDate: notification.datetime,
-                  adminNotif: true,
-                };
-              })
+          } else {                           
+            const formattedNotifications = notification
+            .filter(notification => notification.read === false)
+            .map(notification => ({
+              ...notification,
+              eventTitle: notification.event,
+              eventLocation: notification.location,
+              eventDate: notification.datetime,
+              adminNotif: true,
+              reason: notification.message
+            }));
 
               setData(formattedNotifications);
-              
+              console.log('asd',formattedNotifications);
                         
             
           }                                      
@@ -116,8 +116,7 @@ export default function Notifications({ navigation, route }) {
 
   const showModal = async (notification, buttonType) => {
     setSelectedEventTitle(notification.eventTitle);
-
-    console.log(notification);
+    
     setButtonPressed(buttonType);
     try {
       const data = {
@@ -130,6 +129,21 @@ export default function Notifications({ navigation, route }) {
         const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
 
         if (response.status === 200) {
+
+          const response = await axios.get(`${global.baseurl}:4000/userViewEvents`, {
+            params: {
+              user_id: user_id,
+            },
+          });
+          if (response.status === 200) {
+            const { data } = response;
+            const events = data.events;
+            setEventData(events);
+          }
+          setData(prevData => {
+            // Filter out the item where user_id and event_id match
+            return prevData.filter(item => !(item.user_id === notification.user_id && item.event_id === notification.event_id));
+          });
           console.log('success');
         }else {
           console.log('something went wrong')
@@ -153,7 +167,7 @@ export default function Notifications({ navigation, route }) {
     setRejectData(data)      
  
     setModalVisible(true);
-    console.log(comment);
+  
   }
   const sendReject = async() => {
     try {
@@ -164,10 +178,14 @@ export default function Notifications({ navigation, route }) {
           invitation: rejectData.invitation,  
           comment: comment
         }
-        console.log(data);
+        
         const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
 
         if (response.status === 200) {
+          setData(prevData => {
+            // Filter out the item where user_id and event_id match
+            return prevData.filter(item => !(item.user_id === notification.user_id && item.event_id === notification.event_id));
+          });
           console.log('success');
           setComment('');
         }else {
@@ -281,6 +299,9 @@ export default function Notifications({ navigation, route }) {
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+              email={email}
+              image={image}
             />
           </View>
           {/* <Text>Sample</Text> */}
@@ -407,6 +428,9 @@ export default function Notifications({ navigation, route }) {
             user={user}
             user_id={user_id}
             role={role}
+            contact={contact}
+            email={email}
+            image={image}
           />
         </>
       )}

@@ -27,6 +27,9 @@ export default function Button({
   user,
   user_id,
   role,
+  contact,
+  email,
+  image
 }) {
   return (
     <View
@@ -48,6 +51,9 @@ export default function Button({
               user: user,
               user_id: user_id,
               role: role,
+              contact: contact,
+              email: email,
+              image:image
             });
           } else if (fnc == "press") {
             onPress();

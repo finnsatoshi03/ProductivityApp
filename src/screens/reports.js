@@ -30,7 +30,7 @@ import axios from "axios";
 import '../../global'
 
 export default function Reports({ navigation, route }) {
-  const { fullname, user, user_id, role, participants } = route.params;
+  const { fullname, user, user_id, role, participants, contact, email, image } = route.params;
 
   const { eventData, setEventData } = useData();
   const { reportData, setReportData } = useData({});
@@ -168,7 +168,7 @@ export default function Reports({ navigation, route }) {
         const reports = data.reports
 
         setReportData(reports)
-        console.log(reports);
+        
       } else console.log('failed');
     }
 
@@ -389,6 +389,9 @@ export default function Reports({ navigation, route }) {
               user={user}
               user_id={user_id}
               role={role}
+              contact={contact}
+            email={email}
+            image={image}
             />
           </View>
         </View>
@@ -654,6 +657,9 @@ export default function Reports({ navigation, route }) {
             user={user}
             user_id={user_id}
             role={role}
+            contact={contact}
+            email={email}
+            image={image}
           />
         </>
       )}

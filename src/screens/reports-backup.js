@@ -12,7 +12,7 @@ import { useData } from "./../DataContext";
 
 export default function Reports({ navigation, route }) {
   
-  const { fullname, user, user_id, role} = route.params;
+  const { fullname, user, user_id, role, contact, email, image} = route.params;
 
   const { eventData, setEventData } = useData();
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -77,7 +77,12 @@ export default function Reports({ navigation, route }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Reports"} navigation={navigation} fullname={fullname} user={user} user_id={user_id} role={role} />
+            <Navbar notifCounts={6} icon={"Reports"} 
+            navigation={navigation} 
+            fullname={fullname} user={user} 
+            user_id={user_id} role={role}
+            contact={contact}
+            email={email}  image={image}/>
           </View>
         </View>
       </View>
@@ -95,6 +100,9 @@ export default function Reports({ navigation, route }) {
             user={user}
             user_id={user_id}
             role={role}
+            contact={contact}
+            email={email}
+            image={image}
           />
         </>
       )}
