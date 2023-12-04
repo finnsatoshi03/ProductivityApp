@@ -6,7 +6,7 @@ import {
   StyleSheet,
   ScrollView,
   TouchableOpacity,
-  Pressable
+  Pressable,
 } from "react-native";
 import fetchSquareImage from "./imagefetchAPI";
 import {
@@ -25,6 +25,7 @@ import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 import axios from "axios";
 import { useData } from "./../DataContext";
+import { set } from "date-fns";
 
 const ViewEvent = ({ route, navigation }) => {
   const {
@@ -44,7 +45,7 @@ const ViewEvent = ({ route, navigation }) => {
     email,
     image
   } = route.params;
-  console.log(starred);
+  
   const { eventData, setEventData } = useData();
 
   const [imageURL, setImageURL] = useState("");
@@ -92,9 +93,8 @@ const ViewEvent = ({ route, navigation }) => {
   const [iconType, setIconType] = useState(starred === true ? "solid-star" : "outlined-star");
 
   const handleIconButtonPress = async () => {
-    
     setIconType((prevIconType) =>
-      prevIconType === "outlined-star" ? "solid-star" : "outlined-star",      
+      prevIconType === "outlined-star" ? "solid-star" : "outlined-star"
     );
 
     try {
@@ -118,13 +118,11 @@ const ViewEvent = ({ route, navigation }) => {
         });
         console.log('happy');
       } else {
-        console.log('sad');
+        console.log("sad");
       }
-
-    } catch(error) {
+    } catch (error) {
       console.log(error);
     }
-
   };
 
   return (
@@ -149,31 +147,31 @@ const ViewEvent = ({ route, navigation }) => {
                 </View>
               </View>
             )}
-              <View style={{ position: 'absolute', top: 10, left: 10 }}>
-                <View
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
-                    borderRadius: 15,
-                    padding: 5,
+            <View style={{ position: "absolute", top: 10, left: 10 }}>
+              <View
+                style={{
+                  backgroundColor: "rgba(255, 255, 255, 0.5)",
+                  borderRadius: 15,
+                  padding: 5,
+                }}
+              >
+                <Pressable
+                  onPress={() => {
+                    navigation.goBack();
                   }}
                 >
-                  <Pressable
-                    onPress={() => {
-                      navigation.goBack();
+                  <Image
+                    style={{
+                      height: 40,
+                      width: 40,
+                      // Add other styles as needed
                     }}
-                  >
-                    <Image
-                      style={{
-                        height: 40,
-                        width: 40,
-                        // Add other styles as needed
-                      }}
-                      source={require('../../assets/back.png')}
-                      // Replace 'back.png' with your actual return button icon
-                    />
-                  </Pressable>
-                </View>
+                    source={require("../../assets/back.png")}
+                    // Replace 'back.png' with your actual return button icon
+                  />
+                </Pressable>
               </View>
+            </View>
             <LinearGradient
               colors={["rgba(247,249,248,0)", "rgba(125,156,101,1)"]}
               start={{ x: 0.5, y: 0 }}
@@ -417,6 +415,8 @@ const ViewEvent = ({ route, navigation }) => {
             userTag={role === "user" ? user : null}
             event_id={id}
             user_id={user_id}
+            modalVisible={isAttendeesModalVisible}
+            setModalVisible={setAttendeesModalVisible}
           />
         </View>
       </Modal>

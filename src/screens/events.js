@@ -59,6 +59,7 @@ export default function EventsScreen({ navigation, route }) {
   const [btnFnc, setBtnFnc] = useState("create");
   const [selectedEvent, setSelectedEvent] = useState("");
   const [isCreatingEvent, setCreatingEvent] = useState(false);
+  const [starredFilter, setStarredFilter] = useState(false);
 
   const [sortOrder, setSortOrder] = useState("asc");
   const [selectedMonth, setSelectedMonth] = useState(null);
@@ -88,6 +89,56 @@ export default function EventsScreen({ navigation, route }) {
     { label: "December", value: "December" },
   ];
 
+  const holidays = [
+    "2023-01-01",
+    "2023-04-06",
+    "2023-04-07",
+    "2023-04-10",
+    "2023-04-21",
+    "2023-05-01",
+    "2023-06-12",
+    "2023-06-28",
+    "2023-08-28",
+    "2023-11-27",
+    "2023-12-25",
+    "2023-12-30",
+    "2023-02-24",
+    "2023-04-08",
+    "2023-08-21",
+    "2023-11-01",
+    "2023-12-08",
+    "2023-12-31",
+    "2023-10-30",
+    "2023-11-02",
+    "2023-01-02",
+    "2023-10-30",
+    "2023-11-02",
+    "2023-01-02",
+    "2023-11-01",
+    "2023-11-25",
+    "2023-12-08",
+    "2023-12-23",
+    "2023-12-30",
+    "2024-01-01",
+    "2024-03-28",
+    "2024-03-29",
+    "2024-04-09",
+    "2024-05-01",
+    "2024-06-12",
+    "2024-08-26",
+    "2024-11-30",
+    "2024-12-25",
+    "2024-12-30",
+    "2024-02-10",
+    "2024-03-30",
+    "2024-08-21",
+    "2024-11-01",
+    "2024-11-02",
+    "2024-12-08",
+    "2024-12-24",
+    "2024-12-31",
+  ];
+
   const addEvent = async (
     eventTitle,
     participants,
@@ -96,7 +147,27 @@ export default function EventsScreen({ navigation, route }) {
     location,
     description
   ) => {
+    const isHoliday = holidays.includes(startDate.toISOString().split("T")[0]);
+
+    if (isHoliday) {
+      Alert.alert(
+        "Holiday Error",
+        "You cannot create an event on a holiday.",
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              console.log("OK Pressed");
+            },
+          },
+        ],
+        { cancelable: false }
+      );
+      return;
+    }
+
     setCreatingEvent(true);
+
     const datetime = new Date(
       startDate.getFullYear(),
       startDate.getMonth(),
@@ -165,7 +236,7 @@ export default function EventsScreen({ navigation, route }) {
           location: location,
         };
         newEvent.id = event_id;
-        
+
         const request =
           btnFnc === "create"
             ? await axios.post(
@@ -296,6 +367,11 @@ export default function EventsScreen({ navigation, route }) {
       });
     }
 
+    // Filter starred events if the starred filter is active
+    if (starredFilter) {
+      sortedData = sortedData.filter((event) => event.starred);
+    }
+
     // Sort the data based on the datetime property only if "Recent" is toggled
     if (activeButtons.recent) {
       sortedData.sort((a, b) => {
@@ -311,7 +387,13 @@ export default function EventsScreen({ navigation, route }) {
     }
 
     return sortedData;
-  }, [eventData, sortOrder, activeButtons.recent, selectedMonth]);
+  }, [
+    eventData,
+    sortOrder,
+    activeButtons.recent,
+    selectedMonth,
+    starredFilter,
+  ]);
 
   const getParticipants = async (event_id) => {
     try {
@@ -535,12 +617,16 @@ export default function EventsScreen({ navigation, route }) {
                   borderRadius: 20,
                   height: hp("5%"),
                 }}
-                onPress={() =>
+                onPress={() => {
                   setActiveButtons({
                     ...activeButtons,
                     starred: !activeButtons.starred,
-                  })
-                }
+                  });
+                  setStarredFilter(!starredFilter);
+                  setSortOrder((prevOrder) =>
+                    prevOrder === "asc" ? "desc" : "asc"
+                  );
+                }}
               >
                 <Text
                   style={{

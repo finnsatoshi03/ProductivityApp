@@ -25,14 +25,14 @@ export default function PostCards({
   avatar,
   fullname,
   datetime,
-  description,  
+  comments,
   user_id,
-  id
+  id,
 }) {
   const { eventData, setEventData } = useData();
   const [isPresent, setIsPresent] = useState(false);
   const [isAbsent, setIsAbsent] = useState(false);
-  
+
   const handlePresentPress = async () => {
     setIsPresent(!isPresent);
     setIsAbsent(false);
@@ -41,23 +41,28 @@ export default function PostCards({
       user_id: user_id,
       event_id: id,
       attend: true,
-    }
-    
+    };
+
     try {
-      const response = await axios.patch(`${global.baseurl}:4000/updateAttendee`, data)
+      const response = await axios.patch(
+        `${global.baseurl}:4000/updateAttendee`,
+        data
+      );
 
       if (response.status === 200) {
-        console.log('success');        
+        console.log("success");
       } else {
-        console.log('sad');
+        console.log("sad");
       }
     } catch (error) {
       console.log(error);
     }
         
   };
-  const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").format("MM/DD/YYYY HH:mm:ss");
-  
+  const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").format(
+    "MM/DD/YYYY HH:mm:ss"
+  );
+
   const handleAbsentPress = async () => {
     setIsAbsent(!isAbsent);
     setIsPresent(false);
@@ -66,15 +71,18 @@ export default function PostCards({
       user_id: user_id,
       event_id: id,
       attend: false,
-    }
-    
+    };
+
     try {
-      const response = await axios.patch(`${global.baseurl}:4000/updateAttendee`, data)
+      const response = await axios.patch(
+        `${global.baseurl}:4000/updateAttendee`,
+        data
+      );
 
       if (response.status === 200) {
-        console.log('success');
+        console.log("success");
       } else {
-        console.log('sad');
+        console.log("sad");
       }
     } catch (error) {
       console.log(error);
@@ -119,10 +127,9 @@ export default function PostCards({
                 fontSize: globalStyles.fontSize.description,
               }}
             >
-              {formattedDate ||
-                "1 hour ago"}
+              {formattedDate || "1 hour ago"}
             </Text>
-          </View> 
+          </View>
         </View>
         <View
           style={{
@@ -204,7 +211,7 @@ export default function PostCards({
               fontSize: globalStyles.fontSize.description,
             }}
           >
-            {description ||
+            {comments ||
               "Join us for the annual Tech Conference 2022! This event will feature industry leaders and experts from around the world, who will share their insights on the latest trends and technologies. You'll have the opportunity to network with professionals, learn from the best in the field, and discover new tools and strategies to boost your career. Don't miss out on this exciting opportunity to stay ahead in the fast-paced world of technology!"}
           </Text>
         </ReadMore>
