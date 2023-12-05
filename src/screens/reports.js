@@ -27,10 +27,11 @@ import { useData } from "./../DataContext";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 import axios from "axios";
-import '../../global'
+import "../../global";
 
 export default function Reports({ navigation, route }) {
-  const { fullname, user, user_id, role, participants, contact, email, image } = route.params;
+  const { fullname, user, user_id, role, participants, contact, email, image } =
+    route.params;
 
   const { eventData, setEventData } = useData();
   const { reportData, setReportData } = useData({});
@@ -43,7 +44,7 @@ export default function Reports({ navigation, route }) {
     );
     console.log(`Report ${reportTitleToDelete} has been deleted.`);
   };
-  
+
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedEventTitle, setSelectedEventTitle] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -81,13 +82,13 @@ export default function Reports({ navigation, route }) {
       label: event.event,
       value: event.event,
     }));
-    const calculateNumberOfWords = (str) => {
-      if (!str) return 0;
-      return str.split(" ").length;
-    };
-    const numberOfWords = calculateNumberOfWords(selectedEventTitle);
-    // console.log("Number of Words:", numberOfWords);
-    const dropdownHeight = numberOfWords >= 2 ? hp("10%") : hp("7%");
+  const calculateNumberOfWords = (str) => {
+    if (!str) return 0;
+    return str.split(" ").length;
+  };
+  const numberOfWords = calculateNumberOfWords(selectedEventTitle);
+  // console.log("Number of Words:", numberOfWords);
+  const dropdownHeight = numberOfWords >= 2 ? hp("10%") : hp("7%");
 
   const handleMonthChange = (selectedMonth) => {
     // console.log("Selected month:", selectedMonth);
@@ -153,21 +154,19 @@ export default function Reports({ navigation, route }) {
   };
 
   useEffect(() => {
-    const getReport = async() => {
-
-      const response = await axios.get(`${global.baseurl}:4000/getReports`)
+    const getReport = async () => {
+      const response = await axios.get(`${global.baseurl}:4000/getReports`);
 
       if (response.status === 200) {
-        const {data} = response
-        const reports = data.reports
+        const { data } = response;
+        const reports = data.reports;
 
-        setReportData(reports)
-        
-      } else console.log('failed');
-    }
+        setReportData(reports);
+      } else console.log("failed");
+    };
 
-    getReport()
-  }, [])
+    getReport();
+  }, []);
 
   const showAlert = (message) => {
     Alert.alert(undefined, message, [
@@ -175,17 +174,29 @@ export default function Reports({ navigation, route }) {
     ]);
   };
 
-  const handleCreateReport = async() => {
+  const handleCreateReport = async () => {
     try {
       setIsLoading(true);
+
+      const selectedEndTimeDate = new Date(selectedEndTime);
+      const selectedEventDate = new Date(selectedEvent.datetime);
+
+      const selectedEndTimeHours = selectedEndTimeDate.getHours();
+      const selectedEndTimeMinutes = selectedEndTimeDate.getMinutes();
+
+      const selectedEventHours = selectedEventDate.getHours();
+      const selectedEventMinutes = selectedEventDate.getMinutes();
 
       if (!selectedEvent) {
         showAlert("Event is required");
         return;
       } else if (
-        new Date(selectedEndTime).toLocaleTimeString("en-US") <=
-        new Date(selectedEvent.datetime).toLocaleTimeString("en-US")
+        selectedEndTimeHours < selectedEventHours ||
+        (selectedEndTimeHours === selectedEventHours &&
+          selectedEndTimeMinutes <= selectedEventMinutes)
       ) {
+        console.log("Selected end time:", selectedEndTime);
+        console.log("Selected event time:", selectedEvent.datetime);
         showAlert("Invalid start or end time");
         return;
       } else if (!selectedEventTitle || !selectedEndTime) {
@@ -197,27 +208,30 @@ export default function Reports({ navigation, route }) {
       console.log("End Time:", selectedEndTime);
 
       const newReport = {
-        event_id: selectedEvent.id,      
+        event_id: selectedEvent.id,
         endTime: selectedEndTime,
         narrative: text,
         event: selectedEvent.event,
-        location:selectedEvent.location,
-        datetime:selectedEvent.datetime,
+        location: selectedEvent.location,
+        datetime: selectedEvent.datetime,
       };
-      
-      const response = await axios.post(`${global.baseurl}:4000/createReport`,newReport)
-  
+
+      const response = await axios.post(
+        `${global.baseurl}:4000/createReport`,
+        newReport
+      );
+
       if (response.status === 200) {
-        console.log('tr');
+        console.log("tr");
       } else {
-        console.log('false');
+        console.log("false");
       }
-  
+
       setReportData((prevData) => [...prevData, newReport]);
-      
+
       console.log("New report:", newReport);
       console.log("Report data:", reportData);
-  
+
       setModalVisible(false);
       setSelectedEventTitle(null);
       setSelectedEvent(null);
@@ -229,9 +243,8 @@ export default function Reports({ navigation, route }) {
       console.log(error);
       setIsLoading(false);
     }
-    
   };
-  
+
   return (
     <>
       <View style={globalStyles.container}>
@@ -400,8 +413,8 @@ export default function Reports({ navigation, route }) {
               user_id={user_id}
               role={role}
               contact={contact}
-            email={email}
-            image={image}
+              email={email}
+              image={image}
             />
           </View>
         </View>
