@@ -38,13 +38,6 @@ export default function Reports({ navigation, route }) {
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const deleteReport = (reportTitleToDelete) => {
-    setReportData(
-      reportData.filter((event) => event.event !== reportTitleToDelete)
-    );
-    console.log(`Report ${reportTitleToDelete} has been deleted.`);
-  };
-
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedEventTitle, setSelectedEventTitle] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -195,8 +188,8 @@ export default function Reports({ navigation, route }) {
         (selectedEndTimeHours === selectedEventHours &&
           selectedEndTimeMinutes <= selectedEventMinutes)
       ) {
-        console.log("Selected end time:", selectedEndTime);
-        console.log("Selected event time:", selectedEvent.datetime);
+        // console.log("Selected end time:", selectedEndTime);
+        // console.log("Selected event time:", selectedEvent.datetime);
         showAlert("Invalid start or end time");
         return;
       } else if (!selectedEventTitle || !selectedEndTime) {
@@ -204,8 +197,8 @@ export default function Reports({ navigation, route }) {
         return;
       }
 
-      console.log("Selected event:", selectedEvent);
-      console.log("End Time:", selectedEndTime);
+      // console.log("Selected event:", selectedEvent);
+      // console.log("End Time:", selectedEndTime);
 
       const newReport = {
         event_id: selectedEvent.id,
@@ -229,8 +222,12 @@ export default function Reports({ navigation, route }) {
 
       setReportData((prevData) => [...prevData, newReport]);
 
-      console.log("New report:", newReport);
+      // console.log("New report:", newReport);
       console.log("Report data:", reportData);
+      console.log(
+        "Report IDs:",
+        reportData.map((report) => report.id)
+      );
 
       setModalVisible(false);
       setSelectedEventTitle(null);
@@ -242,6 +239,32 @@ export default function Reports({ navigation, route }) {
     } catch (error) {
       console.log(error);
       setIsLoading(false);
+    }
+  };
+
+  const deleteReport = async (report_id) => {
+    console.log("Deleting report:", report_id);
+    try {
+      const response = await axios.delete(
+        `${global.baseurl}:4000/deleteReport`,
+        {
+          params: {
+            event_id: report_id,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(`Report ${report_id} has been deleted.`);
+        // Update the local state to reflect the deletion
+        setReportData((prevData) =>
+          prevData.filter((report) => report.id !== report_id)
+        );
+      } else {
+        console.log("Failed to delete report");
+      }
+    } catch (error) {
+      console.error(error);
     }
   };
 
@@ -393,7 +416,7 @@ export default function Reports({ navigation, route }) {
                     navigation={navigation}
                     isInReportsScreen={true}
                     {...item}
-                    onDelete={() => deleteReport(item.event)}
+                    onDelete={() => deleteReport(item.id)}
                     fullname={fullname}
                     user={user}
                     user_id={user_id}
