@@ -14,12 +14,12 @@ import axios from "axios";
 import "../../global";
 import { format } from "date-fns-tz";
 
-const images = [
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-  "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-];
+// const images = [
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+//   "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
+// ];
 
 export default function PostCards({
   avatar,
@@ -27,6 +27,7 @@ export default function PostCards({
   datetime,
   comments,
   user_id,
+  image,
   id,
 }) {
   const { eventData, setEventData } = useData();
@@ -88,7 +89,7 @@ export default function PostCards({
       console.log(error);
     }
   };
-
+  console.log(image);
   return (
     <View>
       <View
@@ -140,28 +141,12 @@ export default function PostCards({
             marginBottom: 10,
           }}
         >
-          {images.map((image, index) => (
-            <View
-              key={index}
-              style={{
-                width:
-                  images.length === 1
-                    ? "100%"
-                    : images.length === 3 && index === 2
-                    ? "100%"
-                    : "50%",
-                flexDirection: "column",
-              }}
-            >
-              <Image
-                style={{
-                  height: images.length === 1 ? hp("40%") : hp("20%"),
-                  width: "100%",
-                }}
-                source={{ uri: image }}
-              />
-            </View>
-          ))}
+          <View style={{ width: "100%", flexDirection: "column" }}>
+            <Image
+              style={{ height: hp("40%"), width: "100%" }}
+              source={{ uri: image }}
+            />
+          </View>
         </View>
         <View
           style={{

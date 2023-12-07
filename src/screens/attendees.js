@@ -40,12 +40,7 @@ export default function Attendees({
   const [post, setPost] = useState({
     fullname: "",
     datetime: "",
-    images: [
-      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-      "https://images.unsplash.com/photo-1561336313-0bd5e0b27ec8?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWgelHx8fGVufDB8fHx8fA%3D%3D",
-    ],
+    images: "",
     comments: "",
     id: "",
     user_id: "",
@@ -62,12 +57,23 @@ export default function Attendees({
       if (response.status === 200) {
         const { data } = response;
         const attendees = data.users;
-
-        console.log(attendees);
-        setPost(attendees);
-        attendees.forEach((attendee) => {
-          console.log("Comments: ", attendee.comments);
+        const id = attendees[0].attendance_id
+        
+        const imageResponse = axios.get(`${global.baseurl}:4000/attendanceImage/${id}`)
+                
+        
+        imageResponse.then(response => {
+          const imageData = response.data;
+          console.log(imageData);
+          // Update the image property of the first attendee
+          attendees[0].image = imageData;
+    
+        }).catch(error => {
+            console.error('Failed to fetch image data:', error);
+            // Handle error if needed
         });
+
+        setPost(attendees);
       }
     };
     if (role === "admin") {
@@ -82,37 +88,33 @@ export default function Attendees({
         moment(a.datetime, "MM/DD/YYYY HH:mm:ss")
     );
   }
-
+  console.log(post);
   const [text, setText] = useState("");
   const maxChars = 200;
-  const [images, setImages] = useState([]);
+  const [images, setImages] = useState();
   const [isLoading, setIsLoading] = useState(false);
 
   const selectImage = async () => {
-    if (images.length >= 4) {
-      alert("You can only select up to 4 images.");
-      return;
-    }
-
+   
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
     });
-
+    console.log(result.assets[0].uri);
     if (!result.canceled) {
-      setImages([...images, result.assets[0].uri]);
+      setImages(result.assets[0].uri);
     }
   };
 
   const submitPost = async () => {
-    if (text.trim() === "") {
+    if (text.trim() === "" && images) {
       alert("Please add some text and at least one image before posting.");
       return;
     }
-
-    setIsLoading(true);
+    
+    // setIsLoading(true);
 
     setTimeout(async () => {
       try {
@@ -120,7 +122,9 @@ export default function Attendees({
           user_id: user_id,
           events_id: event_id,
           comments: text,
+          image: images,          
         };
+        
         const response = await axios.post(
           `${global.baseurl}:4000/createAttendance`,
           data
@@ -240,42 +244,41 @@ export default function Attendees({
                 <View
                   style={{ flexDirection: "row", gap: 10, marginBottom: 20 }}
                 >
-                  <FlatList
-                    data={images}
-                    renderItem={({ item: imageUri, index }) => (
-                      <View>
-                        <Image
-                          source={{ uri: imageUri }}
-                          style={{
-                            height: hp("10%"),
-                            width: hp("10%"),
-                            borderRadius: 15,
-                            marginRight: 10,
-                          }}
+                  {images ? (
+                    <View>
+                      <Image
+                        source={{ uri: images }}
+                        style={{
+                          height: hp("10%"),
+                          width: hp("10%"),
+                          borderRadius: 15,
+                          marginRight: 10,
+                        }}
+                      />
+                      <TouchableOpacity
+                        style={{
+                          position: "absolute",
+                          top: 0,
+                          right: 0,
+                        }}
+                        onPress={() => {
+                          const newImages = [...images];
+                          newImages.splice(index, 1);
+                          setImages(newImages);
+                        }}
+                      >
+                        <Ionicons
+                          name="close-circle"
+                          size={24}
+                          color="black"
                         />
-                        <TouchableOpacity
-                          style={{
-                            position: "absolute",
-                            top: 0,
-                            right: 0,
-                          }}
-                          onPress={() => {
-                            const newImages = [...images];
-                            newImages.splice(index, 1);
-                            setImages(newImages);
-                          }}
-                        >
-                          <Ionicons
-                            name="close-circle"
-                            size={24}
-                            color="black"
-                          />
-                        </TouchableOpacity>
-                      </View>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                    horizontal
-                  />
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <></>
+                  )}
+                  
+                  
                 </View>
                 <View
                   style={{
@@ -284,12 +287,12 @@ export default function Attendees({
                     justifyContent: "space-between",
                   }}
                 >
-                  {/* <TouchableOpacity onPress={selectImage}>
+                  <TouchableOpacity onPress={selectImage}>
                   <Image
                     style={{ height: hp("3%"), width: hp("3%") }}
                     source={require("./../../assets/gallery.png")}
                   />
-                </TouchableOpacity> */}
+                </TouchableOpacity>
                   {isLoading ? (
                     <ActivityIndicator
                       size="large"

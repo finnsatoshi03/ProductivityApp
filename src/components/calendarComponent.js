@@ -142,8 +142,8 @@ export default function CalendarComponent({ events, onDayPress }) {
       const localDate = format(eventDate, "yyyy-MM-dd", {
         timeZone: "Asia/Manila",
       });
-      console.log("localDate", eventDate, localDate);
-      console.log("Holdays", holidays.includes(localDate));
+      // console.log("localDate", eventDate, localDate);
+      // console.log("Holdays", holidays.includes(localDate));
 
       const color = colors[index % colors.length];
       const eventMarking = {
