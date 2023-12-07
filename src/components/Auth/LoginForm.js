@@ -64,7 +64,7 @@ export default function AdminLogin({
       if (userType === "User") {
         baseurl = `${global.baseurl}:4000/userlogin`;
       }
-     
+
       const response = await axios.post(baseurl, credentials);
 
       if (response.status === 200) {
@@ -73,20 +73,20 @@ export default function AdminLogin({
           token: response.data.token,
           user_id: response.data.user_id,
           role: response.data.role,
-          fullname: response.data.fullname,         
+          fullname: response.data.fullname,
         });
         setIsLoading(false);
-        
+
         setErrorMessage("Login successful");
         navigation.navigate("Calendar", {
           fullname: response.data.fullname,
           user: response.data.username,
-          user_id:response.data.user_id,
+          user_id: response.data.user_id,
           role: response.data.role,
           contact: response.data.contact,
           email: response.data.email,
-          image: response.data.i
-        });       
+          image: response.data.i,
+        });
       }
     } catch (error) {
       setIsLoading(false);
@@ -244,6 +244,7 @@ export default function AdminLogin({
           secureTextEntry={true}
           value={password}
           onChangeText={handlePasswordChange}
+          isPasswordInput={true}
         />
       </View>
       <View style={globalStyles.loginButtonContainer}>
