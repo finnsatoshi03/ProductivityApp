@@ -301,6 +301,7 @@ export default function SignupForm({ navigation }) {
                   margin={true}
                   value={formdata.password}
                   onChangeText={(value) => handleInputChange("password", value)}
+                  isPasswordInput={true}
                 />
                 <SignUpLabel text="Fullname *" error={errors.fullname} />
                 <InputFields

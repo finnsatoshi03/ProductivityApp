@@ -27,23 +27,17 @@ import { useData } from "./../DataContext";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 import axios from "axios";
-import '../../global'
+import "../../global";
 
 export default function Reports({ navigation, route }) {
-  const { fullname, user, user_id, role, participants, contact, email, image } = route.params;
+  const { fullname, user, user_id, role, participants, contact, email, image } =
+    route.params;
 
   const { eventData, setEventData } = useData();
   const { reportData, setReportData } = useData({});
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
 
-  const deleteReport = (reportTitleToDelete) => {
-    setReportData(
-      reportData.filter((event) => event.event !== reportTitleToDelete)
-    );
-    console.log(`Report ${reportTitleToDelete} has been deleted.`);
-  };
-  
   const [selectedMonth, setSelectedMonth] = useState(null);
   const [selectedEventTitle, setSelectedEventTitle] = useState(null);
   const [selectedEvent, setSelectedEvent] = useState(null);
@@ -81,13 +75,13 @@ export default function Reports({ navigation, route }) {
       label: event.event,
       value: event.event,
     }));
-    const calculateNumberOfWords = (str) => {
-      if (!str) return 0;
-      return str.split(" ").length;
-    };
-    const numberOfWords = calculateNumberOfWords(selectedEventTitle);
-    // console.log("Number of Words:", numberOfWords);
-    const dropdownHeight = numberOfWords >= 2 ? hp("10%") : hp("7%");
+  const calculateNumberOfWords = (str) => {
+    if (!str) return 0;
+    return str.split(" ").length;
+  };
+  const numberOfWords = calculateNumberOfWords(selectedEventTitle);
+  // console.log("Number of Words:", numberOfWords);
+  const dropdownHeight = numberOfWords >= 2 ? hp("10%") : hp("7%");
 
   const handleMonthChange = (selectedMonth) => {
     // console.log("Selected month:", selectedMonth);
@@ -152,22 +146,29 @@ export default function Reports({ navigation, route }) {
     setEndTimePickerVisible(false);
   };
 
-  useEffect(() => {
-    const getReport = async() => {
-
-      const response = await axios.get(`${global.baseurl}:4000/getReports`)
+  const getReport = async () => {
+    try {
+      setIsLoading(true);
+      const response = await axios.get(`${global.baseurl}:4000/getReports`);
 
       if (response.status === 200) {
-        const {data} = response
-        const reports = data.reports
+        const { data } = response;
+        const reports = data.reports;
 
-        setReportData(reports)
-        
-      } else console.log('failed');
+        setReportData(reports);
+      } else {
+        console.log("failed");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
     }
+  };
 
-    getReport()
-  }, [])
+  useEffect(() => {
+    getReport();
+  }, []);
 
   const showAlert = (message) => {
     Alert.alert(undefined, message, [
@@ -175,17 +176,29 @@ export default function Reports({ navigation, route }) {
     ]);
   };
 
-  const handleCreateReport = async() => {
+  const handleCreateReport = async () => {
     try {
       setIsLoading(true);
+
+      const selectedEndTimeDate = new Date(selectedEndTime);
+      const selectedEventDate = new Date(selectedEvent.datetime);
+
+      const selectedEndTimeHours = selectedEndTimeDate.getHours();
+      const selectedEndTimeMinutes = selectedEndTimeDate.getMinutes();
+
+      const selectedEventHours = selectedEventDate.getHours();
+      const selectedEventMinutes = selectedEventDate.getMinutes();
 
       if (!selectedEvent) {
         showAlert("Event is required");
         return;
       } else if (
-        new Date(selectedEndTime).toLocaleTimeString("en-US") <=
-        new Date(selectedEvent.datetime).toLocaleTimeString("en-US")
+        selectedEndTimeHours < selectedEventHours ||
+        (selectedEndTimeHours === selectedEventHours &&
+          selectedEndTimeMinutes <= selectedEventMinutes)
       ) {
+        // console.log("Selected end time:", selectedEndTime);
+        // console.log("Selected event time:", selectedEvent.datetime);
         showAlert("Invalid start or end time");
         return;
       } else if (!selectedEventTitle || !selectedEndTime) {
@@ -193,31 +206,38 @@ export default function Reports({ navigation, route }) {
         return;
       }
 
-      console.log("Selected event:", selectedEvent);
-      console.log("End Time:", selectedEndTime);
+      // console.log("Selected event:", selectedEvent);
+      // console.log("End Time:", selectedEndTime);
 
       const newReport = {
-        event_id: selectedEvent.id,      
+        event_id: selectedEvent.id,
         endTime: selectedEndTime,
         narrative: text,
         event: selectedEvent.event,
-        location:selectedEvent.location,
-        datetime:selectedEvent.datetime,
+        location: selectedEvent.location,
+        datetime: selectedEvent.datetime,
       };
-      
-      const response = await axios.post(`${global.baseurl}:4000/createReport`,newReport)
-  
+
+      const response = await axios.post(
+        `${global.baseurl}:4000/createReport`,
+        newReport
+      );
+
       if (response.status === 200) {
-        console.log('tr');
+        console.log("tr");
       } else {
-        console.log('false');
+        console.log("false");
       }
-  
+
       setReportData((prevData) => [...prevData, newReport]);
-      
-      console.log("New report:", newReport);
+
+      // console.log("New report:", newReport);
       console.log("Report data:", reportData);
-  
+      console.log(
+        "Report IDs:",
+        reportData.map((report) => report.id)
+      );
+
       setModalVisible(false);
       setSelectedEventTitle(null);
       setSelectedEvent(null);
@@ -229,9 +249,34 @@ export default function Reports({ navigation, route }) {
       console.log(error);
       setIsLoading(false);
     }
-    
   };
-  
+
+  const deleteReport = async (report_id) => {
+    console.log("Deleting report:", report_id);
+    try {
+      const response = await axios.delete(
+        `${global.baseurl}:4000/deleteReport`,
+        {
+          params: {
+            event_id: report_id,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log(`Report ${report_id} has been deleted.`);
+        // Update the local state to reflect the deletion
+        setReportData((prevData) =>
+          prevData.filter((report) => report.id !== report_id)
+        );
+      } else {
+        console.log("Failed to delete report");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <>
       <View style={globalStyles.container}>
@@ -349,7 +394,21 @@ export default function Reports({ navigation, route }) {
               height: hp("62%"),
             }}
           >
-            {reportData.length === 0 ? (
+            {isLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator
+                  size="large"
+                  color={globalStyles.colors.darkGreen}
+                />
+                <Text>Fetching your reports from the database..</Text>
+              </View>
+            ) : reportData.length === 0 ? (
               <View
                 style={{
                   flex: 1,
@@ -380,7 +439,7 @@ export default function Reports({ navigation, route }) {
                     navigation={navigation}
                     isInReportsScreen={true}
                     {...item}
-                    onDelete={() => deleteReport(item.event)}
+                    onDelete={() => deleteReport(item.id)}
                     fullname={fullname}
                     user={user}
                     user_id={user_id}
@@ -400,8 +459,8 @@ export default function Reports({ navigation, route }) {
               user_id={user_id}
               role={role}
               contact={contact}
-            email={email}
-            image={image}
+              email={email}
+              image={image}
             />
           </View>
         </View>

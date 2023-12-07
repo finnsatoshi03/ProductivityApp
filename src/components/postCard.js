@@ -58,7 +58,6 @@ export default function PostCards({
     } catch (error) {
       console.log(error);
     }
-        
   };
   const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").format(
     "MM/DD/YYYY HH:mm:ss"

@@ -61,9 +61,8 @@ export default function eventCard({
   role,
   contact,
   email,
-  image
+  image,
 }) {
-  
   const [isExpanded, setIsExpanded] = useState(false);
   const animationRef = useRef(new Animated.Value(0)).current;
   const rotateInterpolation = animationRef.interpolate({
@@ -77,10 +76,10 @@ export default function eventCard({
   const [isParticipantsModalVisible, setParticipantsModalVisible] =
     useState(false);
   const [activeButton, setActiveButton] = useState("Present");
-  const [present,setPresent] = useState({})
-  const [absent,setAbsent] = useState({})
-  
-  const showParticipantsModal = async() => {
+  const [present, setPresent] = useState({});
+  const [absent, setAbsent] = useState({});
+
+  const showParticipantsModal = async () => {
     setParticipantsModalVisible(true);
 
     try {
@@ -184,15 +183,15 @@ export default function eventCard({
         description: description,
         joinReasons: [reason],
         participants: participantsData,
-        starred:starred,
+        starred: starred,
 
         fullname: fullname,
         user: user,
         user_id: user_id,
         role: role,
-        contact:contact,
+        contact: contact,
         email: email,
-        image: image
+        image: image,
       });
     } else {
       console.log("error");
@@ -610,7 +609,7 @@ const generateHTMLReport = (reportData, present, absent) => {
           Absentees:<br>${absent.map((a) => a.fullname).join("<br>")}
         </td>
         <td style="width: 33.33%; padding: 10px;">
-          <canvas id="attendanceChart" width="150" height="150"></canvas>
+      
         </td>
       </tr>
     </table>
@@ -654,22 +653,6 @@ const generateHTMLReport = (reportData, present, absent) => {
           </div>
           ${tableContent}
         </div>
-
-        <script>
-          // Draw Pie Chart
-          const ctx = document.getElementById('attendanceChart').getContext('2d');
-          const chartData = {
-            labels: ['Presentees', 'Absentees'],
-            datasets: [{
-              data: [${present.length}, ${absent.length}],
-              backgroundColor: ['#36A2EB', '#FF6384'],
-            }],
-          };
-          new Chart(ctx, {
-            type: 'pie',
-            data: chartData,
-          });
-        </script>
       </body>
     </html>
   `;
