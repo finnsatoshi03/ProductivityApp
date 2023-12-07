@@ -146,8 +146,9 @@ export default function Reports({ navigation, route }) {
     setEndTimePickerVisible(false);
   };
 
-  useEffect(() => {
-    const getReport = async () => {
+  const getReport = async () => {
+    try {
+      setIsLoading(true);
       const response = await axios.get(`${global.baseurl}:4000/getReports`);
 
       if (response.status === 200) {
@@ -155,9 +156,17 @@ export default function Reports({ navigation, route }) {
         const reports = data.reports;
 
         setReportData(reports);
-      } else console.log("failed");
-    };
+      } else {
+        console.log("failed");
+      }
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
+  useEffect(() => {
     getReport();
   }, []);
 
@@ -385,7 +394,21 @@ export default function Reports({ navigation, route }) {
               height: hp("62%"),
             }}
           >
-            {reportData.length === 0 ? (
+            {isLoading ? (
+              <View
+                style={{
+                  flex: 1,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <ActivityIndicator
+                  size="large"
+                  color={globalStyles.colors.darkGreen}
+                />
+                <Text>Fetching your reports from the database..</Text>
+              </View>
+            ) : reportData.length === 0 ? (
               <View
                 style={{
                   flex: 1,

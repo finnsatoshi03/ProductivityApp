@@ -572,11 +572,6 @@ export default function eventCard({
 const generateHTMLReport = (reportData, present, absent) => {
   let reportContent = "";
   let lastReportNarrative = "";
-  const fileReader = new FileReader();
-  fileReader.onload = (fileLoadedEvent) => {
-    const base64Image = fileLoadedEvent.target.result;
-  };
-  fileReader.readAsDataURL("./../../assets/logo.png");
 
   const startTime = new Date(
     moment(reportData.datetime, "D MMMM YYYY h:mm A").toISOString()
