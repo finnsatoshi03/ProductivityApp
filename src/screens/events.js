@@ -54,6 +54,7 @@ export default function EventsScreen({ navigation, route }) {
   const [participantNames, setParticipantNames] = useState("");
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
+  const [is_important, setIsImportant] = useState(false);
 
   const [addedParticipants, setAddedParticipants] = useState([]);
   const [btnFnc, setBtnFnc] = useState("create");
@@ -145,7 +146,8 @@ export default function EventsScreen({ navigation, route }) {
     startDate,
     endDate,
     location,
-    description
+    description,
+    is_important
   ) => {
     const isHoliday = holidays.includes(startDate.toISOString().split("T")[0]);
 
@@ -213,6 +215,7 @@ export default function EventsScreen({ navigation, route }) {
       location: location,
       description: description,
       id: selectedEvent === "" ? null : selectedEvent,
+      is_important: Boolean(is_important),
     };
 
     // console.log("Date: ", newEvent.datetime);
@@ -250,6 +253,7 @@ export default function EventsScreen({ navigation, route }) {
 
         if (request.status === 200) {
           console.log("SUCCSESESE");
+          console.log("Importance status:", is_important);
         } else {
           console.log("NOT SUCESESES");
         }
@@ -455,6 +459,15 @@ export default function EventsScreen({ navigation, route }) {
     setDescription(event.description);
   };
 
+  const toggleImportance = () => {
+    setIsImportant((prevIsImportant) => {
+      console.log("Previous isImportant:", prevIsImportant);
+      const newIsImportant = !prevIsImportant;
+      console.log("New isImportant:", newIsImportant);
+      return newIsImportant;
+    });
+  };
+
   const handleMonthChange = (selectedMonth) => {
     console.log("Selected month:", selectedMonth);
     setSelectedMonth(selectedMonth);
@@ -504,7 +517,8 @@ export default function EventsScreen({ navigation, route }) {
   const handleCloseNewModal = () => {
     setNewModalVisible(false);
   };
-  console.log(eventData);
+
+  // console.log(eventData);
   return (
     <>
       <View style={globalStyles.container}>
@@ -692,6 +706,12 @@ export default function EventsScreen({ navigation, route }) {
                 onChangeText={(text) => setEventTitle(text)}
                 value={eventTitle}
               />
+              <Pressable onPress={toggleImportance}>
+                <Text style={{ color: is_important ? "red" : "black" }}>
+                  {is_important ? "Important" : "Not Important"}
+                </Text>
+              </Pressable>
+
               <View style={{ paddingVertical: 10 }}>
                 <Text
                   style={{
@@ -858,7 +878,8 @@ export default function EventsScreen({ navigation, route }) {
                           startDate,
                           endDate,
                           location,
-                          description
+                          description,
+                          is_important
                         )
                       }
                     />
@@ -877,7 +898,8 @@ export default function EventsScreen({ navigation, route }) {
                         startDate,
                         endDate,
                         location,
-                        description
+                        description,
+                        is_important
                       )
                     }
                   />
