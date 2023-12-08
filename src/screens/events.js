@@ -285,7 +285,7 @@ export default function EventsScreen({ navigation, route }) {
       setDescription("");
       setAddedParticipants([]);
       setLocation("");
-      setDescription("");
+      setIsImportant(false);
 
       Alert.alert(
         "Event Created",
