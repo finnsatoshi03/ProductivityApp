@@ -30,8 +30,8 @@ export default function AdminLogin({
   userType,
 }) {
   const [isFocused, setIsFocused] = useState(false);
-  const [username, setUsername] = useState("admin_123");
-  const [password, setPassword] = useState("12345678");
+  const [username, setUsername] = useState("1");
+  const [password, setPassword] = useState("1");
 
   const logoSize = useRef(new Animated.Value(1)).current;
   const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
@@ -76,15 +76,14 @@ export default function AdminLogin({
           fullname: response.data.fullname,
         });
         setIsLoading(false);
-        let user_id = response.data.user_id                           
+        let user_id = response.data.user_id;
         let baseurlimage = `${global.baseurl}:4000/adminImage/${user_id}`;
 
         if (userType === "User") {
           baseurlimage = `${global.baseurl}:4000/userImage/${user_id}`;
         }
         const responseimage = await axios.get(baseurlimage);
-        
-        
+
         setErrorMessage("Login successful");
         navigation.navigate("Calendar", {
           fullname: response.data.fullname,
@@ -93,8 +92,8 @@ export default function AdminLogin({
           role: response.data.role,
           contact: response.data.contact,
           email: response.data.email,
-          image: responseimage.data
-        });    
+          image: responseimage.data,
+        });
       }
     } catch (error) {
       setIsLoading(false);

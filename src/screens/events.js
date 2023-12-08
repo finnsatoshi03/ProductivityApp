@@ -672,180 +672,179 @@ export default function EventsScreen({ navigation, route }) {
               margin: 0,
             }}
           >
-            {/* Content of the bottom sheet */}
-            {btnFnc === "create" ? (
-              <View
+            <View
+              style={{
+                backgroundColor: globalStyles.colors.green,
+                padding: 40,
+                borderTopLeftRadius: 20,
+                borderTopRightRadius: 20,
+              }}
+            >
+              <TextInput
+                placeholder="Name of the event"
                 style={{
-                  backgroundColor: globalStyles.colors.green,
-                  padding: 40,
-                  borderTopLeftRadius: 20,
-                  borderTopRightRadius: 20,
+                  fontFamily: globalStyles.fontStyle.semiBold,
+                  fontSize: globalStyles.fontSize.subHeader,
+                  color: "black",
                 }}
-              >
-                <TextInput
-                  placeholder="Name of the event"
+                placeholderTextColor="rgba(0,0,0,0.5)"
+                paddingVertical={10}
+                onChangeText={(text) => setEventTitle(text)}
+                value={eventTitle}
+              />
+              <View style={{ paddingVertical: 10 }}>
+                <Text
                   style={{
-                    fontFamily: globalStyles.fontStyle.semiBold,
-                    fontSize: globalStyles.fontSize.subHeader,
-                    color: "black",
-                  }}
-                  placeholderTextColor="rgba(0,0,0,0.5)"
-                  paddingVertical={10}
-                  onChangeText={(text) => {
-                    setEventTitle(text);
-                  }}
-                />
-                <View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    Invite Participants
-                  </Text>
-                  <Pressable onPress={() => setNewModalVisible(true)}>
-                    <Image
-                      style={{
-                        height: hp("3.5%"),
-                        width: hp("3.5%"),
-                        borderRadius: hp("3.5%") / 2,
-                        opacity: 0.5,
-                      }}
-                      source={require("./../../assets/add-dotted.png")}
-                    />
-                  </Pressable>
-                  {participantNames.length > 0 && (
-                    <View>
-                      <Text
-                        style={{
-                          fontFamily: globalStyles.fontStyle.semiBold,
-                          fontSize: globalStyles.fontSize.description,
-                        }}
-                      >
-                        {participantNames}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-
-                <View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    Select Date & Time
-                  </Text>
-                  <Pressable onPress={showDatePicker}>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.bold,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`Date: `}</Text>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.regular,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`${format(startDate, "dd MMMM yyyy", {
-                      timeZone: "Asia/Manila",
-                    })}`}</Text>
-                  </Pressable>
-                  <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={(date) => handleDateTimeConfirm(date, "date")}
-                    onCancel={hideDatePicker}
-                  />
-                  <Pressable onPress={showTimePicker}>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.bold,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`Time: `}</Text>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.regular,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`${format(endDate, "HH:mm", {
-                      timeZone: "Asia/Manila",
-                    })}`}</Text>
-                  </Pressable>
-                  <DateTimePickerModal
-                    isVisible={isTimePickerVisible}
-                    mode="time"
-                    onConfirm={(date) => handleDateTimeConfirm(date, "time")}
-                    onCancel={hideTimePicker}
-                  />
-                </View>
-                <View View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                      marginBottom: -7,
-                    }}
-                  >
-                    Choose Location
-                  </Text>
-                  <TextInput
-                    placeholder="Where is the event?"
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                    placeholderTextColor={"rgba(0,0,0,0.5)"}
-                    onChangeText={(text) => {
-                      setLocation(text);
-                    }}
-                  />
-                </View>
-                <View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                      marginBottom: -7,
-                    }}
-                  >
-                    Write a description
-                  </Text>
-                  <TextInput
-                    placeholder="Message.."
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                    placeholderTextColor={"rgba(0,0,0,0.5)"}
-                    onChangeText={(text) => {
-                      setDescription(text);
-                    }}
-                  />
-                </View>
-                <View
-                  style={{
-                    marginVertical: 20,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "100%",
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                    color: "rgba(0,0,0,0.5)",
                   }}
                 >
-                  {isCreatingEvent ? (
+                  Invite Participants
+                </Text>
+                <Pressable onPress={() => setNewModalVisible(true)}>
+                  <Image
+                    style={{
+                      height: hp("3.5%"),
+                      width: hp("3.5%"),
+                      borderRadius: hp("3.5%") / 2,
+                      opacity: 0.5,
+                    }}
+                    source={require("./../../assets/add-dotted.png")}
+                  />
+                </Pressable>
+                {participantNames.length > 0 && (
+                  <View>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.description,
+                      }}
+                    >
+                      {participantNames}
+                    </Text>
+                  </View>
+                )}
+              </View>
+
+              <View style={{ paddingVertical: 10 }}>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                    color: "rgba(0,0,0,0.5)",
+                  }}
+                >
+                  Select Date & Time
+                </Text>
+                <Pressable onPress={showDatePicker}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.bold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                  >{`Date: `}</Text>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                  >{`${format(startDate, "dd MMMM yyyy", {
+                    timeZone: "Asia/Manila",
+                  })}`}</Text>
+                </Pressable>
+                <DateTimePickerModal
+                  isVisible={isDatePickerVisible}
+                  mode="date"
+                  onConfirm={(date) => handleDateTimeConfirm(date, "date")}
+                  onCancel={hideDatePicker}
+                />
+                <Pressable onPress={showTimePicker}>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.bold,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                  >{`Time: `}</Text>
+                  <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.mediumDescription,
+                      color: "black",
+                    }}
+                  >{`${format(endDate, "HH:mm", {
+                    timeZone: "Asia/Manila",
+                  })}`}</Text>
+                </Pressable>
+                <DateTimePickerModal
+                  isVisible={isTimePickerVisible}
+                  mode="time"
+                  onConfirm={(date) => handleDateTimeConfirm(date, "time")}
+                  onCancel={hideTimePicker}
+                />
+              </View>
+
+              <View style={{ paddingVertical: 10 }}>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                    color: "rgba(0,0,0,0.5)",
+                    marginBottom: -7,
+                  }}
+                >
+                  Choose Location
+                </Text>
+                <TextInput
+                  placeholder="Where is the event?"
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: globalStyles.fontSize.mediumDescription,
+                    color: "black",
+                  }}
+                  placeholderTextColor={"rgba(0,0,0,0.5)"}
+                  onChangeText={(text) => setLocation(text)}
+                  value={location}
+                />
+              </View>
+
+              <View style={{ paddingVertical: 10 }}>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                    color: "rgba(0,0,0,0.5)",
+                    marginBottom: -7,
+                  }}
+                >
+                  Write a description
+                </Text>
+                <TextInput
+                  placeholder="Message.."
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: globalStyles.fontSize.mediumDescription,
+                    color: "black",
+                  }}
+                  placeholderTextColor={"rgba(0,0,0,0.5)"}
+                  onChangeText={(text) => setDescription(text)}
+                  value={description}
+                />
+              </View>
+
+              <View
+                style={{
+                  marginVertical: 20,
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  width: "100%",
+                }}
+              >
+                {btnFnc === "create" ? (
+                  isCreatingEvent ? (
                     <ActivityIndicator size="large" color={"black"} />
                   ) : (
                     <Button
@@ -863,225 +862,36 @@ export default function EventsScreen({ navigation, route }) {
                         )
                       }
                     />
-                  )}
+                  )
+                ) : isCreatingEvent ? (
+                  <ActivityIndicator size="large" color={"black"} />
+                ) : (
                   <Button
-                    text={"Cancel"}
-                    width={wp("23%")}
-                    bgColor="rgba(0,0,0,0.3)"
-                    textColor="#9198bc"
-                    onPress={closeBottomSheet}
+                    text={"Edit Event"}
+                    width={wp("55%")}
                     fnc={"press"}
+                    onPress={() =>
+                      addEvent(
+                        eventTitle,
+                        participants,
+                        startDate,
+                        endDate,
+                        location,
+                        description
+                      )
+                    }
                   />
-                </View>
-              </View>
-            ) : (
-              <View
-                style={{
-                  backgroundColor: globalStyles.colors.green,
-                  padding: 40,
-                  borderTopLeftRadius: 20,
-                  borderTopRightRadius: 20,
-                }}
-              >
-                <TextInput
-                  placeholder="Name of the event"
-                  style={{
-                    fontFamily: globalStyles.fontStyle.semiBold,
-                    fontSize: globalStyles.fontSize.subHeader,
-                    color: "black",
-                  }}
-                  placeholderTextColor="rgba(0,0,0,0.5)"
-                  paddingVertical={10}
-                  onChangeText={(text) => {
-                    setEventTitle(text);
-                  }}
-                  value={eventTitle}
+                )}
+                <Button
+                  text={"Cancel"}
+                  width={wp("23%")}
+                  bgColor="rgba(0,0,0,0.3)"
+                  textColor="#9198bc"
+                  onPress={closeBottomSheet}
+                  fnc={"press"}
                 />
-                <View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    Invite Participants
-                  </Text>
-                  <Pressable onPress={() => setNewModalVisible(true)}>
-                    <Image
-                      style={{
-                        height: hp("3.5%"),
-                        width: hp("3.5%"),
-                        borderRadius: hp("3.5%") / 2,
-                        opacity: 0.5,
-                      }}
-                      source={require("./../../assets/add-dotted.png")}
-                    />
-                  </Pressable>
-                  {participantNames.length > 0 && (
-                    <View>
-                      <Text
-                        style={{
-                          fontFamily: globalStyles.fontStyle.semiBold,
-                          fontSize: globalStyles.fontSize.description,
-                        }}
-                      >
-                        {participantNames}
-                      </Text>
-                    </View>
-                  )}
-                </View>
-
-                <View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    Select Date & Time
-                  </Text>
-                  <Pressable onPress={showDatePicker}>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.bold,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`Date: `}</Text>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.regular,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`${startDate.toLocaleDateString("en-GB", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric",
-                    })}`}</Text>
-                  </Pressable>
-                  <DateTimePickerModal
-                    isVisible={isDatePickerVisible}
-                    mode="date"
-                    onConfirm={(date) => handleDateTimeConfirm(date, "date")}
-                    onCancel={hideDatePicker}
-                  />
-                  <Pressable onPress={showTimePicker}>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.bold,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`Time: `}</Text>
-                    <Text
-                      style={{
-                        fontFamily: globalStyles.fontStyle.regular,
-                        fontSize: globalStyles.fontSize.mediumDescription,
-                        color: "black",
-                      }}
-                    >{`${endDate.toLocaleTimeString("en-GB", {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                    })}`}</Text>
-                  </Pressable>
-                  <DateTimePickerModal
-                    isVisible={isTimePickerVisible}
-                    mode="time"
-                    onConfirm={(date) => handleDateTimeConfirm(date, "time")}
-                    onCancel={hideTimePicker}
-                  />
-                </View>
-                <View View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                      marginBottom: -7,
-                    }}
-                  >
-                    Choose Location
-                  </Text>
-                  <TextInput
-                    placeholder="Where is the event?"
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                    placeholderTextColor={"rgba(0,0,0,0.5)"}
-                    onChangeText={(text) => {
-                      setLocation(text);
-                    }}
-                    value={location}
-                  />
-                </View>
-                <View style={{ paddingVertical: 10 }}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                      marginBottom: -7,
-                    }}
-                  >
-                    Write a description
-                  </Text>
-                  <TextInput
-                    placeholder="Message.."
-                    style={{
-                      fontFamily: globalStyles.fontStyle.semiBold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                    placeholderTextColor={"rgba(0,0,0,0.5)"}
-                    onChangeText={(text) => {
-                      setDescription(text);
-                    }}
-                    value={description}
-                  />
-                </View>
-                <View
-                  style={{
-                    marginVertical: 20,
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    width: "100%",
-                  }}
-                >
-                  {isCreatingEvent ? (
-                    <ActivityIndicator size="large" color={"black"} />
-                  ) : (
-                    <Button
-                      text={"Edit Event"}
-                      width={wp("55%")}
-                      fnc={"press"}
-                      onPress={() =>
-                        addEvent(
-                          eventTitle,
-                          participants,
-                          startDate,
-                          endDate,
-                          location,
-                          description
-                        )
-                      }
-                    />
-                  )}
-                  <Button
-                    text={"Cancel"}
-                    width={wp("23%")}
-                    bgColor="rgba(0,0,0,0.3)"
-                    textColor="#9198bc"
-                    onPress={closeBottomSheet}
-                    fnc={"press"}
-                  />
-                </View>
               </View>
-            )}
+            </View>
           </Modal>
           <Modal
             isVisible={isNewModalVisible}
@@ -1162,7 +972,6 @@ export default function EventsScreen({ navigation, route }) {
                       user={user}
                       user_id={user_id}
                       role={role}
-
                     />
                   ) : (
                     <></>
