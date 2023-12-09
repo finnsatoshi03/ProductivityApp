@@ -449,6 +449,8 @@ export default function Notifications({ navigation, route }) {
                   width: "100%",
                   marginBottom: 20,
                   paddingHorizontal: 20,
+                  paddingVertical: 5,
+                  borderRadius: 10,
                 }}
                 placeholder="Please tell us why you rejected"
                 multiline={true}
