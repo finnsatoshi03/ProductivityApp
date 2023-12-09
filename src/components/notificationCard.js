@@ -20,7 +20,7 @@ export default function NotificationCard({
   isImportant,
   onPressAccept,
   onPressReject,
-  onPressTrash,
+  onPressEdit,
 }) {
   const dateObject = new Date(created_at);
   const formattedDate = new Intl.DateTimeFormat("en-US", {
@@ -49,12 +49,20 @@ export default function NotificationCard({
     : eventTitle;
 
   const [isAccepted, setIsAccepted] = useState(false);
+  const [isEditToggled, setIsEditToggled] = useState(false);
+  const [isRejectHidden, setIsRejectHidden] = useState(false);
   const handleAccept = () => {
     onPressAccept();
     setIsAccepted(true);
   };
+  const handleEditToggle = () => {
+    setIsEditToggled(!isEditToggled);
+  };
+  const handleRejectToggle = () => {
+    setIsRejectHidden(!isRejectHidden);
+  };
 
-  console.log(invitation);
+  // console.log(invitation);
   return (
     <View
       style={{
@@ -79,7 +87,7 @@ export default function NotificationCard({
             marginBottom: 3,
             flexWrap: "wrap",
             width:
-              isAccepted || invitation
+              isAccepted || invitation || isEventPastDue
                 ? "100%"
                 : eventDate && eventLocation
                 ? wp("55%")
@@ -184,7 +192,12 @@ export default function NotificationCard({
             </Text>
           )}
         </View>
-        {eventDate && eventLocation && !read && !adminNotif && !isAccepted ? (
+        {eventDate &&
+        eventLocation &&
+        !read &&
+        !adminNotif &&
+        !isAccepted &&
+        !isEventPastDue ? (
           <View style={{ gap: 10, padding: 5 }}>
             {invitation !== true && (
               <>
@@ -213,12 +226,33 @@ export default function NotificationCard({
           {formattedDate}
         </Text>
         {isAccepted || (invitation && !adminNotif && !isEventPastDue) ? (
-          <Pressable onPress={onPressTrash}>
-            <Image
-              style={{ height: wp("5%"), width: wp("5%") }}
-              source={require("./../../assets/edit.png")}
-            />
-          </Pressable>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 5 }}>
+            {isEditToggled ? (
+              <>
+                <Pressable onPress={handleEditToggle}>
+                  <Image
+                    style={{ height: wp("5%"), width: wp("5%") }}
+                    source={require("./../../assets/edit.png")}
+                  />
+                </Pressable>
+                <Button
+                  text={"Reject"}
+                  width={wp("20%")}
+                  borderRadius={10}
+                  bgColor="rgba(255, 0, 0, 0.5)"
+                  textColor="white"
+                  onPress={onPressReject}
+                />
+              </>
+            ) : (
+              <Pressable onPress={handleEditToggle}>
+                <Image
+                  style={{ height: wp("5%"), width: wp("5%") }}
+                  source={require("./../../assets/edit.png")}
+                />
+              </Pressable>
+            )}
+          </View>
         ) : null}
       </View>
     </View>

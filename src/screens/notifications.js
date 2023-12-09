@@ -90,7 +90,7 @@ export default function Notifications({ navigation, route }) {
             setData(formattedNotifications);
             console.log("asd", formattedNotifications);
           }
-          console.log("sucess");
+          console.log("suces");
           setIsLoading(false);
         } else console.log("failed");
       } catch (err) {
@@ -167,7 +167,7 @@ export default function Notifications({ navigation, route }) {
           );
 
           setData(updatedData);
-          console.log("success");
+          console.log("succes");
         } else {
           console.log("something went wrong");
         }
