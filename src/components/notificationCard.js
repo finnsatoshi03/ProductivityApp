@@ -31,6 +31,8 @@ export default function NotificationCard({
     minute: "numeric",
   }).format(dateObject);
 
+  const isEventPastDue = eventDate ? new Date() > new Date(eventDate) : false;
+
   const eventTitles = [
     "Get ready for an electrifying event!",
     "Don't miss this exciting event!",
@@ -210,16 +212,14 @@ export default function NotificationCard({
         <Text style={{ fontFamily: globalStyles.fontStyle.regular }}>
           {formattedDate}
         </Text>
-        {(eventDate && eventLocation && eventTime && eventTitle) ||
-        adminNotif ? (
-          <></>
-        ) : // <Pressable onPress={onPressTrash}>
-        //   <Image
-        //     style={{ height: wp("5%"), width: wp("5%") }}
-        //     source={require("./../../assets/trash.png")}
-        //   />
-        // </Pressable>
-        null}
+        {isAccepted || (invitation && !adminNotif && !isEventPastDue) ? (
+          <Pressable onPress={onPressTrash}>
+            <Image
+              style={{ height: wp("5%"), width: wp("5%") }}
+              source={require("./../../assets/edit.png")}
+            />
+          </Pressable>
+        ) : null}
       </View>
     </View>
   );
