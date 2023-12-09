@@ -190,7 +190,7 @@ export default function Notifications({ navigation, route }) {
     setRejectData(data);
     setSelectedEventTitle(notification.eventTitle);
 
-    console.log("WTF?");
+    // console.log("WTF?");
     setModalVisible(true);
   };
 
