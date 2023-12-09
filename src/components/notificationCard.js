@@ -76,11 +76,12 @@ export default function NotificationCard({
             flexDirection: "row",
             marginBottom: 3,
             flexWrap: "wrap",
-            width: isAccepted
-              ? "100%"
-              : eventDate && eventLocation
-              ? wp("55%")
-              : "100%",
+            width:
+              isAccepted || invitation
+                ? "100%"
+                : eventDate && eventLocation
+                ? wp("55%")
+                : "100%",
           }}
         >
           {eventDate && eventLocation && !adminNotif ? (
@@ -183,20 +184,24 @@ export default function NotificationCard({
         </View>
         {eventDate && eventLocation && !read && !adminNotif && !isAccepted ? (
           <View style={{ gap: 10, padding: 5 }}>
-            <Button
-              text={"Accept"}
-              width={wp("20%")}
-              borderRadius={10}
-              onPress={handleAccept}
-            />
-            <Button
-              text={"Reject"}
-              width={wp("20%")}
-              borderRadius={10}
-              bgColor="rgba(255, 255, 255, 0.5)"
-              textColor="rgba(0, 0, 0, 0.5)"
-              onPress={onPressReject}
-            />
+            {invitation !== true && (
+              <>
+                <Button
+                  text={"Accept"}
+                  width={wp("20%")}
+                  borderRadius={10}
+                  onPress={handleAccept}
+                />
+                <Button
+                  text={"Reject"}
+                  width={wp("20%")}
+                  borderRadius={10}
+                  bgColor="rgba(255, 255, 255, 0.5)"
+                  textColor="rgba(0, 0, 0, 0.5)"
+                  onPress={onPressReject}
+                />
+              </>
+            )}
           </View>
         ) : null}
       </View>

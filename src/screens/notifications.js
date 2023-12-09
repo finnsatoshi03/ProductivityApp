@@ -57,24 +57,18 @@ export default function Notifications({ navigation, route }) {
           console.log("Notifications: ", notification);
 
           if (role === "user") {
-            if (!notification.read) {
-              const formattedNotifications = notification.map(
-                (notification) => {
-                  const eventDetails = extractEventDetails(
-                    notification.message
-                  );
-                  return {
-                    ...notification,
-                    eventTitle: eventDetails.event,
-                    eventLocation: eventDetails.location,
-                    eventDate: eventDetails.date,
-                    reason: notification.comment,
-                  };
-                }
-              );
+            const formattedNotifications = notification.map((notification) => {
+              const eventDetails = extractEventDetails(notification.message);
+              return {
+                ...notification,
+                eventTitle: eventDetails.event,
+                eventLocation: eventDetails.location,
+                eventDate: eventDetails.date,
+                reason: notification.comment,
+              };
+            });
 
-              setData(formattedNotifications);
-            }
+            setData(formattedNotifications);
           } else {
             const formattedNotifications = notification
               .filter((notification) => notification.read === false)
@@ -87,7 +81,6 @@ export default function Notifications({ navigation, route }) {
                 reason: notification.message,
               }))
               .sort((a, b) => {
-                // Assuming the date is in ISO format, you may need to adjust this
                 const dateA = new Date(a.eventDate);
                 const dateB = new Date(b.eventDate);
                 return dateA - dateB;
@@ -149,6 +142,7 @@ export default function Notifications({ navigation, route }) {
             setEventData(events);
           }
           setData((prevData) => {
+            // Filter out the item where user_id and event_id match
             return prevData.filter(
               (item) =>
                 !(
