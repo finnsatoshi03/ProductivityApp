@@ -376,6 +376,10 @@ export default function EventsScreen({ navigation, route }) {
       sortedData = sortedData.filter((event) => event.starred);
     }
 
+    if (activeButtons.important) {
+      sortedData = sortedData.filter((event) => event.is_important);
+    }
+
     // Sort the data based on the datetime property only if "Recent" is toggled
     if (activeButtons.recent) {
       sortedData.sort((a, b) => {
@@ -397,6 +401,7 @@ export default function EventsScreen({ navigation, route }) {
     activeButtons.recent,
     selectedMonth,
     starredFilter,
+    activeButtons.important,
   ]);
 
   const getParticipants = async (event_id) => {
@@ -449,6 +454,7 @@ export default function EventsScreen({ navigation, route }) {
     setBtnFnc("edit");
     setSelectedEvent(event.id);
 
+    setIsImportant(event.is_important);
     getParticipants(event.id);
     // setParticipantNames(event.)
     const dateTime = new Date(event.datetime);
@@ -619,7 +625,7 @@ export default function EventsScreen({ navigation, route }) {
                 Recent
               </Text>
             </Pressable>
-            {role !== "admin" && (
+            {role !== "admin" ? (
               <Pressable
                 style={{
                   paddingVertical: 13,
@@ -649,6 +655,37 @@ export default function EventsScreen({ navigation, route }) {
                   }}
                 >
                   Starred
+                </Text>
+              </Pressable>
+            ) : (
+              <Pressable
+                style={{
+                  paddingVertical: 13,
+                  paddingHorizontal: 20,
+                  alignSelf: "center",
+                  backgroundColor: activeButtons.important
+                    ? globalStyles.colors.green
+                    : "transparent",
+                  borderRadius: 20,
+                  height: hp("5%"),
+                }}
+                onPress={() => {
+                  setActiveButtons({
+                    ...activeButtons,
+                    important: !activeButtons.important,
+                  });
+                  setSortOrder((prevOrder) =>
+                    prevOrder === "asc" ? "desc" : "asc"
+                  );
+                }}
+              >
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    color: activeButtons.important ? "white" : "grey",
+                  }}
+                >
+                  Important
                 </Text>
               </Pressable>
             )}
@@ -694,23 +731,42 @@ export default function EventsScreen({ navigation, route }) {
                 borderTopRightRadius: 20,
               }}
             >
-              <TextInput
-                placeholder="Name of the event"
+              <View
                 style={{
-                  fontFamily: globalStyles.fontStyle.semiBold,
-                  fontSize: globalStyles.fontSize.subHeader,
-                  color: "black",
+                  flexDirection: "row",
+                  justifyContent: "space-between",
+                  alignItems: "center",
+                  width: "100%",
                 }}
-                placeholderTextColor="rgba(0,0,0,0.5)"
-                paddingVertical={10}
-                onChangeText={(text) => setEventTitle(text)}
-                value={eventTitle}
-              />
-              <Pressable onPress={toggleImportance}>
-                <Text style={{ color: is_important ? "red" : "black" }}>
-                  {is_important ? "Important" : "Not Important"}
-                </Text>
-              </Pressable>
+              >
+                <TextInput
+                  placeholder="Name of the event"
+                  style={{
+                    fontFamily: globalStyles.fontStyle.semiBold,
+                    fontSize: globalStyles.fontSize.subHeader,
+                    color: "black",
+                    width: "80%",
+                  }}
+                  placeholderTextColor="rgba(0,0,0,0.5)"
+                  paddingVertical={10}
+                  onChangeText={(text) => setEventTitle(text)}
+                  value={eventTitle}
+                />
+                <TouchableOpacity
+                  onPress={toggleImportance}
+                  style={{ alignItems: "center" }}
+                >
+                  {/* <Text>Importance</Text> */}
+                  <Image
+                    style={{ height: hp("3%"), width: hp("3%") }}
+                    source={
+                      is_important
+                        ? require("./../../assets/flag-alt.png")
+                        : require("./../../assets/flag.png")
+                    }
+                  />
+                </TouchableOpacity>
+              </View>
 
               <View style={{ paddingVertical: 10 }}>
                 <Text
