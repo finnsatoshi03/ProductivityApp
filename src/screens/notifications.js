@@ -5,6 +5,7 @@ import {
   TouchableOpacity,
   ActivityIndicator,
   TextInput,
+  Alert,
 } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
@@ -112,8 +113,22 @@ export default function Notifications({ navigation, route }) {
 
   const showModal = async (notification, buttonType) => {
     setSelectedEventTitle(notification.eventTitle);
-
     setButtonPressed(buttonType);
+
+    const currentDate = new Date();
+    const eventDate = new Date(notification.date);
+    console.log("Notification Date: ", eventDate);
+    console.log(notification);
+
+    if (eventDate <= currentDate) {
+      Alert.alert(
+        "Event Passed",
+        "This event has already passed. You cannot accept it.",
+        [{ text: "OK", onPress: () => {} }]
+      );
+      return;
+    }
+
     try {
       const data = {
         user_id: notification.user_id,
@@ -141,16 +156,16 @@ export default function Notifications({ navigation, route }) {
             const events = data.events;
             setEventData(events);
           }
-          setData((prevData) => {
-            // Filter out the item where user_id and event_id match
-            return prevData.filter(
-              (item) =>
-                !(
-                  item.user_id === notification.user_id &&
-                  item.event_id === notification.event_id
-                )
-            );
-          });
+          const updatedData = data.map((item) =>
+            item.user_id === notification.user_id &&
+            item.event_id === notification.event_id
+              ? {
+                  ...item,
+                }
+              : item
+          );
+
+          setData(updatedData);
           console.log("success");
         } else {
           console.log("something went wrong");
