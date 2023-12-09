@@ -24,87 +24,90 @@ import "../../global";
 
 // Helper function to extract event details from the message
 const extractEventDetails = (message) => {
-  const lines = message.split('\n');
-                              
+  const lines = message.split("\n");
+
   return {
-    event: lines[1]?.trim().replace('Event: ', ''),
-    location: lines[3]?.trim().replace('Location: ', ''),
-    date: lines[2]?.trim().replace('Date: ', ''),   
+    event: lines[1]?.trim().replace("Event: ", ""),
+    location: lines[3]?.trim().replace("Location: ", ""),
+    date: lines[2]?.trim().replace("Date: ", ""),
   };
 };
 
 export default function Notifications({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
   const { eventData, setEventData } = useData();
-  const [data, setData] = useState({},);
+  const [data, setData] = useState({});
 
   useEffect(() => {
     const getNotifications = async () => {
       try {
         setIsLoading(true);
-        const response = role === 'user' ? 
-        await axios.get(`${global.baseurl}:4000/getNotifications`,
-          {
-            params: {
-              user_id: user_id,
-            },
-          }
-        ) : await axios.get(`${global.baseurl}:4000/getAdminNotification`);
-          
+        const response =
+          role === "user"
+            ? await axios.get(`${global.baseurl}:4000/getNotifications`, {
+                params: {
+                  user_id: user_id,
+                },
+              })
+            : await axios.get(`${global.baseurl}:4000/getAdminNotification`);
 
         if (response.status === 200) {
           const { data } = response;
           const notification = data.notifications;
-          console.log(notification);
+          console.log("Notifications: ", notification);
 
-          if (role === 'user') {
+          if (role === "user") {
             if (!notification.read) {
-              
-              const formattedNotifications = notification.map((notification) => {
-                const eventDetails = extractEventDetails(notification.message);
+              const formattedNotifications = notification.map(
+                (notification) => {
+                  const eventDetails = extractEventDetails(
+                    notification.message
+                  );
                   return {
                     ...notification,
                     eventTitle: eventDetails.event,
                     eventLocation: eventDetails.location,
                     eventDate: eventDetails.date,
-                    reason: notification.comment
+                    reason: notification.comment,
                   };
-                });
-                          
-              setData(formattedNotifications);            
-            }
-          } else {                           
-            const formattedNotifications = notification
-            .filter(notification => notification.read === false)
-            .map(notification => ({
-              ...notification,
-              eventTitle: notification.event,
-              eventLocation: notification.location,
-              eventDate: notification.datetime,
-              adminNotif: true,
-              reason: notification.message
-            }));
+                }
+              );
 
               setData(formattedNotifications);
-              console.log('asd',formattedNotifications);
-                        
-            
-          }                                      
+            }
+          } else {
+            const formattedNotifications = notification
+              .filter((notification) => notification.read === false)
+              .map((notification) => ({
+                ...notification,
+                eventTitle: notification.event,
+                eventLocation: notification.location,
+                eventDate: notification.datetime,
+                adminNotif: true,
+                reason: notification.message,
+              }))
+              .sort((a, b) => {
+                // Assuming the date is in ISO format, you may need to adjust this
+                const dateA = new Date(a.eventDate);
+                const dateB = new Date(b.eventDate);
+                return dateA - dateB;
+              });
+
+            setData(formattedNotifications);
+            console.log("asd", formattedNotifications);
+          }
           console.log("sucess");
           setIsLoading(false);
         } else console.log("failed");
-
       } catch (err) {
         console.log(err);
         setIsLoading(false);
       }
-
-      
     };
     getNotifications();
   }, []);
   console.log(data);
-  
+
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
@@ -112,95 +115,134 @@ export default function Notifications({ navigation, route }) {
   const [buttonPressed, setButtonPressed] = useState(null);
   const [notificationsToDelete, setNotificationsToDelete] = useState([]);
   const [comment, setComment] = useState();
-  const [rejectData, setRejectData] = useState({})
+  const [rejectData, setRejectData] = useState({});
 
   const showModal = async (notification, buttonType) => {
     setSelectedEventTitle(notification.eventTitle);
-    
+
     setButtonPressed(buttonType);
     try {
       const data = {
         user_id: notification.user_id,
         event_id: notification.event_id,
-        invitation: buttonType === 'accept' ? true : false,
-        comment: buttonType === 'accept' ? "" : "false",
-      }      
-      if (buttonType === 'accept') {
-        const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
+        invitation: buttonType === "accept" ? true : false,
+        comment: buttonType === "accept" ? "" : "false",
+      };
+      if (buttonType === "accept") {
+        const response = await axios.patch(
+          `${global.baseurl}:4000/stateNotification`,
+          data
+        );
 
         if (response.status === 200) {
-
-          const response = await axios.get(`${global.baseurl}:4000/userViewEvents`, {
-            params: {
-              user_id: user_id,
-            },
-          });
+          const response = await axios.get(
+            `${global.baseurl}:4000/userViewEvents`,
+            {
+              params: {
+                user_id: user_id,
+              },
+            }
+          );
           if (response.status === 200) {
             const { data } = response;
             const events = data.events;
             setEventData(events);
           }
-          setData(prevData => {
-            // Filter out the item where user_id and event_id match
-            return prevData.filter(item => !(item.user_id === notification.user_id && item.event_id === notification.event_id));
+          setData((prevData) => {
+            return prevData.filter(
+              (item) =>
+                !(
+                  item.user_id === notification.user_id &&
+                  item.event_id === notification.event_id
+                )
+            );
           });
-          console.log('success');
-        }else {
-          console.log('something went wrong')
+          console.log("success");
+        } else {
+          console.log("something went wrong");
         }
       }
-      
     } catch (error) {
       console.log(error);
     }
-         
+
     setModalVisible(true);
   };
 
   const rejectModal = async (notification, buttonType) => {
- 
     const data = {
       user_id: notification.user_id,
       event_id: notification.event_id,
-      invitation: buttonType === 'accept' ? true : null,      
-    }      
-    setRejectData(data)      
- 
-    setModalVisible(true);
-  
-  }
-  const sendReject = async() => {
-    try {
-          
-        const data = {
-          user_id: rejectData.user_id,
-          event_id: rejectData.event_id,
-          invitation: rejectData.invitation,  
-          comment: comment
-        }
-        
-        const response = await axios.patch(`${global.baseurl}:4000/stateNotification`,data)
+      invitation: buttonType === "accept" ? true : null,
+    };
+    setRejectData(data);
+    setSelectedEventTitle(notification.eventTitle);
 
-        if (response.status === 200) {
-          setData(prevData => {
-            // Filter out the item where user_id and event_id match
-            return prevData.filter(item => !(item.user_id === notification.user_id && item.event_id === notification.event_id));
-          });
-          console.log('success');
-          setComment('');
-        }else {
-          console.log('something went wrong')
-        }
-        
+    try {
+      const response = await axios.patch(
+        `${global.baseurl}:4000/stateNotification`,
+        data
+      );
+
+      if (response.status === 200) {
+        setData((prevData) =>
+          prevData.filter(
+            (item) =>
+              !(
+                item.user_id === notification.user_id &&
+                item.event_id === notification.event_id
+              )
+          )
+        );
+        console.log("success");
+      } else {
+        console.log("something went wrong");
+      }
     } catch (error) {
       console.log(error);
     }
-    
-    setModalVisible(false)
-  }
-  
-  const hideModal = () => {      
-    setModalVisible(false)
+
+    setModalVisible(true);
+  };
+
+  const sendReject = async () => {
+    try {
+      const data = {
+        user_id: rejectData.user_id,
+        event_id: rejectData.event_id,
+        invitation: rejectData.invitation,
+        comment: comment,
+      };
+
+      const response = await axios.patch(
+        `${global.baseurl}:4000/stateNotification`,
+        data
+      );
+
+      if (response.status === 200) {
+        setData((prevData) => {
+          // Filter out the item where user_id and event_id match
+          return prevData.filter(
+            (item) =>
+              !(
+                item.user_id === data.user_id && item.event_id === data.event_id
+              )
+          );
+        });
+        console.log("success");
+        setComment("");
+      } else {
+        console.log("something went wrong");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+
+    setModalVisible(false);
+  };
+
+  const hideModal = () => {
+    setModalVisible(false);
   };
 
   const handleDeleteNotification = (notificationId) => {
@@ -277,9 +319,12 @@ export default function Notifications({ navigation, route }) {
                   renderItem={({ item }) => (
                     <NotificationCard
                       {...item}
+                      isImportant={item.is_important}
                       onPressAccept={() => showModal(item, "accept")}
                       onPressReject={() => rejectModal(item, "reject")}
-                      onPressTrash={() => handleDeleteNotification(item.notification_id)}
+                      onPressTrash={() =>
+                        handleDeleteNotification(item.notification_id)
+                      }
                     />
                   )}
                 />

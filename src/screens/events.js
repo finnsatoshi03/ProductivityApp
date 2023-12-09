@@ -151,6 +151,7 @@ export default function EventsScreen({ navigation, route }) {
   ) => {
     const isHoliday = holidays.includes(startDate.toISOString().split("T")[0]);
 
+    // Validations
     if (isHoliday) {
       Alert.alert(
         "Holiday Error",
@@ -168,6 +169,7 @@ export default function EventsScreen({ navigation, route }) {
       return;
     }
 
+    // Creation of event
     setCreatingEvent(true);
 
     const datetime = new Date(

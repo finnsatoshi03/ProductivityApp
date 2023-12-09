@@ -17,6 +17,7 @@ export default function NotificationCard({
   reason,
   read,
   adminNotif,
+  isImportant,
   onPressAccept,
   onPressReject,
   onPressTrash,
@@ -41,6 +42,10 @@ export default function NotificationCard({
   const [header] = useState(
     eventTitles[Math.floor(Math.random() * eventTitles.length)]
   );
+  const eventTitleWithLabel = isImportant
+    ? "🚨 Important Event 🚨"
+    : eventTitle;
+
   const [isAccepted, setIsAccepted] = useState(false);
   const handleAccept = () => {
     onPressAccept();
@@ -78,7 +83,7 @@ export default function NotificationCard({
               : "100%",
           }}
         >
-          {eventDate && eventLocation && !adminNotif? (
+          {eventDate && eventLocation && !adminNotif ? (
             read === false ? (
               <>
                 <View style={{ marginBottom: 5 }}>
@@ -88,7 +93,7 @@ export default function NotificationCard({
                       fontSize: globalStyles.fontSize.mediumDescription,
                     }}
                   >
-                    🎉 {header} 🎉
+                    {isImportant ? "🚨 Important Event 🚨" : `🎉 ${header} 🎉`}
                   </Text>
                 </View>
                 <Text
@@ -203,13 +208,13 @@ export default function NotificationCard({
         {(eventDate && eventLocation && eventTime && eventTitle) ||
         adminNotif ? (
           <></>
-          // <Pressable onPress={onPressTrash}>
-          //   <Image
-          //     style={{ height: wp("5%"), width: wp("5%") }}
-          //     source={require("./../../assets/trash.png")}
-          //   />
-          // </Pressable>
-        ) : null}
+        ) : // <Pressable onPress={onPressTrash}>
+        //   <Image
+        //     style={{ height: wp("5%"), width: wp("5%") }}
+        //     source={require("./../../assets/trash.png")}
+        //   />
+        // </Pressable>
+        null}
       </View>
     </View>
   );
