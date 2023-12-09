@@ -55,7 +55,7 @@ export default function Notifications({ navigation, route }) {
         if (response.status === 200) {
           const { data } = response;
           const notification = data.notifications;
-          console.log("Notifications: ", notification);
+          // console.log("Notifications: ", notification);
 
           if (role === "user") {
             const formattedNotifications = notification.map((notification) => {
@@ -100,7 +100,7 @@ export default function Notifications({ navigation, route }) {
     };
     getNotifications();
   }, []);
-  console.log(data);
+  // console.log(data);
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -112,13 +112,14 @@ export default function Notifications({ navigation, route }) {
   const [rejectData, setRejectData] = useState({});
 
   const showModal = async (notification, buttonType) => {
+    console.log("Notification: ", notification);
     setSelectedEventTitle(notification.eventTitle);
     setButtonPressed(buttonType);
 
     const currentDate = new Date();
-    const eventDate = new Date(notification.date);
+    const eventDate = new Date(notification.eventDate);
     console.log("Notification Date: ", eventDate);
-    console.log(notification);
+    // console.log(notification);
 
     if (eventDate <= currentDate) {
       Alert.alert(
