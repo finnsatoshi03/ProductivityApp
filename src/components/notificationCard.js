@@ -231,8 +231,12 @@ export default function NotificationCard({
               <>
                 <Pressable onPress={handleEditToggle}>
                   <Image
-                    style={{ height: wp("5%"), width: wp("5%") }}
-                    source={require("./../../assets/edit.png")}
+                    style={{
+                      height: wp("5%"),
+                      width: wp("5%"),
+                      transform: [{ rotate: "45deg" }],
+                    }}
+                    source={require("./../../assets/add-alt.png")}
                   />
                 </Pressable>
                 <Button

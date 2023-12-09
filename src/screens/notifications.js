@@ -90,7 +90,7 @@ export default function Notifications({ navigation, route }) {
             setData(formattedNotifications);
             console.log("asd", formattedNotifications);
           }
-          console.log("suces");
+          console.log("sucess");
           setIsLoading(false);
         } else console.log("failed");
       } catch (err) {
@@ -104,6 +104,7 @@ export default function Notifications({ navigation, route }) {
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [isSending, setIsSending] = useState(false);
   const [isModalVisible, setModalVisible] = useState(false);
   const [selectedEventTitle, setSelectedEventTitle] = useState(null);
   const [buttonPressed, setButtonPressed] = useState(null);
@@ -157,17 +158,18 @@ export default function Notifications({ navigation, route }) {
             const events = data.events;
             setEventData(events);
           }
-          const updatedData = data.map((item) =>
-            item.user_id === notification.user_id &&
-            item.event_id === notification.event_id
-              ? {
-                  ...item,
-                }
-              : item
+          setData((prevData) =>
+            prevData.map((item) =>
+              item.user_id === notification.user_id &&
+              item.event_id === notification.event_id
+                ? {
+                    ...item,
+                  }
+                : item
+            )
           );
 
-          setData(updatedData);
-          console.log("succes");
+          console.log("success");
         } else {
           console.log("something went wrong");
         }
@@ -188,35 +190,13 @@ export default function Notifications({ navigation, route }) {
     setRejectData(data);
     setSelectedEventTitle(notification.eventTitle);
 
-    try {
-      const response = await axios.patch(
-        `${global.baseurl}:4000/stateNotification`,
-        data
-      );
-
-      if (response.status === 200) {
-        setData((prevData) =>
-          prevData.filter(
-            (item) =>
-              !(
-                item.user_id === notification.user_id &&
-                item.event_id === notification.event_id
-              )
-          )
-        );
-        console.log("success");
-      } else {
-        console.log("something went wrong");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-
+    console.log("WTF?");
     setModalVisible(true);
   };
 
   const sendReject = async () => {
     try {
+      setIsSending(true);
       const data = {
         user_id: rejectData.user_id,
         event_id: rejectData.event_id,
@@ -247,12 +227,13 @@ export default function Notifications({ navigation, route }) {
     } catch (error) {
       console.log(error);
     }
-
+    setIsSending(false);
     setModalVisible(false);
   };
 
   const hideModal = () => {
     setModalVisible(false);
+    setButtonPressed(null);
   };
 
   const handleDeleteNotification = (notificationId) => {
@@ -466,7 +447,14 @@ export default function Notifications({ navigation, route }) {
                 multiline={true}
                 onChange={(e) => setComment(e.nativeEvent.text)}
               />
-              <Button text="Send" onPress={sendReject} width={wp("20%")} />
+              {isSending ? (
+                <ActivityIndicator
+                  size="large"
+                  color={globalStyles.colors.green}
+                />
+              ) : (
+                <Button text="Send" onPress={sendReject} width={wp("20%")} />
+              )}
             </>
           )}
         </View>
