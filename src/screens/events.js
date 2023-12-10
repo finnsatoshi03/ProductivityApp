@@ -10,6 +10,9 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
+import * as DocumentPicker from 'expo-document-picker';
+import * as FileSystem from 'expo-file-system';
+
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -55,6 +58,8 @@ export default function EventsScreen({ navigation, route }) {
   const [location, setLocation] = useState("");
   const [description, setDescription] = useState("");
   const [is_important, setIsImportant] = useState(false);
+  const [document, setDocument] = useState(null);
+  const [documentName, setDocumentName] = useState("");
 
   const [addedParticipants, setAddedParticipants] = useState([]);
   const [btnFnc, setBtnFnc] = useState("create");
@@ -147,7 +152,8 @@ export default function EventsScreen({ navigation, route }) {
     endDate,
     location,
     description,
-    is_important
+    is_important,
+    document
   ) => {
     const isHoliday = holidays.includes(startDate.toISOString().split("T")[0]);
 
@@ -218,8 +224,9 @@ export default function EventsScreen({ navigation, route }) {
       description: description,
       id: selectedEvent === "" ? null : selectedEvent,
       is_important: Boolean(is_important),
+      document: document,
     };
-
+    
     // console.log("Date: ", newEvent.datetime);
     // console.log(new Date(newEvent.datetime).toLocaleString());
 
@@ -452,6 +459,7 @@ export default function EventsScreen({ navigation, route }) {
   };
 
   const handleEditEvent = (event) => {
+    
     setBottomSheetVisible(true);
     setBtnFnc("edit");
     setSelectedEvent(event.id);
@@ -465,6 +473,7 @@ export default function EventsScreen({ navigation, route }) {
     setEventTitle(event.event);
     setLocation(event.location);
     setDescription(event.description);
+    setDocumentName(event.document ? 'Already have an file' : "")
   };
 
   const toggleImportance = () => {
@@ -525,8 +534,28 @@ export default function EventsScreen({ navigation, route }) {
   const handleCloseNewModal = () => {
     setNewModalVisible(false);
   };
+  
+  const pickDocument = async () => {
+    try {
+      const result = await DocumentPicker.getDocumentAsync({
+        type: 'application/pdf', // Adjust the type based on your requirements
+      });      
+      
+      if (!result.canceled) {
+        setDocument(result.assets[0].uri);    
+        setDocumentName(result.assets[0].name)    
+      } else {
+        console.log('Document picking cancelled or failed');
+      }
+    } catch (error) {
+      console.error('Error picking document', error);
+    }
+  };
+   // Use useEffect to log the document value after the component has re-rendered
+   useEffect(() => {
+    console.log(document);
+  }, [document]); // The useEffect will run whenever the value of `document` changes
 
-  // console.log(eventData);
   return (
     <>
       <View style={globalStyles.container}>
@@ -912,7 +941,30 @@ export default function EventsScreen({ navigation, route }) {
                   value={description}
                 />
               </View>
-
+              <View style={{ paddingVertical: 10 }}>
+                <Text
+                    style={{
+                      fontFamily: globalStyles.fontStyle.regular,
+                      fontSize: globalStyles.fontSize.description,
+                      color: "rgba(0,0,0,0.5)",
+                    }}
+                  >
+                    Attach File
+                  </Text>
+                <Pressable onPress={() => pickDocument()}>
+                  <Image
+                    style={{
+                      height: hp("3.5%"),
+                      width: hp("3.5%"),
+                      borderRadius: hp("3.5%") / 2,
+                      opacity: 0.5,
+                    }}
+                    source={require("./../../assets/add-dotted.png")}
+                  />
+                  {documentName && <Text>{documentName}</Text>}
+                  
+                </Pressable>
+              </View>
               <View
                 style={{
                   marginVertical: 20,
@@ -937,7 +989,8 @@ export default function EventsScreen({ navigation, route }) {
                           endDate,
                           location,
                           description,
-                          is_important
+                          is_important,
+                          document
                         )
                       }
                     />
@@ -957,7 +1010,8 @@ export default function EventsScreen({ navigation, route }) {
                         endDate,
                         location,
                         description,
-                        is_important
+                        is_important, 
+                        document
                       )
                     }
                   />

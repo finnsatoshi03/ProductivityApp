@@ -26,6 +26,8 @@ import Button from "./button";
 import axios from "axios";
 import { useData } from "./../DataContext";
 import { set } from "date-fns";
+import * as FileSystem from 'expo-file-system';
+import * as IntentLauncher from 'expo-intent-launcher';
 
 const ViewEvent = ({ route, navigation }) => {
   const {
@@ -125,6 +127,28 @@ const ViewEvent = ({ route, navigation }) => {
     }
   };
 
+  const showDocs = async () => {
+
+    const response = await axios.get(`${global.baseurl}:4000/file/${id}`)
+    
+    if (response.status === 200) {
+      console.log(response.data);
+      const cUri = await FileSystem.getContentUriAsync(response.data);
+
+      await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+        data: cUri,
+        flags: 1,
+        type: "application/pdf",
+    });
+    }    
+    // FileSystem.getContentUriAsync(uri).then(cUri => {
+    //   IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
+    //       data: cUri.uri,
+    //       flags: 1,
+    //       type: 'application/pdf'
+    //    });
+    // });
+  }
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -350,6 +374,23 @@ const ViewEvent = ({ route, navigation }) => {
                     onPress={showAdminModal}
                     width={wp("35%")}
                   />
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: 15,
+                    marginTop: hp("3%"),
+                  }}
+                >
+                  <Button
+                    text={"Signed Document"}
+                    onPress={showDocs}
+                    width={wp("45%")}
+                    bgColor="rgba(255, 255, 255, 0.5)"
+                    textColor="rgba(0, 0, 0, 0.5)"
+                  />                  
                 </View>
               </View>
             </View>
