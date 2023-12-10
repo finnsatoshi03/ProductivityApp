@@ -30,7 +30,7 @@ export default function AdminLogin({
   userType,
 }) {
   const [isFocused, setIsFocused] = useState(false);
-  const [username, setUsername] = useState("admin_123");
+  const [username, setUsername] = useState("user123");
   const [password, setPassword] = useState("12345678");
 
   const logoSize = useRef(new Animated.Value(1)).current;

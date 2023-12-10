@@ -153,14 +153,14 @@ export default function Notifications({ navigation, route }) {
     }
     setHasValidationOrConflict(false);
 
-    if (eventDate <= currentDate) {
-      Alert.alert(
-        "Event Passed",
-        "This event has already passed. You cannot accept it.",
-        [{ text: "OK", onPress: () => {} }]
-      );
-      return;
-    }
+    // if (eventDate <= currentDate) {
+    //   Alert.alert(
+    //     "Event Passed",
+    //     "This event has already passed. You cannot accept it.",
+    //     [{ text: "OK", onPress: () => {} }]
+    //   );
+    //   return;
+    // }
 
     try {
       const data = {
@@ -216,7 +216,7 @@ export default function Notifications({ navigation, route }) {
     const data = {
       user_id: notification.user_id,
       event_id: notification.event_id,
-      invitation: buttonType === "accept" ? true : null,
+      invitation: buttonType === "accept" ? true : false,
     };
     setRejectData(data);
     setSelectedEventTitle(notification.eventTitle);
