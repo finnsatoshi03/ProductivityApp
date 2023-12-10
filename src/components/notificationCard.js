@@ -57,9 +57,11 @@ export default function NotificationCard({
   };
   const handleEditToggle = () => {
     setIsEditToggled(!isEditToggled);
+    setIsRejectHidden(true);
   };
   const handleRejectToggle = () => {
     setIsRejectHidden(!isRejectHidden);
+    setIsEditToggled(false);
   };
 
   // console.log(invitation);
@@ -245,7 +247,10 @@ export default function NotificationCard({
                   borderRadius={10}
                   bgColor="rgba(255, 0, 0, 0.5)"
                   textColor="white"
-                  onPress={onPressReject}
+                  onPress={() => {
+                    onPressReject();
+                    handleRejectToggle();
+                  }}
                 />
               </>
             ) : (
