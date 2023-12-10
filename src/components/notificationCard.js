@@ -60,7 +60,7 @@ export default function NotificationCard({
       return;
     } else {
       console.log("Accepted");
-      
+      setIsAccepted(true);
     }
     // setIsAccepted(true);
   };
@@ -71,7 +71,6 @@ export default function NotificationCard({
   const handleRejectToggle = () => {
     setIsRejectHidden(!isRejectHidden);
     setIsEditToggled(false);
-    setIsAccepted(true);
   };
 
   // console.log(invitation);
@@ -208,7 +207,8 @@ export default function NotificationCard({
         eventLocation &&
         !read &&
         !adminNotif &&
-        !isAccepted  ? (
+        !isAccepted &&
+        !isEventPastDue ? (
           <View style={{ gap: 10, padding: 5 }}>
             {invitation !== true && (
               <>
@@ -271,7 +271,7 @@ export default function NotificationCard({
               </Pressable>
             )}
           </View>
-        ) : null} 
+        ) : null}
       </View>
     </View>
   );
