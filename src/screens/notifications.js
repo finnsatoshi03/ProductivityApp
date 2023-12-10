@@ -111,6 +111,7 @@ export default function Notifications({ navigation, route }) {
   const [notificationsToDelete, setNotificationsToDelete] = useState([]);
   const [comment, setComment] = useState();
   const [rejectData, setRejectData] = useState({});
+  const [hasValidationOrConflict, setHasValidationOrConflict] = useState(null);
 
   const showModal = async (notification, buttonType) => {
     // console.log("Notification: ", notification);
@@ -126,12 +127,12 @@ export default function Notifications({ navigation, route }) {
     const hasConflict = data.some((item) => {
       const itemDate = new Date(item.eventDate);
 
-      console.log("Item User ID: ", item.user_id);
-      console.log("Notification User ID: ", notification.user_id);
-      console.log("Item Event ID: ", item.event_id);
-      console.log("Notification Event ID: ", notification.event_id);
-      console.log("Item Time: ", itemDate.getTime());
-      console.log("Event Time: ", eventDate.getTime());
+      // console.log("Item User ID: ", item.user_id);
+      // console.log("Notification User ID: ", notification.user_id);
+      // console.log("Item Event ID: ", item.event_id);
+      // console.log("Notification Event ID: ", notification.event_id);
+      // console.log("Item Time: ", itemDate.getTime());
+      // console.log("Event Time: ", eventDate.getTime());
 
       return (
         item.user_id === notification.user_id &&
@@ -147,8 +148,10 @@ export default function Notifications({ navigation, route }) {
         "This event conflicts with another event. Please choose a different time.",
         [{ text: "OK", onPress: () => {} }]
       );
+      setHasValidationOrConflict(true);
       return;
     }
+    setHasValidationOrConflict(false);
 
     if (eventDate <= currentDate) {
       Alert.alert(
@@ -197,7 +200,7 @@ export default function Notifications({ navigation, route }) {
             )
           );
 
-          console.log("success");
+          console.log("sucess");
         } else {
           console.log("something went wrong");
         }
@@ -218,7 +221,8 @@ export default function Notifications({ navigation, route }) {
     setRejectData(data);
     setSelectedEventTitle(notification.eventTitle);
 
-    // console.log("WTF?");
+    // console.log("WTFs?");
+    setHasValidationOrConflict(false);
     setModalVisible(true);
   };
 
@@ -339,6 +343,7 @@ export default function Notifications({ navigation, route }) {
                     <NotificationCard
                       {...item}
                       isImportant={item.is_important}
+                      hasValidationOrConflict={hasValidationOrConflict}
                       onPressAccept={() => showModal(item, "accept")}
                       onPressReject={() => rejectModal(item, "reject")}
                       onPressTrash={() =>

@@ -21,6 +21,7 @@ export default function NotificationCard({
   onPressAccept,
   onPressReject,
   onPressEdit,
+  hasValidationOrConflict,
 }) {
   const dateObject = new Date(created_at);
   const formattedDate = new Intl.DateTimeFormat("en-US", {
@@ -53,7 +54,15 @@ export default function NotificationCard({
   const [isRejectHidden, setIsRejectHidden] = useState(false);
   const handleAccept = () => {
     onPressAccept();
-    setIsAccepted(true);
+    if (hasValidationOrConflict) {
+      console.log("Not accepted - Conflict detected");
+      setIsAccepted(false);
+      return;
+    } else {
+      console.log("Accepted");
+      setIsAccepted(true);
+    }
+    // setIsAccepted(true);
   };
   const handleEditToggle = () => {
     setIsEditToggled(!isEditToggled);
@@ -215,7 +224,10 @@ export default function NotificationCard({
                   borderRadius={10}
                   bgColor="rgba(255, 255, 255, 0.5)"
                   textColor="rgba(0, 0, 0, 0.5)"
-                  onPress={onPressReject}
+                  onPress={() => {
+                    onPressReject();
+                    handleRejectToggle();
+                  }}
                 />
               </>
             )}
@@ -247,10 +259,7 @@ export default function NotificationCard({
                   borderRadius={10}
                   bgColor="rgba(255, 0, 0, 0.5)"
                   textColor="white"
-                  onPress={() => {
-                    onPressReject();
-                    handleRejectToggle();
-                  }}
+                  onPress={onPressReject}
                 />
               </>
             ) : (
