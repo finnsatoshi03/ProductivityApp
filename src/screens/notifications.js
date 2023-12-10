@@ -113,7 +113,7 @@ export default function Notifications({ navigation, route }) {
   const [rejectData, setRejectData] = useState({});
 
   const showModal = async (notification, buttonType) => {
-    console.log("Notification: ", notification);
+    // console.log("Notification: ", notification);
     setSelectedEventTitle(notification.eventTitle);
     setButtonPressed(buttonType);
 
@@ -121,6 +121,34 @@ export default function Notifications({ navigation, route }) {
     const eventDate = new Date(notification.eventDate);
     console.log("Notification Date: ", eventDate);
     // console.log(notification);
+
+    // Check for event conflicts
+    const hasConflict = data.some((item) => {
+      const itemDate = new Date(item.eventDate);
+
+      console.log("Item User ID: ", item.user_id);
+      console.log("Notification User ID: ", notification.user_id);
+      console.log("Item Event ID: ", item.event_id);
+      console.log("Notification Event ID: ", notification.event_id);
+      console.log("Item Time: ", itemDate.getTime());
+      console.log("Event Time: ", eventDate.getTime());
+
+      return (
+        item.user_id === notification.user_id &&
+        item.event_id !== notification.event_id &&
+        itemDate.getTime() === eventDate.getTime()
+      );
+    });
+    console.log("Has Conflict: ", hasConflict);
+
+    if (hasConflict) {
+      Alert.alert(
+        "Conflict Detected",
+        "This event conflicts with another event. Please choose a different time.",
+        [{ text: "OK", onPress: () => {} }]
+      );
+      return;
+    }
 
     if (eventDate <= currentDate) {
       Alert.alert(
