@@ -31,6 +31,7 @@ const extractEventDetails = (message) => {
     event: lines[1]?.trim().replace("Event: ", ""),
     location: lines[3]?.trim().replace("Location: ", ""),
     date: lines[2]?.trim().replace("Date: ", ""),
+    eventId: lines[4]?.trim().replace("Event ID: ", "") || null,
   };
 };
 
@@ -113,58 +114,106 @@ export default function Notifications({ navigation, route }) {
   const [rejectData, setRejectData] = useState({});
   const [hasValidationOrConflict, setHasValidationOrConflict] = useState(null);
   const [conflictingEvent, setConflictingEvent] = useState(null);
+  const [currentNotification, setCurrentNotification] = useState(null);
 
   const getConflictingEvent = (notification) => {
-    const conflictingEvent = data.find(
+    const conflictingEvent = eventData.find(
       (item) =>
         item.user_id === notification.user_id &&
         item.event_id !== notification.event_id &&
-        new Date(item.eventDate).getTime() ===
-          new Date(notification.eventDate).getTime()
+        item.event_id === notification.eventId
     );
+    console.log("Conflicting Event: ", conflictingEvent);
 
     return conflictingEvent || null;
   };
 
-  const handleOverwriteConflict = async (notification) => {
+  const handleOverwriteConflict = async (notification, conflictingEvent) => {
+    console.log("Notification: ", notification);
+    console.log("Conflicting Event: ", conflictingEvent);
+
     try {
-      const response = await axios.patch(
-        `${global.baseurl}:4000/overwriteEvent`,
+      const response = await axios.delete(
+        `${global.baseurl}:4000/deleteEvent`,
         {
-          conflictingEventId: conflictingEvent.event_id,
-          newEventDetails: {
-            event: notification.eventTitle,
-            location: notification.eventLocation,
-            datetime: notification.eventDate,
-            description: notification.description,
+          params: {
+            event_id: conflictingEvent.event_id,
           },
         }
       );
 
       if (response.status === 200) {
-        console.log("Event overwritten successfully");
+        console.log(`Event ${conflictingEvent.eventTitle} has been deleted.`);
+      } else console.log("no");
+    } catch (error) {
+      console.log(error);
+    }
+
+    try {
+      const data = {
+        user_id: notification.user_id,
+        event_id: notification.event_id,
+        invitation: true,
+        comment: "",
+      };
+
+      const response = await axios.patch(
+        `${global.baseurl}:4000/stateNotification`,
+        data
+      );
+
+      if (response.status === 200) {
+        const response = await axios.get(
+          `${global.baseurl}:4000/userViewEvents`,
+          {
+            params: {
+              user_id: user_id,
+            },
+          }
+        );
+        if (response.status === 200) {
+          const { data } = response;
+          const events = data.events;
+          setEventData(events);
+        }
+        setData((prevData) =>
+          prevData.map((item) =>
+            item.user_id === notification.user_id &&
+            item.event_id === notification.event_id
+              ? {
+                  ...item,
+                }
+              : item
+          )
+        );
+
+        console.log("Accepted and Overwritten", notification.eventTitle);
       } else {
-        console.log("Failed to overwrite event");
+        console.log("something went wrong");
       }
     } catch (error) {
       console.log(error);
     }
-    setModalVisible(false);
+
+    // setModalVisible(false);
   };
 
   const showModal = async (notification, buttonType, conflictingEvent) => {
     // console.log("Notification: ", notification);
     setSelectedEventTitle(notification.eventTitle);
     setButtonPressed(buttonType);
+    setCurrentNotification(notification);
 
     const currentDate = new Date();
     const eventDate = new Date(notification.eventDate);
-    console.log("Notification Date: ", eventDate);
+    console.log("Event Data Date", eventData);
+    console.log("Notification Data Date", notification.eventDate);
 
-    const hasConflict = data.some((item) => {
-      const itemDate = new Date(item.eventDate);
+    const hasConflict = eventData.some((item) => {
+      const itemDate = new Date(item.datetime);
+      console.log("Comparing:", itemDate.getTime(), eventDate.getTime());
+      console.log("Comparing 2:", item.event_id, notification.event_id);
       return (
-        item.user_id === notification.user_id &&
         item.event_id !== notification.event_id &&
         itemDate.getTime() === eventDate.getTime()
       );
@@ -172,12 +221,7 @@ export default function Notifications({ navigation, route }) {
     console.log("Has Conflict: ", hasConflict);
 
     if (hasConflict) {
-      const conflictingEvent = data.find(
-        (item) =>
-          item.user_id === notification.user_id &&
-          item.event_id !== notification.event_id &&
-          new Date(item.eventDate).getTime() === eventDate.getTime()
-      );
+      const conflictingEvent = getConflictingEvent(notification);
 
       if (conflictingEvent) {
         console.log("Conflicting Event Logged:", conflictingEvent);
@@ -241,6 +285,11 @@ export default function Notifications({ navigation, route }) {
         } else {
           console.log("something went wrong");
         }
+      } else if (buttonType === "accept") {
+        handleOverwriteConflict(
+          notification,
+          getConflictingEvent(notification)
+        );
       }
     } catch (error) {
       console.log(error);
@@ -379,7 +428,7 @@ export default function Notifications({ navigation, route }) {
                   renderItem={({ item }) => (
                     <NotificationCard
                       {...item}
-                      data={data}
+                      data={eventData}
                       eventDateProp={item.eventDate}
                       notificationIdProp={item.id}
                       isImportant={item.is_important}
@@ -465,17 +514,17 @@ export default function Notifications({ navigation, route }) {
                   <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
                     Event Conflict Title:{" "}
                   </Text>
-                  {conflictingEvent.eventTitle}
-                  {"\n"}{" "}
+                  {/* {conflictingEvent.eventTitle} */}
+                  {"\n"}
                   <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
                     Date:{" "}
                   </Text>
-                  {conflictingEvent.eventDate}
+                  {/* {conflictingEvent.eventDate} */}
                   {"\n"}
                   <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
                     Important:{" "}
                   </Text>
-                  {conflictingEvent.is_important ? "Yes" : "No"}
+                  {/* {conflictingEvent.is_important ? "Yes" : "No"} */}
                 </Text>
               </View>
               <View
@@ -487,7 +536,12 @@ export default function Notifications({ navigation, route }) {
               >
                 <Button
                   text="Overwrite"
-                  onPress={() => handleOverwriteConflict(conflictingEvent)}
+                  onPress={() => {
+                    handleOverwriteConflict(
+                      currentNotification,
+                      conflictingEvent
+                    );
+                  }}
                   width={wp("30%")}
                   bgColor={"black"}
                   textColor={"white"}

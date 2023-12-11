@@ -58,16 +58,16 @@ export default function NotificationCard({
   const getConflictingEvent = () => {
     if (data && eventDateProp) {
       const conflictingEvent = data.find((item) => {
-        console.log("Current item.eventDate:", item.eventDate);
+        // console.log("Current item.eventDate:", item.eventDate);
         return (
           item.id !== notificationIdProp &&
-          new Date(item.eventDate).getTime() ===
+          new Date(item.datetime).getTime() ===
             new Date(eventDateProp).getTime()
         );
       });
 
       if (conflictingEvent) {
-        console.log("tite:", conflictingEvent);
+        console.log("Nag conflict dito tanga:", conflictingEvent);
       }
 
       return conflictingEvent;
