@@ -31,7 +31,7 @@ const extractEventDetails = (message) => {
     event: lines[1]?.trim().replace("Event: ", ""),
     location: lines[3]?.trim().replace("Location: ", ""),
     date: lines[2]?.trim().replace("Date: ", ""),
-    eventId: lines[4]?.trim().replace("Event ID: ", "") || null,
+    is_important: lines[4]?.trim().replace("Important: ", "") === "Yes",
   };
 };
 
@@ -119,12 +119,13 @@ export default function Notifications({ navigation, route }) {
   const getConflictingEvent = (notification) => {
     const conflictingEvent = eventData.find(
       (item) =>
-        item.user_id === notification.user_id &&
         item.event_id !== notification.event_id &&
-        item.event_id === notification.eventId
+        new Date(item.datetime).getTime() ===
+          new Date(notification.eventDate).getTime()
     );
-    console.log("Conflicting Event: ", conflictingEvent);
 
+    console.log("Conflicting Event: ", conflictingEvent);
+    setConflictingEvent(conflictingEvent);
     return conflictingEvent || null;
   };
 
@@ -137,13 +138,13 @@ export default function Notifications({ navigation, route }) {
         `${global.baseurl}:4000/deleteEvent`,
         {
           params: {
-            event_id: conflictingEvent.event_id,
+            event_id: conflictingEvent.id,
           },
         }
       );
 
       if (response.status === 200) {
-        console.log(`Event ${conflictingEvent.eventTitle} has been deleted.`);
+        console.log(`Event ${conflictingEvent.event} has been deleted.`);
       } else console.log("no");
     } catch (error) {
       console.log(error);
@@ -206,8 +207,8 @@ export default function Notifications({ navigation, route }) {
 
     const currentDate = new Date();
     const eventDate = new Date(notification.eventDate);
-    console.log("Event Data Date", eventData);
-    console.log("Notification Data Date", notification.eventDate);
+    // console.log("Event Data Date", eventData);
+    // console.log("Notification Data Date", notification.eventDate);
 
     const hasConflict = eventData.some((item) => {
       const itemDate = new Date(item.datetime);
@@ -221,14 +222,20 @@ export default function Notifications({ navigation, route }) {
     console.log("Has Conflict: ", hasConflict);
 
     if (hasConflict) {
-      const conflictingEvent = getConflictingEvent(notification);
+      const conflictingEvent = eventData.find(
+        (item) =>
+          item.event_id !== notification.event_id &&
+          new Date(item.eventDate).getTime() === eventDate.getTime()
+      );
 
       if (conflictingEvent) {
         console.log("Conflicting Event Logged:", conflictingEvent);
       }
 
       setHasValidationOrConflict(true);
-      setConflictingEvent(conflictingEvent);
+      getConflictingEvent(notification);
+      // setConflictingEvent(conflictingEvent);
+      console.log("Conflicting Event: ", conflictingEvent);
       setModalVisible(true);
       return;
     }
@@ -280,16 +287,14 @@ export default function Notifications({ navigation, route }) {
                 : item
             )
           );
-
+          handleOverwriteConflict(
+            notification,
+            getConflictingEvent(notification)
+          );
           console.log("sucess");
         } else {
           console.log("something went wrong");
         }
-      } else if (buttonType === "accept") {
-        handleOverwriteConflict(
-          notification,
-          getConflictingEvent(notification)
-        );
       }
     } catch (error) {
       console.log(error);
@@ -514,17 +519,27 @@ export default function Notifications({ navigation, route }) {
                   <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
                     Event Conflict Title:{" "}
                   </Text>
-                  {/* {conflictingEvent.eventTitle} */}
+                  {conflictingEvent?.event}
                   {"\n"}
                   <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
                     Date:{" "}
                   </Text>
-                  {/* {conflictingEvent.eventDate} */}
+                  {new Date(conflictingEvent?.datetime).toLocaleString(
+                    "en-US",
+                    {
+                      month: "short",
+                      day: "2-digit",
+                      year: "numeric",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: true,
+                    }
+                  )}{" "}
                   {"\n"}
                   <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
                     Important:{" "}
                   </Text>
-                  {/* {conflictingEvent.is_important ? "Yes" : "No"} */}
+                  {conflictingEvent?.is_important ? "Yes" : "No"}
                 </Text>
               </View>
               <View
