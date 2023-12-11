@@ -22,6 +22,9 @@ export default function NotificationCard({
   onPressReject,
   onPressEdit,
   hasValidationOrConflict,
+  eventDateProp,
+  notificationIdProp,
+  data,
 }) {
   const dateObject = new Date(created_at);
   const formattedDate = new Intl.DateTimeFormat("en-US", {
@@ -52,17 +55,37 @@ export default function NotificationCard({
   const [isAccepted, setIsAccepted] = useState(false);
   const [isEditToggled, setIsEditToggled] = useState(false);
   const [isRejectHidden, setIsRejectHidden] = useState(false);
+  const getConflictingEvent = () => {
+    if (data && eventDateProp) {
+      const conflictingEvent = data.find((item) => {
+        console.log("Current item.eventDate:", item.eventDate);
+        return (
+          item.id !== notificationIdProp &&
+          new Date(item.eventDate).getTime() ===
+            new Date(eventDateProp).getTime()
+        );
+      });
+
+      if (conflictingEvent) {
+        console.log("tite:", conflictingEvent);
+      }
+
+      return conflictingEvent;
+    }
+    return null;
+  };
+
   const handleAccept = () => {
     onPressAccept();
-    if (hasValidationOrConflict) {
+    const conflict = getConflictingEvent();
+    if (conflict) {
       console.log("Not accepted - Conflict detected");
-      setIsAccepted(false);
-      return;
+      // setIsAccepted(false);
+      setIsAccepted(!conflict);
     } else {
       console.log("Accepted");
       setIsAccepted(true);
     }
-    // setIsAccepted(true);
   };
   const handleEditToggle = () => {
     setIsEditToggled(!isEditToggled);

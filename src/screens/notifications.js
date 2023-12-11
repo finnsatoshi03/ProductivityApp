@@ -112,8 +112,47 @@ export default function Notifications({ navigation, route }) {
   const [comment, setComment] = useState();
   const [rejectData, setRejectData] = useState({});
   const [hasValidationOrConflict, setHasValidationOrConflict] = useState(null);
+  const [conflictingEvent, setConflictingEvent] = useState(null);
 
-  const showModal = async (notification, buttonType) => {
+  const getConflictingEvent = (notification) => {
+    const conflictingEvent = data.find(
+      (item) =>
+        item.user_id === notification.user_id &&
+        item.event_id !== notification.event_id &&
+        new Date(item.eventDate).getTime() ===
+          new Date(notification.eventDate).getTime()
+    );
+
+    return conflictingEvent || null;
+  };
+
+  const handleOverwriteConflict = async (notification) => {
+    try {
+      const response = await axios.patch(
+        `${global.baseurl}:4000/overwriteEvent`,
+        {
+          conflictingEventId: conflictingEvent.event_id,
+          newEventDetails: {
+            event: notification.eventTitle,
+            location: notification.eventLocation,
+            datetime: notification.eventDate,
+            description: notification.description,
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        console.log("Event overwritten successfully");
+      } else {
+        console.log("Failed to overwrite event");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setModalVisible(false);
+  };
+
+  const showModal = async (notification, buttonType, conflictingEvent) => {
     // console.log("Notification: ", notification);
     setSelectedEventTitle(notification.eventTitle);
     setButtonPressed(buttonType);
@@ -121,19 +160,9 @@ export default function Notifications({ navigation, route }) {
     const currentDate = new Date();
     const eventDate = new Date(notification.eventDate);
     console.log("Notification Date: ", eventDate);
-    // console.log(notification);
 
-    // Check for event conflicts
     const hasConflict = data.some((item) => {
       const itemDate = new Date(item.eventDate);
-
-      // console.log("Item User ID: ", item.user_id);
-      // console.log("Notification User ID: ", notification.user_id);
-      // console.log("Item Event ID: ", item.event_id);
-      // console.log("Notification Event ID: ", notification.event_id);
-      // console.log("Item Time: ", itemDate.getTime());
-      // console.log("Event Time: ", eventDate.getTime());
-
       return (
         item.user_id === notification.user_id &&
         item.event_id !== notification.event_id &&
@@ -143,12 +172,20 @@ export default function Notifications({ navigation, route }) {
     console.log("Has Conflict: ", hasConflict);
 
     if (hasConflict) {
-      Alert.alert(
-        "Conflict Detected",
-        "This event conflicts with another event. Please choose a different time.",
-        [{ text: "OK", onPress: () => {} }]
+      const conflictingEvent = data.find(
+        (item) =>
+          item.user_id === notification.user_id &&
+          item.event_id !== notification.event_id &&
+          new Date(item.eventDate).getTime() === eventDate.getTime()
       );
+
+      if (conflictingEvent) {
+        console.log("Conflicting Event Logged:", conflictingEvent);
+      }
+
       setHasValidationOrConflict(true);
+      setConflictingEvent(conflictingEvent);
+      setModalVisible(true);
       return;
     }
     setHasValidationOrConflict(false);
@@ -342,9 +379,14 @@ export default function Notifications({ navigation, route }) {
                   renderItem={({ item }) => (
                     <NotificationCard
                       {...item}
+                      data={data}
+                      eventDateProp={item.eventDate}
+                      notificationIdProp={item.id}
                       isImportant={item.is_important}
                       hasValidationOrConflict={hasValidationOrConflict}
-                      onPressAccept={() => showModal(item, "accept")}
+                      onPressAccept={() =>
+                        showModal(item, "accept", getConflictingEvent(item))
+                      }
                       onPressReject={() => rejectModal(item, "reject")}
                       onPressTrash={() =>
                         handleDeleteNotification(item.notification_id)
@@ -381,12 +423,88 @@ export default function Notifications({ navigation, route }) {
           style={{
             alignItems: "center",
             justifyContent: "center",
-            backgroundColor: "white",
+            backgroundColor: hasValidationOrConflict ? "#d82424" : "white",
             borderRadius: 20,
             padding: 20,
           }}
         >
-          {buttonPressed === "accept" ? (
+          {hasValidationOrConflict ? (
+            <>
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.bold,
+                  fontSize: globalStyles.fontSize.subHeader,
+                  marginBottom: 10,
+                  color: "white",
+                }}
+              >
+                Warning!
+              </Text>
+              <Text
+                style={{
+                  fontFamily: globalStyles.fontStyle.regular,
+                  fontSize: globalStyles.fontSize.description,
+                  textAlign: "center",
+                  marginBottom: 20,
+                  color: "white",
+                }}
+              >
+                You already accepted an event with the same schedule. Do you
+                want to overwrite the event you want to attend to?
+              </Text>
+              <View>
+                <Text
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                    // textAlign: "center",
+                    marginBottom: 20,
+                    color: "white",
+                  }}
+                >
+                  <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
+                    Event Conflict Title:{" "}
+                  </Text>
+                  {conflictingEvent.eventTitle}
+                  {"\n"}{" "}
+                  <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
+                    Date:{" "}
+                  </Text>
+                  {conflictingEvent.eventDate}
+                  {"\n"}
+                  <Text style={{ fontFamily: globalStyles.fontStyle.semiBold }}>
+                    Important:{" "}
+                  </Text>
+                  {conflictingEvent.is_important ? "Yes" : "No"}
+                </Text>
+              </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  justifyContent: "space-around",
+                  width: "80%",
+                }}
+              >
+                <Button
+                  text="Overwrite"
+                  onPress={() => handleOverwriteConflict(conflictingEvent)}
+                  width={wp("30%")}
+                  bgColor={"black"}
+                  textColor={"white"}
+                />
+                <Button
+                  text="Reject"
+                  onPress={() => {
+                    hideModal();
+                    rejectModal(conflictingEvent, "reject");
+                  }}
+                  width={wp("30%")}
+                  bgColor={"white"}
+                  textColor={"black"}
+                />
+              </View>
+            </>
+          ) : buttonPressed === "accept" ? (
             <>
               <Text
                 style={{
