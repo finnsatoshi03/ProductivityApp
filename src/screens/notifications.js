@@ -115,6 +115,7 @@ export default function Notifications({ navigation, route }) {
   const [hasValidationOrConflict, setHasValidationOrConflict] = useState(null);
   const [conflictingEvent, setConflictingEvent] = useState(null);
   const [currentNotification, setCurrentNotification] = useState(null);
+  const [overwriteInProgress, setOverwriteInProgress] = useState(false);
 
   const getConflictingEvent = (notification) => {
     const conflictingEvent = eventData.find(
@@ -132,6 +133,7 @@ export default function Notifications({ navigation, route }) {
   const handleOverwriteConflict = async (notification, conflictingEvent) => {
     console.log("Notification: ", notification);
     console.log("Conflicting Event: ", conflictingEvent);
+    setOverwriteInProgress(true);
 
     try {
       const response = await axios.delete(
@@ -145,9 +147,17 @@ export default function Notifications({ navigation, route }) {
 
       if (response.status === 200) {
         console.log(`Event ${conflictingEvent.event} has been deleted.`);
-      } else console.log("no");
+        setData((prevData) =>
+          prevData.filter((item) => item.event_id !== conflictingEvent.id)
+        );
+      } else {
+        console.log("no");
+        setOverwriteInProgress(false);
+        return;
+      }
     } catch (error) {
       console.log(error);
+      setOverwriteInProgress(false);
     }
 
     try {
@@ -177,17 +187,8 @@ export default function Notifications({ navigation, route }) {
           const events = data.events;
           setEventData(events);
         }
-        setData((prevData) =>
-          prevData.map((item) =>
-            item.user_id === notification.user_id &&
-            item.event_id === notification.event_id
-              ? {
-                  ...item,
-                }
-              : item
-          )
-        );
-
+        // alert("Accepted and Overwritten: ", notification.eventTitle);
+        setModalVisible(false);
         console.log("Accepted and Overwritten", notification.eventTitle);
       } else {
         console.log("something went wrong");
@@ -195,7 +196,7 @@ export default function Notifications({ navigation, route }) {
     } catch (error) {
       console.log(error);
     }
-
+    setOverwriteInProgress(false);
     // setModalVisible(false);
   };
 
@@ -549,18 +550,25 @@ export default function Notifications({ navigation, route }) {
                   width: "80%",
                 }}
               >
-                <Button
-                  text="Overwrite"
-                  onPress={() => {
-                    handleOverwriteConflict(
-                      currentNotification,
-                      conflictingEvent
-                    );
-                  }}
-                  width={wp("30%")}
-                  bgColor={"black"}
-                  textColor={"white"}
-                />
+                {overwriteInProgress ? (
+                  <ActivityIndicator
+                    size="large"
+                    color={globalStyles.colors.green}
+                  />
+                ) : (
+                  <Button
+                    text="Overwrite"
+                    onPress={() => {
+                      handleOverwriteConflict(
+                        currentNotification,
+                        conflictingEvent
+                      );
+                    }}
+                    width={wp("30%")}
+                    bgColor={"black"}
+                    textColor={"white"}
+                  />
+                )}
                 <Button
                   text="Reject"
                   onPress={() => {
