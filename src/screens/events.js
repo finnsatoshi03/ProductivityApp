@@ -33,6 +33,7 @@ import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
 import "../../global";
 import { format } from "date-fns-tz";
+import { ScrollView } from "react-native-gesture-handler";
 
 export default function EventsScreen({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
@@ -791,276 +792,281 @@ export default function EventsScreen({ navigation, route }) {
               margin: 0,
             }}
           >
-            <View
-              style={{
-                backgroundColor: globalStyles.colors.green,
-                padding: 40,
-                borderTopLeftRadius: 20,
-                borderTopRightRadius: 20,
-              }}
-            >
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  width: "100%",
-                }}
-              >
-                <TextInput
-                  placeholder="Name of the event"
+            <View style={{ flex: 1 }}>
+              <ScrollView>
+                <View
                   style={{
-                    fontFamily: globalStyles.fontStyle.semiBold,
-                    fontSize: globalStyles.fontSize.subHeader,
-                    color: "black",
-                    width: "80%",
-                  }}
-                  placeholderTextColor="rgba(0,0,0,0.5)"
-                  paddingVertical={10}
-                  onChangeText={(text) => setEventTitle(text)}
-                  value={eventTitle}
-                />
-                <TouchableOpacity
-                  onPress={toggleImportance}
-                  style={{ alignItems: "center" }}
-                >
-                  {/* <Text>Importance</Text> */}
-                  <Image
-                    style={{ height: hp("3%"), width: hp("3%") }}
-                    source={
-                      is_important
-                        ? require("./../../assets/flag-alt.png")
-                        : require("./../../assets/flag.png")
-                    }
-                  />
-                </TouchableOpacity>
-              </View>
-
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
+                    backgroundColor: globalStyles.colors.green,
+                    padding: 40,
+                    borderTopLeftRadius: 20,
+                    borderTopRightRadius: 20,
+                    maxHeight: hp("90%"),
                   }}
                 >
-                  Invite Participants
-                </Text>
-                <Pressable onPress={() => setNewModalVisible(true)}>
-                  <Image
+                  <View
                     style={{
-                      height: hp("3.5%"),
-                      width: hp("3.5%"),
-                      borderRadius: hp("3.5%") / 2,
-                      opacity: 0.5,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                      width: "100%",
                     }}
-                    source={require("./../../assets/add-dotted.png")}
-                  />
-                </Pressable>
-                {participantNames.length > 0 && (
-                  <View>
-                    <Text
+                  >
+                    <TextInput
+                      placeholder="Name of the event"
                       style={{
                         fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.subHeader,
+                        color: "black",
+                        width: "80%",
+                      }}
+                      placeholderTextColor="rgba(0,0,0,0.5)"
+                      paddingVertical={10}
+                      onChangeText={(text) => setEventTitle(text)}
+                      value={eventTitle}
+                    />
+                    <TouchableOpacity
+                      onPress={toggleImportance}
+                      style={{ alignItems: "center" }}
+                    >
+                      {/* <Text>Importance</Text> */}
+                      <Image
+                        style={{ height: hp("3%"), width: hp("3%") }}
+                        source={
+                          is_important
+                            ? require("./../../assets/flag-alt.png")
+                            : require("./../../assets/flag.png")
+                        }
+                      />
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={{ paddingVertical: 10 }}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
                         fontSize: globalStyles.fontSize.description,
+                        color: "rgba(0,0,0,0.5)",
                       }}
                     >
-                      {participantNames}
+                      Invite Participants
                     </Text>
+                    <Pressable onPress={() => setNewModalVisible(true)}>
+                      <Image
+                        style={{
+                          height: hp("3.5%"),
+                          width: hp("3.5%"),
+                          borderRadius: hp("3.5%") / 2,
+                          opacity: 0.5,
+                        }}
+                        source={require("./../../assets/add-dotted.png")}
+                      />
+                    </Pressable>
+                    {participantNames.length > 0 && (
+                      <View>
+                        <Text
+                          style={{
+                            fontFamily: globalStyles.fontStyle.semiBold,
+                            fontSize: globalStyles.fontSize.description,
+                          }}
+                        >
+                          {participantNames}
+                        </Text>
+                      </View>
+                    )}
                   </View>
-                )}
-              </View>
 
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                  }}
-                >
-                  Select Date & Time
-                </Text>
-                <Pressable onPress={showDatePicker}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.bold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`Date: `}</Text>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`${format(startDate, "dd MMMM yyyy", {
-                    timeZone: "Asia/Manila",
-                  })}`}</Text>
-                </Pressable>
-                <DateTimePickerModal
-                  isVisible={isDatePickerVisible}
-                  mode="date"
-                  onConfirm={(date) => handleDateTimeConfirm(date, "date")}
-                  onCancel={hideDatePicker}
-                />
-                <Pressable onPress={showTimePicker}>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.bold,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`Time: `}</Text>
-                  <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.mediumDescription,
-                      color: "black",
-                    }}
-                  >{`${format(endDate, "HH:mm", {
-                    timeZone: "Asia/Manila",
-                  })}`}</Text>
-                </Pressable>
-                <DateTimePickerModal
-                  isVisible={isTimePickerVisible}
-                  mode="time"
-                  onConfirm={(date) => handleDateTimeConfirm(date, "time")}
-                  onCancel={hideTimePicker}
-                />
-              </View>
-
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                    marginBottom: -7,
-                  }}
-                >
-                  Choose Location
-                </Text>
-                <TextInput
-                  placeholder="Where is the event?"
-                  style={{
-                    fontFamily: globalStyles.fontStyle.semiBold,
-                    fontSize: globalStyles.fontSize.mediumDescription,
-                    color: "black",
-                  }}
-                  placeholderTextColor={"rgba(0,0,0,0.5)"}
-                  onChangeText={(text) => setLocation(text)}
-                  value={location}
-                />
-              </View>
-
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                    marginBottom: -7,
-                  }}
-                >
-                  Write a description
-                </Text>
-                <TextInput
-                  placeholder="Message.."
-                  style={{
-                    fontFamily: globalStyles.fontStyle.semiBold,
-                    fontSize: globalStyles.fontSize.mediumDescription,
-                    color: "black",
-                  }}
-                  placeholderTextColor={"rgba(0,0,0,0.5)"}
-                  onChangeText={(text) => setDescription(text)}
-                  value={description}
-                />
-              </View>
-              <View style={{ paddingVertical: 10 }}>
-                <Text
-                  style={{
-                    fontFamily: globalStyles.fontStyle.regular,
-                    fontSize: globalStyles.fontSize.description,
-                    color: "rgba(0,0,0,0.5)",
-                  }}
-                >
-                  Attach File
-                </Text>
-                <Pressable onPress={() => pickDocument()}>
-                  <Image
-                    style={{
-                      height: hp("3.5%"),
-                      width: hp("3.5%"),
-                      borderRadius: hp("3.5%") / 2,
-                      opacity: 0.5,
-                    }}
-                    source={require("./../../assets/add-dotted.png")}
-                  />
-                  {documentName && <Text>{documentName}</Text>}
-                </Pressable>
-              </View>
-              <View
-                style={{
-                  marginVertical: 20,
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  width: "100%",
-                }}
-              >
-                {btnFnc === "create" ? (
-                  isCreatingEvent ? (
-                    <ActivityIndicator size="large" color={"black"} />
-                  ) : (
-                    <Button
-                      text={"Create Event"}
-                      width={wp("55%")}
-                      fnc={"press"}
-                      onPress={() =>
-                        addEvent(
-                          eventTitle,
-                          participants,
-                          startDate,
-                          endDate,
-                          location,
-                          description,
-                          is_important,
-                          document
-                        )
-                      }
+                  <View style={{ paddingVertical: 10 }}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.description,
+                        color: "rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      Select Date & Time
+                    </Text>
+                    <Pressable onPress={showDatePicker}>
+                      <Text
+                        style={{
+                          fontFamily: globalStyles.fontStyle.bold,
+                          fontSize: globalStyles.fontSize.mediumDescription,
+                          color: "black",
+                        }}
+                      >{`Date: `}</Text>
+                      <Text
+                        style={{
+                          fontFamily: globalStyles.fontStyle.regular,
+                          fontSize: globalStyles.fontSize.mediumDescription,
+                          color: "black",
+                        }}
+                      >{`${format(startDate, "dd MMMM yyyy", {
+                        timeZone: "Asia/Manila",
+                      })}`}</Text>
+                    </Pressable>
+                    <DateTimePickerModal
+                      isVisible={isDatePickerVisible}
+                      mode="date"
+                      onConfirm={(date) => handleDateTimeConfirm(date, "date")}
+                      onCancel={hideDatePicker}
                     />
-                  )
-                ) : isCreatingEvent ? (
-                  <ActivityIndicator size="large" color={"black"} />
-                ) : (
-                  <Button
-                    text={"Edit Event"}
-                    width={wp("55%")}
-                    fnc={"press"}
-                    onPress={() =>
-                      addEvent(
-                        eventTitle,
-                        participants,
-                        startDate,
-                        endDate,
-                        location,
-                        description,
-                        is_important,
-                        document
+                    <Pressable onPress={showTimePicker}>
+                      <Text
+                        style={{
+                          fontFamily: globalStyles.fontStyle.bold,
+                          fontSize: globalStyles.fontSize.mediumDescription,
+                          color: "black",
+                        }}
+                      >{`Time: `}</Text>
+                      <Text
+                        style={{
+                          fontFamily: globalStyles.fontStyle.regular,
+                          fontSize: globalStyles.fontSize.mediumDescription,
+                          color: "black",
+                        }}
+                      >{`${format(endDate, "HH:mm", {
+                        timeZone: "Asia/Manila",
+                      })}`}</Text>
+                    </Pressable>
+                    <DateTimePickerModal
+                      isVisible={isTimePickerVisible}
+                      mode="time"
+                      onConfirm={(date) => handleDateTimeConfirm(date, "time")}
+                      onCancel={hideTimePicker}
+                    />
+                  </View>
+
+                  <View style={{ paddingVertical: 10 }}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.description,
+                        color: "rgba(0,0,0,0.5)",
+                        marginBottom: -7,
+                      }}
+                    >
+                      Choose Location
+                    </Text>
+                    <TextInput
+                      placeholder="Where is the event?"
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                      placeholderTextColor={"rgba(0,0,0,0.5)"}
+                      onChangeText={(text) => setLocation(text)}
+                      value={location}
+                    />
+                  </View>
+
+                  <View style={{ paddingVertical: 10 }}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.description,
+                        color: "rgba(0,0,0,0.5)",
+                        marginBottom: -7,
+                      }}
+                    >
+                      Write a description
+                    </Text>
+                    <TextInput
+                      placeholder="Message.."
+                      style={{
+                        fontFamily: globalStyles.fontStyle.semiBold,
+                        fontSize: globalStyles.fontSize.mediumDescription,
+                        color: "black",
+                      }}
+                      placeholderTextColor={"rgba(0,0,0,0.5)"}
+                      onChangeText={(text) => setDescription(text)}
+                      value={description}
+                    />
+                  </View>
+                  <View style={{ paddingVertical: 10 }}>
+                    <Text
+                      style={{
+                        fontFamily: globalStyles.fontStyle.regular,
+                        fontSize: globalStyles.fontSize.description,
+                        color: "rgba(0,0,0,0.5)",
+                      }}
+                    >
+                      Attach File
+                    </Text>
+                    <Pressable onPress={() => pickDocument()}>
+                      <Image
+                        style={{
+                          height: hp("3.5%"),
+                          width: hp("3.5%"),
+                          borderRadius: hp("3.5%") / 2,
+                          opacity: 0.5,
+                        }}
+                        source={require("./../../assets/add-dotted.png")}
+                      />
+                      {documentName && <Text>{documentName}</Text>}
+                    </Pressable>
+                  </View>
+                  <View
+                    style={{
+                      marginVertical: 20,
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      width: "100%",
+                    }}
+                  >
+                    {btnFnc === "create" ? (
+                      isCreatingEvent ? (
+                        <ActivityIndicator size="large" color={"black"} />
+                      ) : (
+                        <Button
+                          text={"Create Event"}
+                          width={wp("55%")}
+                          fnc={"press"}
+                          onPress={() =>
+                            addEvent(
+                              eventTitle,
+                              participants,
+                              startDate,
+                              endDate,
+                              location,
+                              description,
+                              is_important,
+                              document
+                            )
+                          }
+                        />
                       )
-                    }
-                  />
-                )}
-                <Button
-                  text={"Cancel"}
-                  width={wp("23%")}
-                  bgColor="rgba(0,0,0,0.3)"
-                  textColor="#9198bc"
-                  onPress={closeBottomSheet}
-                  fnc={"press"}
-                />
-              </View>
+                    ) : isCreatingEvent ? (
+                      <ActivityIndicator size="large" color={"black"} />
+                    ) : (
+                      <Button
+                        text={"Edit Event"}
+                        width={wp("55%")}
+                        fnc={"press"}
+                        onPress={() =>
+                          addEvent(
+                            eventTitle,
+                            participants,
+                            startDate,
+                            endDate,
+                            location,
+                            description,
+                            is_important,
+                            document
+                          )
+                        }
+                      />
+                    )}
+                    <Button
+                      text={"Cancel"}
+                      width={wp("23%")}
+                      bgColor="rgba(0,0,0,0.3)"
+                      textColor="#9198bc"
+                      onPress={closeBottomSheet}
+                      fnc={"press"}
+                    />
+                  </View>
+                </View>
+              </ScrollView>
             </View>
           </Modal>
           <Modal
