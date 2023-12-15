@@ -2,6 +2,7 @@ import React, { useState, useEffect, useMemo } from "react";
 import {
   Text,
   View,
+  ScrollView,
   Pressable,
   Image,
   TouchableOpacity,
@@ -33,7 +34,6 @@ import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
 import "../../global";
 import { format } from "date-fns-tz";
-import { ScrollView } from "react-native-gesture-handler";
 
 export default function EventsScreen({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
@@ -523,7 +523,10 @@ export default function EventsScreen({ navigation, route }) {
         return;
       }
 
-      if (date < currentDate) {
+      const selectedDate = new Date(date.setHours(0, 0, 0, 0));
+      const today = new Date(currentDate.setHours(0, 0, 0, 0));
+
+      if (selectedDate < today) {
         Alert.alert(
           "Date Error",
           "You cannot select a date that has already occurred.",
@@ -545,10 +548,14 @@ export default function EventsScreen({ navigation, route }) {
       console.log(date);
       hideDatePicker();
     } else {
-      if (date < currentDate) {
+      const twoHoursFromNow = new Date(
+        currentDate.getTime() + 2 * 60 * 60 * 1000
+      );
+
+      if (date < twoHoursFromNow) {
         Alert.alert(
           "Time Error",
-          "You cannot select a time that has already occurred.",
+          "You cannot select a time that is less than 2 hours from now.",
           [
             {
               text: "OK",
@@ -792,7 +799,7 @@ export default function EventsScreen({ navigation, route }) {
               margin: 0,
             }}
           >
-            <View style={{ flex: 1 }}>
+            <View style={{}}>
               <ScrollView>
                 <View
                   style={{

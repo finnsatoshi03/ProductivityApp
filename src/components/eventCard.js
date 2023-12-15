@@ -54,6 +54,7 @@ export default function eventCard({
   narrative,
   endtime,
   isInReportsScreen,
+  isInCalendar,
 
   fullname,
   user,
@@ -388,7 +389,7 @@ export default function eventCard({
                     {location}
                   </Text>
                 </View>
-                {role === "admin" && !isInReportsScreen && (
+                {!isInCalendar && role === "admin" && !isInReportsScreen && (
                   <Pressable onPress={onEdit}>
                     <Image
                       style={{ height: hp("4%"), width: hp("4%") }}
@@ -396,7 +397,7 @@ export default function eventCard({
                     />
                   </Pressable>
                 )}
-                {isInReportsScreen && (
+                {!isInCalendar && isInReportsScreen && (
                   <Pressable onPress={handleExportReportData}>
                     <Image
                       style={{ height: hp("4%"), width: hp("4%") }}
@@ -414,7 +415,15 @@ export default function eventCard({
                   paddingVertical: 10,
                 }}
               >
-                <View style={{ width: role === "admin" ? "60%" : "100%" }}>
+                <View
+                  style={{
+                    width: isInCalendar
+                      ? "100%"
+                      : role === "admin"
+                      ? "60%"
+                      : "100%",
+                  }}
+                >
                   <Button
                     text={isInReportsScreen ? "ATTENDEES" : "VIEW"}
                     bgColor={globalStyles.colors.green}
@@ -424,7 +433,7 @@ export default function eventCard({
                     fnc={"press"}
                   />
                 </View>
-                {role === "admin" && (
+                {role === "admin" && !isInCalendar && (
                   <Button
                     text="DELETE"
                     bgColor="#e2e6f0"

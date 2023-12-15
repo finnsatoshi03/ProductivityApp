@@ -137,7 +137,7 @@ export default function Notifications({ navigation, route }) {
 
     try {
       const response = await axios.delete(
-        `${global.baseurl}:4000/deleteEvent`,
+        `${global.baseurl}:4000/deleteUserEvent`,
         {
           params: {
             event_id: conflictingEvent.id,

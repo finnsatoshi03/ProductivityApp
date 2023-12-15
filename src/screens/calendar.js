@@ -32,7 +32,7 @@ import * as Notifications from "expo-notifications";
 
 export default function Calendar({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
-  
+
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const { eventData, setEventData } = useData();
   const [loading, setLoading] = useState(true);
@@ -331,7 +331,7 @@ export default function Calendar({ navigation, route }) {
                 renderItem={({ item }) => (
                   <Events
                     navigation={navigation}
-                    // isInReportsScreen={true} // to hide the edit button
+                    isInCalendar={true} // to hide the edit button
                     {...item}
                     onDelete={() => deleteEvent(item.event)}
                     fullname={fullname}
