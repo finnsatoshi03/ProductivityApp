@@ -10,8 +10,8 @@ import {
   ActivityIndicator,
 } from "react-native";
 import { globalStyles } from "./../styles/globalStyles";
-import * as DocumentPicker from 'expo-document-picker';
-import * as FileSystem from 'expo-file-system';
+import * as DocumentPicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
 
 import {
   widthPercentageToDP as wp,
@@ -155,26 +155,6 @@ export default function EventsScreen({ navigation, route }) {
     is_important,
     document
   ) => {
-    const isHoliday = holidays.includes(startDate.toISOString().split("T")[0]);
-
-    // Validations
-    if (isHoliday) {
-      Alert.alert(
-        "Holiday Error",
-        "You cannot create an event on a holiday.",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              console.log("OK Pressed");
-            },
-          },
-        ],
-        { cancelable: false }
-      );
-      return;
-    }
-
     // Creation of event
     setCreatingEvent(true);
 
@@ -226,7 +206,7 @@ export default function EventsScreen({ navigation, route }) {
       is_important: Boolean(is_important),
       document: document,
     };
-    
+
     // console.log("Date: ", newEvent.datetime);
     // console.log(new Date(newEvent.datetime).toLocaleString());
 
@@ -459,7 +439,6 @@ export default function EventsScreen({ navigation, route }) {
   };
 
   const handleEditEvent = (event) => {
-    
     setBottomSheetVisible(true);
     setBtnFnc("edit");
     setSelectedEvent(event.id);
@@ -473,7 +452,7 @@ export default function EventsScreen({ navigation, route }) {
     setEventTitle(event.event);
     setLocation(event.location);
     setDescription(event.description);
-    setDocumentName(event.document ? 'Already have an file' : "")
+    setDocumentName(event.document ? "Already have an file" : "");
   };
 
   const toggleImportance = () => {
@@ -519,12 +498,70 @@ export default function EventsScreen({ navigation, route }) {
   };
 
   // Update the handleDateTimeConfirm function
-  const handleDateTimeConfirm = (date, type) => {
+  const handleDateTimeConfirm = async (date, type) => {
+    const currentDate = new Date();
+
     if (type === "date") {
+      const isHoliday = holidays.includes(date.toISOString().split("T")[0]);
+
+      if (isHoliday) {
+        Alert.alert(
+          "Holiday Error",
+          "You cannot create an event on a holiday.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                console.log("OK Pressed");
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+        hideDatePicker();
+        return;
+      }
+
+      if (date < currentDate) {
+        Alert.alert(
+          "Date Error",
+          "You cannot select a date that has already occurred.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                console.log("OK Pressed");
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+        hideDatePicker();
+        return;
+      }
+
       setStartDate(date);
       console.log(date);
       hideDatePicker();
     } else {
+      if (date < currentDate) {
+        Alert.alert(
+          "Time Error",
+          "You cannot select a time that has already occurred.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                console.log("OK Pressed");
+              },
+            },
+          ],
+          { cancelable: false }
+        );
+        hideTimePicker();
+        return;
+      }
+
       setEndDate(date);
       console.log(date.toLocaleTimeString());
       hideTimePicker();
@@ -534,25 +571,25 @@ export default function EventsScreen({ navigation, route }) {
   const handleCloseNewModal = () => {
     setNewModalVisible(false);
   };
-  
+
   const pickDocument = async () => {
     try {
       const result = await DocumentPicker.getDocumentAsync({
-        type: 'application/pdf', // Adjust the type based on your requirements
-      });      
-      
+        type: "application/pdf", // Adjust the type based on your requirements
+      });
+
       if (!result.canceled) {
-        setDocument(result.assets[0].uri);    
-        setDocumentName(result.assets[0].name)    
+        setDocument(result.assets[0].uri);
+        setDocumentName(result.assets[0].name);
       } else {
-        console.log('Document picking cancelled or failed');
+        console.log("Document picking cancelled or failed");
       }
     } catch (error) {
-      console.error('Error picking document', error);
+      console.error("Error picking document", error);
     }
   };
-   // Use useEffect to log the document value after the component has re-rendered
-   useEffect(() => {
+  // Use useEffect to log the document value after the component has re-rendered
+  useEffect(() => {
     console.log(document);
   }, [document]); // The useEffect will run whenever the value of `document` changes
 
@@ -943,14 +980,14 @@ export default function EventsScreen({ navigation, route }) {
               </View>
               <View style={{ paddingVertical: 10 }}>
                 <Text
-                    style={{
-                      fontFamily: globalStyles.fontStyle.regular,
-                      fontSize: globalStyles.fontSize.description,
-                      color: "rgba(0,0,0,0.5)",
-                    }}
-                  >
-                    Attach File
-                  </Text>
+                  style={{
+                    fontFamily: globalStyles.fontStyle.regular,
+                    fontSize: globalStyles.fontSize.description,
+                    color: "rgba(0,0,0,0.5)",
+                  }}
+                >
+                  Attach File
+                </Text>
                 <Pressable onPress={() => pickDocument()}>
                   <Image
                     style={{
@@ -962,7 +999,6 @@ export default function EventsScreen({ navigation, route }) {
                     source={require("./../../assets/add-dotted.png")}
                   />
                   {documentName && <Text>{documentName}</Text>}
-                  
                 </Pressable>
               </View>
               <View
@@ -1010,7 +1046,7 @@ export default function EventsScreen({ navigation, route }) {
                         endDate,
                         location,
                         description,
-                        is_important, 
+                        is_important,
                         document
                       )
                     }
