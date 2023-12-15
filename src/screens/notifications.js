@@ -140,6 +140,7 @@ export default function Notifications({ navigation, route }) {
         `${global.baseurl}:4000/deleteUserEvent`,
         {
           params: {
+            user_id: notification.user_id,
             event_id: conflictingEvent.id,
           },
         }
@@ -188,15 +189,18 @@ export default function Notifications({ navigation, route }) {
           setEventData(events);
         }
         // alert("Accepted and Overwritten: ", notification.eventTitle);
-        setModalVisible(false);
+        // setModalVisible(false);
         console.log("Accepted and Overwritten", notification.eventTitle);
       } else {
         console.log("something went wrong");
       }
     } catch (error) {
       console.log(error);
+    } finally {
+      setOverwriteInProgress(false);
+      setModalVisible(false);
     }
-    setOverwriteInProgress(false);
+    // setOverwriteInProgress(false);
     // setModalVisible(false);
   };
 
