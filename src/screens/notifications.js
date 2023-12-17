@@ -188,7 +188,15 @@ export default function Notifications({ navigation, route }) {
           const events = data.events;
           setEventData(events);
         }
-        // alert("Accepted and Overwritten: ", notification.eventTitle);
+        Alert.alert("Accepted and Overwritten", notification.eventTitle, [
+          {
+            text: "OK",
+            onPress: () => {
+              setOverwriteInProgress(false);
+              setModalVisible(false);
+            },
+          },
+        ]);
         // setModalVisible(false);
         console.log("Accepted and Overwritten", notification.eventTitle);
       } else {
@@ -196,9 +204,6 @@ export default function Notifications({ navigation, route }) {
       }
     } catch (error) {
       console.log(error);
-    } finally {
-      setOverwriteInProgress(false);
-      setModalVisible(false);
     }
     // setOverwriteInProgress(false);
     // setModalVisible(false);
@@ -292,10 +297,10 @@ export default function Notifications({ navigation, route }) {
                 : item
             )
           );
-          handleOverwriteConflict(
-            notification,
-            getConflictingEvent(notification)
-          );
+          // handleOverwriteConflict(
+          //   notification,
+          //   getConflictingEvent(notification)
+          // );
           console.log("sucess");
         } else {
           console.log("something went wrong");
@@ -567,6 +572,9 @@ export default function Notifications({ navigation, route }) {
                         currentNotification,
                         conflictingEvent
                       );
+                      // setTimeout(() => {
+                      //   setModalVisible(false);
+                      // }, 2000);
                     }}
                     width={wp("30%")}
                     bgColor={"black"}

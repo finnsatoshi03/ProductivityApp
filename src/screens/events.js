@@ -548,14 +548,14 @@ export default function EventsScreen({ navigation, route }) {
       console.log(date);
       hideDatePicker();
     } else {
-      const twoHoursFromNow = new Date(
-        currentDate.getTime() + 2 * 60 * 60 * 1000
-      );
+      const selectedTime = date.getHours();
+      const currentTime = currentDate.getHours();
+      const diff = selectedTime - currentTime;
 
-      if (date < twoHoursFromNow) {
+      if (selectedTime >= 0 && selectedTime <= 4) {
         Alert.alert(
           "Time Error",
-          "You cannot select a time that is less than 2 hours from now.",
+          "You cannot select a time between 12AM to 4AM.",
           [
             {
               text: "OK",
