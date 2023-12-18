@@ -23,6 +23,7 @@ import ListView from "../components/listView";
 import Avatar from "./../components/avatar";
 import Modal from "react-native-modal";
 import Button from "./../components/button";
+// import { useData } from "../DataContext";
 
 import axios from "axios";
 import "../../global";
@@ -33,10 +34,12 @@ export default function Attendees({
   userTag,
   event_id,
   user_id,
+  currentViewedEventData,
 
   modalVisible,
   setModalVisible,
 }) {
+  // const { eventData } = useData();
   const [post, setPost] = useState({
     fullname: "",
     datetime: "",
@@ -45,6 +48,7 @@ export default function Attendees({
     id: "",
     user_id: "",
   });
+  console.log("Events Data: s", currentViewedEventData);
 
   useEffect(() => {
     const getAttendees = async () => {
@@ -57,21 +61,23 @@ export default function Attendees({
       if (response.status === 200) {
         const { data } = response;
         const attendees = data.users;
-        const id = attendees[0].attendance_id
-        
-        const imageResponse = axios.get(`${global.baseurl}:4000/attendanceImage/${id}`)
-                
-        
-        imageResponse.then(response => {
-          const imageData = response.data;
-          console.log(imageData);
-          // Update the image property of the first attendee
-          attendees[0].image = imageData;
-    
-        }).catch(error => {
-            console.error('Failed to fetch image data:', error);
+        const id = attendees[0].attendance_id;
+
+        const imageResponse = axios.get(
+          `${global.baseurl}:4000/attendanceImage/${id}`
+        );
+
+        imageResponse
+          .then((response) => {
+            const imageData = response.data;
+            console.log(imageData);
+            // Update the image property of the first attendee
+            attendees[0].image = imageData;
+          })
+          .catch((error) => {
+            console.error("Failed to fetch image data:", error);
             // Handle error if needed
-        });
+          });
 
         setPost(attendees);
       }
@@ -93,9 +99,9 @@ export default function Attendees({
   const maxChars = 200;
   const [images, setImages] = useState();
   const [isLoading, setIsLoading] = useState(false);
+  const [hasSubmittedAttendance, setHasSubmittedAttendance] = useState(false);
 
   const selectImage = async () => {
-   
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
@@ -113,8 +119,22 @@ export default function Attendees({
       alert("Please add some text and at least one image before posting.");
       return;
     }
-    
+
     // setIsLoading(true);
+
+    // const event = eventData.find(
+    //   (e) => e.title === viewEvent && e.eventID === event_id
+    // );
+    // console.log("Events Data: ", eventData);
+
+    const eventEndTime = new Date(currentViewedEventData.datetime);
+    if (new Date() < eventEndTime) {
+      Alert.alert(
+        "Error",
+        "You can't submit attendance before the event has finished."
+      );
+      return;
+    }
 
     setTimeout(async () => {
       try {
@@ -122,9 +142,9 @@ export default function Attendees({
           user_id: user_id,
           events_id: event_id,
           comments: text,
-          image: images,          
+          image: images,
         };
-        
+
         const response = await axios.post(
           `${global.baseurl}:4000/createAttendance`,
           data
@@ -133,6 +153,7 @@ export default function Attendees({
         if (response.status === 200) {
           Alert.alert("Success", "Post submitted successfully");
           setIsLoading(false);
+          setHasSubmittedAttendance(true);
           setModalVisible(false);
         } else {
           Alert.alert("Error", "Failed to submit post");
@@ -267,18 +288,12 @@ export default function Attendees({
                           setImages(newImages);
                         }}
                       >
-                        <Ionicons
-                          name="close-circle"
-                          size={24}
-                          color="black"
-                        />
+                        <Ionicons name="close-circle" size={24} color="black" />
                       </TouchableOpacity>
                     </View>
                   ) : (
                     <></>
                   )}
-                  
-                  
                 </View>
                 <View
                   style={{
@@ -288,11 +303,11 @@ export default function Attendees({
                   }}
                 >
                   <TouchableOpacity onPress={selectImage}>
-                  <Image
-                    style={{ height: hp("3%"), width: hp("3%") }}
-                    source={require("./../../assets/gallery.png")}
-                  />
-                </TouchableOpacity>
+                    <Image
+                      style={{ height: hp("3%"), width: hp("3%") }}
+                      source={require("./../../assets/gallery.png")}
+                    />
+                  </TouchableOpacity>
                   {isLoading ? (
                     <ActivityIndicator
                       size="large"

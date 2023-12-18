@@ -26,8 +26,8 @@ import Button from "./button";
 import axios from "axios";
 import { useData } from "./../DataContext";
 import { set } from "date-fns";
-import * as FileSystem from 'expo-file-system';
-import * as IntentLauncher from 'expo-intent-launcher';
+import * as FileSystem from "expo-file-system";
+import * as IntentLauncher from "expo-intent-launcher";
 
 const ViewEvent = ({ route, navigation }) => {
   const {
@@ -45,9 +45,9 @@ const ViewEvent = ({ route, navigation }) => {
     role,
     contact,
     email,
-    image
+    image,
   } = route.params;
-  
+
   const { eventData, setEventData } = useData();
 
   const [imageURL, setImageURL] = useState("");
@@ -92,7 +92,9 @@ const ViewEvent = ({ route, navigation }) => {
   const time = dateTimeArray.slice(3).join(" ");
 
   const [selectedParticipant, setSelectedParticipant] = useState(null);
-  const [iconType, setIconType] = useState(starred === true ? "solid-star" : "outlined-star");
+  const [iconType, setIconType] = useState(
+    starred === true ? "solid-star" : "outlined-star"
+  );
 
   const handleIconButtonPress = async () => {
     setIconType((prevIconType) =>
@@ -103,22 +105,25 @@ const ViewEvent = ({ route, navigation }) => {
       const data = {
         user_id: user_id,
         event_id: id,
-        starred: iconType === "outlined-star" ? true : false
-      }
-      
-      const response = await axios.patch(`${global.baseurl}:4000/starredEvent`, data)
+        starred: iconType === "outlined-star" ? true : false,
+      };
+
+      const response = await axios.patch(
+        `${global.baseurl}:4000/starredEvent`,
+        data
+      );
 
       if (response.status === 200) {
-        setEventData(prevEventData => {
+        setEventData((prevEventData) => {
           // Update the starred status for the specific event in your state
-          return prevEventData.map(event => {
+          return prevEventData.map((event) => {
             if (event.id === id) {
               return { ...event, starred: data.starred };
             }
             return event;
           });
         });
-        console.log('happy');
+        console.log("happy");
       } else {
         console.log("sad");
       }
@@ -128,9 +133,8 @@ const ViewEvent = ({ route, navigation }) => {
   };
 
   const showDocs = async () => {
+    const response = await axios.get(`${global.baseurl}:4000/file/${id}`);
 
-    const response = await axios.get(`${global.baseurl}:4000/file/${id}`)
-    
     if (response.status === 200) {
       console.log(response.data);
       const cUri = await FileSystem.getContentUriAsync(response.data);
@@ -139,8 +143,8 @@ const ViewEvent = ({ route, navigation }) => {
         data: cUri,
         flags: 1,
         type: "application/pdf",
-    });
-    }    
+      });
+    }
     // FileSystem.getContentUriAsync(uri).then(cUri => {
     //   IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
     //       data: cUri.uri,
@@ -148,7 +152,7 @@ const ViewEvent = ({ route, navigation }) => {
     //       type: 'application/pdf'
     //    });
     // });
-  }
+  };
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -390,7 +394,7 @@ const ViewEvent = ({ route, navigation }) => {
                     width={wp("45%")}
                     bgColor="rgba(255, 255, 255, 0.5)"
                     textColor="rgba(0, 0, 0, 0.5)"
-                  />                  
+                  />
                 </View>
               </View>
             </View>
@@ -456,6 +460,7 @@ const ViewEvent = ({ route, navigation }) => {
             userTag={role === "user" ? user : null}
             event_id={id}
             user_id={user_id}
+            currentViewedEventData={eventData.find((event) => event.id === id)}
             modalVisible={isAttendeesModalVisible}
             setModalVisible={setAttendeesModalVisible}
           />
