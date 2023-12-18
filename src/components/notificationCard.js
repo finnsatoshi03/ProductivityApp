@@ -88,12 +88,17 @@ export default function NotificationCard({
     }
   };
   const handleEditToggle = () => {
+    console.log("Before Toggle - isEditToggled:", isEditToggled);
     setIsEditToggled(!isEditToggled);
     setIsRejectHidden(true);
+    console.log("After Toggle - isEditToggled:", !isEditToggled);
   };
+
   const handleRejectToggle = () => {
+    console.log("Before Toggle - isRejectHidden:", isRejectHidden);
     setIsRejectHidden(!isRejectHidden);
     setIsEditToggled(false);
+    console.log("After Toggle - isRejectHidden:", !isRejectHidden);
   };
 
   // console.log(invitation);

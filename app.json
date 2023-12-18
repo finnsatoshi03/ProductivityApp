@@ -8,7 +8,7 @@
     "userInterfaceStyle": "light",
     "notification": {
       "presentation": {
-        "foreground": true 
+        "foreground": true
       }
     },
     "splash": {
@@ -26,11 +26,16 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
-
+      },
+      "package": "com.fabulouseggpie.ProductivityApp"
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "477f0f00-99d2-4c93-bce2-f4298262046b"
+      }
     }
   }
 }

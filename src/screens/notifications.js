@@ -287,16 +287,16 @@ export default function Notifications({ navigation, route }) {
             const events = data.events;
             setEventData(events);
           }
-          setData((prevData) =>
-            prevData.map((item) =>
-              item.user_id === notification.user_id &&
-              item.event_id === notification.event_id
-                ? {
-                    ...item,
-                  }
-                : item
-            )
-          );
+          // setData((prevData) =>
+          //   prevData.map((item) =>
+          //     item.user_id === notification.user_id &&
+          //     item.event_id === notification.event_id
+          //       ? {
+          //           ...item,
+          //         }
+          //       : item
+          //   )
+          // );
           // handleOverwriteConflict(
           //   notification,
           //   getConflictingEvent(notification)
@@ -352,6 +352,20 @@ export default function Notifications({ navigation, route }) {
               )
           );
         });
+        const response = await axios.get(
+          `${global.baseurl}:4000/userViewEvents`,
+          {
+            params: {
+              user_id: user_id,
+            },
+          }
+        );
+        if (response.status === 200) {
+          const { data } = response;
+          const events = data.events;
+          setEventData(events);
+          // console.log("Events: ", events);
+        }
         console.log("success");
         setComment("");
       } else {

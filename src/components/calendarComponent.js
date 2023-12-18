@@ -98,7 +98,7 @@ export default function CalendarComponent({ events, onDayPress }) {
     "2023-10-30", // (Barangay and SK Elections)
     "2023-11-02", // (Thursday)
     "2023-01-02", // (Monday)
-    "2023-11-01", // All Saints' Day & All Souls' Day (Take a leave on November 3)
+    // "2023-11-01", // All Saints' Day & All Souls' Day (Take a leave on November 3)
     "2023-11-25", // Bonifacio Day
     "2023-12-08", // Feast of the Immaculate Concepcion
     "2023-12-23", // Christmas Day
