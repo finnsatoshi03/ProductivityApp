@@ -28,7 +28,9 @@ export default function ModalCard({
   contact_no,
   reject,
   accept,
+  onDelete,
   onBackdropPress,
+  isVerifiedScreen,
 }) {
   const [isSecondaryModalVisible, setIsSecondaryModalVisible] = useState(false);
 
@@ -46,6 +48,16 @@ export default function ModalCard({
     reject();
     onBackdropPress();
     setIsSecondaryModalVisible(false);
+  };
+
+  const handleDelete = () => {
+    onDelete();
+    Alert.alert(
+      "Success",
+      `The account ${username} is successfully deleted.`,
+      [{ text: "OK", onPress: () => onBackdropPress() }],
+      { cancelable: false }
+    );
   };
 
   return (
@@ -125,16 +137,35 @@ export default function ModalCard({
             </Text>
           </View>
           <View
-            style={{ flexDirection: "row", justifyContent: "space-between" }}
+            style={{
+              flexDirection: isVerifiedScreen ? "column" : "row",
+              justifyContent: "space-between",
+            }}
           >
-            <Button width={wp("50%")} text={"Accept"} onPress={handleAccept} />
-            <Button
-              width={wp("22%")}
-              text={"Reject"}
-              bgColor={"rgba(0,0,0,0.2)"}
-              textColor="rgba(0,0,0,0.5)"
-              onPress={() => setIsSecondaryModalVisible(true)}
-            />
+            {isVerifiedScreen ? (
+              <Button
+                width={"100%"}
+                text={"Delete"}
+                onPress={handleDelete}
+                bgColor={"rgba(0,0,0,0.2)"}
+                textColor="white"
+              />
+            ) : (
+              <>
+                <Button
+                  width={wp("50%")}
+                  text={"Accept"}
+                  onPress={handleAccept}
+                />
+                <Button
+                  width={wp("22%")}
+                  text={"Reject"}
+                  bgColor={"rgba(0,0,0,0.2)"}
+                  textColor="rgba(0,0,0,0.5)"
+                  onPress={() => setIsSecondaryModalVisible(true)}
+                />
+              </>
+            )}
           </View>
         </View>
       </Modal>

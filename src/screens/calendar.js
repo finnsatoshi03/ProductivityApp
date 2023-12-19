@@ -208,6 +208,7 @@ export default function Calendar({ navigation, route }) {
 
   const requestNotificationPermission = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
+    console.log("Notification permission status:", status);
     // if (status === 'granted') {
     //   console.log('Notification permission granted.');
     // } else {

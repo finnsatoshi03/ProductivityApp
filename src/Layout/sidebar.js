@@ -30,10 +30,10 @@ export default function sideBar({
   role,
   contact,
   email,
-  image
+  image,
 }) {
   const { logout } = Authentication();
-  
+
   const [isModalVisible, setModalVisible] = useState(false);
   const [logoutText, setLogoutText] = useState(
     "Are you sure you want to logout?"
@@ -54,7 +54,9 @@ export default function sideBar({
       toValue: -wp("70%"),
       duration: 300,
       useNativeDriver: true,
-    }).start(onHide);
+    }).start(() => {
+      onHide();
+    });
   };
 
   useEffect(() => {
@@ -159,24 +161,44 @@ export default function sideBar({
               image={image}
             />
             {role === "admin" ? (
-              <Button
-                text={"Verify Account"}
-                flexStart={true}
-                transparent={true}
-                textColor={"black"}
-                fontSize={globalStyles.fontSize.mediumDescription}
-                iconSource={require("./../../assets/verify.png")}
-                navigation={navigation}
-                destination={"UserControl"}
-                fnc="navigate"
-                fullname={fullname}
-                user={user}
-                user_id={user_id}
-                role={role}
-                contact={contact}
-                email={email}
-                image={image}
-              />
+              <>
+                <Button
+                  text={"Verify Account"}
+                  flexStart={true}
+                  transparent={true}
+                  textColor={"black"}
+                  fontSize={globalStyles.fontSize.mediumDescription}
+                  iconSource={require("./../../assets/verify.png")}
+                  navigation={navigation}
+                  destination={"UserControl"}
+                  fnc="navigate"
+                  fullname={fullname}
+                  user={user}
+                  user_id={user_id}
+                  role={role}
+                  contact={contact}
+                  email={email}
+                  image={image}
+                />
+                <Button
+                  text={"View Members"}
+                  flexStart={true}
+                  transparent={true}
+                  textColor={"black"}
+                  fontSize={globalStyles.fontSize.mediumDescription}
+                  iconSource={require("./../../assets/users.png")}
+                  navigation={navigation}
+                  destination={"Users"}
+                  fnc="navigate"
+                  fullname={fullname}
+                  user={user}
+                  user_id={user_id}
+                  role={role}
+                  contact={contact}
+                  email={email}
+                  image={image}
+                />
+              </>
             ) : (
               <></>
             )}

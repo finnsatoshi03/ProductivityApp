@@ -15,6 +15,7 @@ import UserControl from "../screens/userControl";
 import ViewEvent from "../components/viewEvent";
 import Conversation from "../components/conversationComponent";
 import Notifications from "../screens/notifications";
+import Users from "../screens/users";
 import { DataProvider } from "./../DataContext";
 
 const Stack = createNativeStackNavigator();
@@ -99,6 +100,11 @@ export default function App() {
           <Stack.Screen
             name="ViewEvent"
             component={ViewEvent}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
+            name="Users"
+            component={Users}
             options={{ headerShown: false }}
           />
           {/* <Stack.Screen
