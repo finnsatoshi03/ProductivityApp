@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, Pressable, Platform,  Alert, Image, FlatList  } from "react-native";
+import {
+  View,
+  Text,
+  Pressable,
+  Platform,
+  Alert,
+  Image,
+  FlatList,
+} from "react-native";
 import * as ImagePicker from "expo-image-picker";
 import * as Permissions from "expo-permissions";
 import { globalStyles } from "../styles/globalStyles";
@@ -16,18 +24,16 @@ import Button from "./../components/button";
 import axios from "axios";
 import "../../global";
 
-
-
 export default function EditProfile({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
-  
+
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isModalVisible, setModalVisible] = useState(true);
   const [usernamefield, setUsername] = useState(user);
   const [emailfield, setEmail] = useState(email);
   const [contactfield, setContact] = useState(contact);
   const [img, setImg] = useState(image);
-  
+
   const hideModal = () => {
     setModalVisible(false);
     navigation.goBack();
@@ -41,7 +47,7 @@ export default function EditProfile({ navigation, route }) {
       contact: contactfield,
       user_id: user_id,
     };
-  
+
     try {
       let baseurl =
         role === "admin"
@@ -51,7 +57,6 @@ export default function EditProfile({ navigation, route }) {
       const response = await axios.patch(baseurl, data);
 
       if (response.status === 200) {
-
         navigation.navigate("Calendar", {
           fullname: fullname,
           user: usernamefield,
@@ -59,7 +64,7 @@ export default function EditProfile({ navigation, route }) {
           role: role,
           contact: contactfield,
           email: emailfield,
-          image:img
+          image: img,
         });
 
         Alert.alert(
@@ -68,7 +73,7 @@ export default function EditProfile({ navigation, route }) {
           [
             {
               text: "OK",
-              onPress: () => {                               
+              onPress: () => {
                 setModalVisible(false);
                 navigation.goBack();
               },
@@ -94,7 +99,7 @@ export default function EditProfile({ navigation, route }) {
       );
     }
   };
-  
+
   const requestPermission = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
@@ -126,8 +131,7 @@ export default function EditProfile({ navigation, route }) {
   const handlContact = (text) => {
     setContact(text);
   };
-  
-  
+
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
@@ -141,12 +145,12 @@ export default function EditProfile({ navigation, route }) {
           <Pressable
             style={{ alignItems: "center" }}
             onPress={requestPermission}
-          >        
+          >
             <Avatar
-              avatar={{uri:img}}
+              avatar={{ uri: img }}
               customHeight={hp("12.5%")}
               customWidth={hp("12.5%")}
-            />             
+            />
             <Text
               style={{
                 fontFamily: globalStyles.fontStyle.semiBold,
@@ -158,7 +162,6 @@ export default function EditProfile({ navigation, route }) {
           </Pressable>
 
           <View>
-            
             <Label
               text={"Username"}
               flexStart={true}
