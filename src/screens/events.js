@@ -203,6 +203,7 @@ export default function EventsScreen({ navigation, route }) {
       event: eventTitle,
       location: location,
       description: description,
+      participants: participants || "",
       id: selectedEvent === "" ? null : selectedEvent,
       is_important: Boolean(is_important),
       document: document,
@@ -229,6 +230,7 @@ export default function EventsScreen({ navigation, route }) {
           location: location,
         };
         newEvent.id = event_id;
+        console.log("Users: ", user_ids);
 
         const request =
           btnFnc === "create"
@@ -338,6 +340,15 @@ export default function EventsScreen({ navigation, route }) {
           prevEvents.filter((event) => event.id !== event_id)
         );
         console.log(`Event ${event_id} has been deleted.`);
+        // Reset the states
+        setEventTitle("");
+        setParticipants([]);
+        setParticipantNames("");
+        setLocation("");
+        setDescription("");
+        setAddedParticipants([]);
+        setLocation("");
+        setIsImportant(false);
       } else console.log("no");
     } catch (error) {
       console.log(error);
@@ -445,7 +456,13 @@ export default function EventsScreen({ navigation, route }) {
     setSelectedEvent(event.id);
 
     setIsImportant(event.is_important);
-    getParticipants(event.id);
+    getParticipants(event.id).then(() => {
+      // After fetching participants, compare and remove any participants not present in the fetched list
+      const removedParticipants = addedParticipants.filter(
+        (participant) => !participants.includes(participant.id.toString())
+      );
+      console.log("Participants to remove: ", removedParticipants);
+    });
     // setParticipantNames(event.)
     const dateTime = new Date(event.datetime);
 
