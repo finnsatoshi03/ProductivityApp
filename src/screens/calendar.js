@@ -10,7 +10,6 @@ import {
   StatusBar,
 } from "react-native";
 import moment from "moment";
-import { isSameDay } from "date-fns";
 import { globalStyles } from "./../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 import Header from "./../components/header";
@@ -99,7 +98,7 @@ export default function Calendar({ navigation, route }) {
 
   const isHoliday = (date) => {
     return Object.keys(holidays).some((holiday) =>
-      isSameDay(new Date(date), new Date(holiday))
+      moment(date).isSame(holiday, "day")
     );
   };
 

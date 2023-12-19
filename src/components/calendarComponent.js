@@ -4,7 +4,6 @@ import {
   Calendar,
   LocaleConfig,
   CalendarProvider,
-  ExpandableCalendar,
 } from "react-native-calendars";
 import { globalStyles } from "../styles/globalStyles";
 import { heightPercentageToDP as hp } from "react-native-responsive-screen";
@@ -61,7 +60,6 @@ export default function CalendarComponent({ events, onDayPress }) {
   const maxDate = `${currentYear}-12-31`;
 
   const [selected, setSelected] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
 
   // console.log("events", events);
   // if (Array.isArray(events)) {

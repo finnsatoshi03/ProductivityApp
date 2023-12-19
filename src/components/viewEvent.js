@@ -25,7 +25,6 @@ import { globalStyles } from "../styles/globalStyles";
 import Button from "./button";
 import axios from "axios";
 import { useData } from "./../DataContext";
-import { set } from "date-fns";
 import * as FileSystem from "expo-file-system";
 import * as IntentLauncher from "expo-intent-launcher";
 

@@ -1,9 +1,6 @@
 import React from "react";
 import { Text, View, Pressable, Image } from "react-native";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
+import { heightPercentageToDP as hp } from "react-native-responsive-screen";
 
 export default function Button({
   navigation,
@@ -29,7 +26,7 @@ export default function Button({
   role,
   contact,
   email,
-  image
+  image,
 }) {
   return (
     <View
@@ -53,7 +50,7 @@ export default function Button({
               role: role,
               contact: contact,
               email: email,
-              image:image
+              image: image,
             });
           } else if (fnc == "press") {
             onPress();

@@ -1,9 +1,5 @@
-import { Image, View, Text, Pressable } from "react-native";
+import { Image, View } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
-import {
-  widthPercentageToDP as wp,
-  heightPercentageToDP as hp,
-} from "react-native-responsive-screen";
 
 export default function LoginComponent({ topProperty }) {
   return (
