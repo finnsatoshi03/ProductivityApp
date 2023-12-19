@@ -29,6 +29,7 @@ import DateTimePickerModal from "react-native-modal-datetime-picker";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
 import Participants from "./participants";
+import { useFocusEffect } from "@react-navigation/native";
 
 import { Authentication } from "../Auth/Authentication";
 import axios from "axios";
@@ -72,6 +73,33 @@ export default function EventsScreen({ navigation, route }) {
   const [selectedMonth, setSelectedMonth] = useState(null);
   // const [dropdownPlaceholder, setDropdownPlaceholder] = useState("Month");
   const [dropdownKey, setDropdownKey] = useState(0);
+
+  const [isScreenActive, setScreenActive] = useState(true);
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        setSidebarVisible(false);
+      };
+    }, [])
+  );
 
   useEffect(() => {
     eventData.forEach((event) => {
@@ -1223,7 +1251,7 @@ export default function EventsScreen({ navigation, route }) {
           {/* <Text>Events Screen</Text> */}
         </View>
       </View>
-      {isSidebarVisible && (
+      {isSidebarVisible && isScreenActive && (
         <>
           <TouchableOpacity
             style={globalStyles.overlay}

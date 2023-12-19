@@ -11,8 +11,10 @@ import Participants from "./../components/profileCard";
 import Sidebar from "./../Layout/sidebar";
 import ModalCard from "../components/modalCard";
 import Navbar from "./../Layout/navbar";
+import { useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios";
+import { set } from "date-fns";
 
 export default function Users({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
@@ -56,6 +58,34 @@ export default function Users({ navigation, route }) {
 
     retrieveVerifiedUsers();
   }, []);
+
+  const [isScreenActive, setScreenActive] = useState(true);
+
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        setSidebarVisible(false);
+      };
+    }, [])
+  );
 
   const handleOpenModal = (user) => {
     setSelectedUser(user);
@@ -163,7 +193,7 @@ export default function Users({ navigation, route }) {
           </View>
         </View>
       </View>
-      {isSidebarVisible && (
+      {isSidebarVisible && isScreenActive && (
         <>
           <TouchableOpacity
             style={globalStyles.overlay}

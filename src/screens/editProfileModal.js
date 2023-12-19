@@ -20,6 +20,7 @@ import Avatar from "./../components/avatar";
 import Label from "./../components/globalLabel";
 import Input from "./../components/input";
 import Button from "./../components/button";
+import { useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios";
 import "../../global";
@@ -131,6 +132,33 @@ export default function EditProfile({ navigation, route }) {
   const handlContact = (text) => {
     setContact(text);
   };
+
+  const [isScreenActive, setScreenActive] = useState(true);
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        // setSidebarVisible(false);
+      };
+    }, [])
+  );
 
   return (
     <View>

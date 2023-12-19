@@ -25,6 +25,7 @@ import DropdownComponent from "./../components/dropdown";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
 import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
+import { useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios";
 import "../../global";
@@ -67,6 +68,34 @@ export default function Reports({ navigation, route }) {
     { label: "November", value: "November" },
     { label: "December", value: "December" },
   ];
+
+  const [isScreenActive, setScreenActive] = useState(true);
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        setSidebarVisible(false);
+      };
+    }, [])
+  );
+
   const eventTitles = eventData
     .filter(
       (event) => !reportData.some((report) => report.event === event.event)
@@ -712,7 +741,7 @@ export default function Reports({ navigation, route }) {
         </View>
       </Modal>
 
-      {isSidebarVisible && (
+      {isSidebarVisible && isScreenActive && (
         <>
           <TouchableOpacity
             style={globalStyles.overlay}

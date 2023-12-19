@@ -20,6 +20,7 @@ import Sidebar from "./../Layout/sidebar";
 import Modal from "react-native-modal";
 import Button from "./../components/button";
 import { useData } from "./../DataContext";
+import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import "../../global";
 
@@ -39,6 +40,33 @@ export default function Notifications({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
   const { eventData, setEventData } = useData();
   const [data, setData] = useState({});
+
+  const [isScreenActive, setScreenActive] = useState(true);
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        setSidebarVisible(false);
+      };
+    }, [])
+  );
 
   useEffect(() => {
     const getNotifications = async () => {
@@ -713,7 +741,7 @@ export default function Notifications({ navigation, route }) {
           )}
         </View>
       </Modal>
-      {isSidebarVisible && (
+      {isSidebarVisible && isScreenActive && (
         <>
           <TouchableOpacity
             style={globalStyles.overlay}

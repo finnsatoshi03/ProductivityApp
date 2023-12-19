@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Text,
   View,
@@ -20,14 +20,14 @@ import Navbar from "./../Layout/navbar";
 import Sidebar from "./../Layout/sidebar";
 import ModalCard from "../components/modalCard";
 import Avatar from "../components/avatar";
+import { useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios";
 
 import "../../global";
 
 export default function UserControl({ navigation, route }) {
-
-  const { fullname, user, user_id, role, contact, email, image} = route.params;
+  const { fullname, user, user_id, role, contact, email, image } = route.params;
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
   const [notVerifiedUsers, setNotVerifiedUsers] = useState({
@@ -45,6 +45,33 @@ export default function UserControl({ navigation, route }) {
   const [selectedUser, setSelectedUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [isScreenActive, setScreenActive] = useState(true);
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        setSidebarVisible(false);
+      };
+    }, [])
+  );
+
   useEffect(() => {
     const retrieveNotVerifiedUsers = async () => {
       setIsLoading(true);
@@ -55,7 +82,7 @@ export default function UserControl({ navigation, route }) {
 
         if (response.status === 200) {
           const { data } = response;
-          
+
           setNotVerifiedUsers(data.users);
         } else {
           console.log(response.message);
@@ -80,7 +107,6 @@ export default function UserControl({ navigation, route }) {
   };
 
   const handleApprove = async (id) => {
-    
     try {
       const data = {
         user_id: id,
@@ -89,7 +115,6 @@ export default function UserControl({ navigation, route }) {
       const response = await axios.patch(`${global.baseurl}:4000/verify`, data);
 
       if (response.status === 200) {
-        
         setNotVerifiedUsers((prevUsers) => {
           return prevUsers.filter((user) => user.id !== id);
         });
@@ -107,10 +132,10 @@ export default function UserControl({ navigation, route }) {
       user_id: id,
       verify: false,
     };
-    
+
     const response = await axios.patch(`${global.baseurl}:4000/verify`, data);
 
-    if (response.status === 200) {      
+    if (response.status === 200) {
       setNotVerifiedUsers((prevUsers) => {
         return prevUsers.filter((user) => user.id !== id);
       });
@@ -181,17 +206,18 @@ export default function UserControl({ navigation, route }) {
               icon="none"
               navigation={navigation}
               eventsData={notVerifiedUsers}
-              fullname={fullname} user={user} user_id={user_id} 
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
               role={role}
               contact={contact}
-              email={email} 
+              email={email}
               image={image}
             />
-            
           </View>
         </View>
       </View>
-      {isSidebarVisible && (
+      {isSidebarVisible && isScreenActive && (
         <>
           <TouchableOpacity
             style={globalStyles.overlay}
@@ -201,7 +227,7 @@ export default function UserControl({ navigation, route }) {
             isVisible={isSidebarVisible}
             onHide={() => setSidebarVisible(false)}
             navigation={navigation}
-            fullname={fullname} 
+            fullname={fullname}
             user={user}
             user_id={user_id}
             role={role}

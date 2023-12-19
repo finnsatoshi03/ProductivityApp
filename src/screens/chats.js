@@ -1,4 +1,4 @@
-import { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Image,
@@ -23,12 +23,11 @@ import Conversation from "../components/conversationComponent";
 import Modal from "react-native-modal";
 import Avatar from "../components/avatar";
 import Button from "../components/button";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useFocusEffect } from "@react-navigation/native";
 // import InputFields from "../components/input";
 
 export default function Chats({ route }) {
-
-  const { fullname, user, user_id, role, contact, email, image} = route.params;
+  const { fullname, user, user_id, role, contact, email, image } = route.params;
 
   const [avatar, setAvatar] = useState(require("./../../assets/profile.png"));
   const [isSidebarVisible, setSidebarVisible] = useState(false);
@@ -151,6 +150,33 @@ export default function Chats({ route }) {
     setCommunityName("");
     setCommunityAvatar(null);
   };
+
+  const [isScreenActive, setScreenActive] = useState(true);
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        setSidebarVisible(false);
+      };
+    }, [])
+  );
 
   return (
     <>
@@ -323,14 +349,23 @@ export default function Chats({ route }) {
             )}
           </View>
           <View style={{ height: hp("14%") }}>
-            <Navbar notifCounts={6} icon={"Chat"} navigation={navigation} 
-            fullname={fullname} user={user} user_id={user_id} role={role}
-            contact={contact} email={email}  image={image}/>
+            <Navbar
+              notifCounts={6}
+              icon={"Chat"}
+              navigation={navigation}
+              fullname={fullname}
+              user={user}
+              user_id={user_id}
+              role={role}
+              contact={contact}
+              email={email}
+              image={image}
+            />
           </View>
           {/* <Text>Chats Screen</Text> */}
         </View>
       </View>
-      {isSidebarVisible && (
+      {isSidebarVisible && isScreenActive && (
         <>
           <TouchableOpacity
             style={globalStyles.overlay}

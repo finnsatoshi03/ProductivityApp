@@ -23,6 +23,7 @@ import {
   SafeAreaInsetsContext,
 } from "react-native-safe-area-context";
 import { useData } from "./../DataContext";
+import { useFocusEffect } from "@react-navigation/native";
 
 import axios from "axios";
 import "../../global";
@@ -225,20 +226,15 @@ export default function Calendar({ navigation, route }) {
   });
 
   const scheduleNotificationOneHourBeforeEvent = async (eventTime) => {
-    const currentTime = new Date(); // Current date/time
+    const currentTime = new Date();
 
-    // Calculate the time difference in milliseconds between current time and event time
     const timeDiff = eventTime.getTime() - currentTime.getTime();
 
-    // Calculate one hour in milliseconds
     const oneHourInMilliseconds = 60 * 60 * 1000;
 
-    // Calculate the trigger time by subtracting one hour from the event time
     const triggerTime = new Date(eventTime.getTime() - oneHourInMilliseconds);
 
-    // Check if the event is at least one hour from the current time
     if (timeDiff > oneHourInMilliseconds) {
-      // Schedule the notification one hour before the event
       await Notifications.scheduleNotificationAsync({
         content: {
           title: "Event Reminder!",
@@ -248,13 +244,39 @@ export default function Calendar({ navigation, route }) {
           date: triggerTime,
         },
       });
-      // console.log('Notification was scheduled')
     } else {
       console.log(
         "Event is less than one hour away. Cannot schedule notification."
       );
     }
   };
+
+  const [isScreenActive, setScreenActive] = useState(true);
+  useEffect(() => {
+    const focusListener = navigation.addListener("focus", () => {
+      setScreenActive(true);
+    });
+
+    const blurListener = navigation.addListener("blur", () => {
+      setScreenActive(false);
+    });
+
+    return () => {
+      focusListener();
+      blurListener();
+    };
+  }, [navigation]);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      setScreenActive(true);
+
+      return () => {
+        setScreenActive(false);
+        setSidebarVisible(false);
+      };
+    }, [])
+  );
 
   return (
     <>
@@ -362,7 +384,7 @@ export default function Calendar({ navigation, route }) {
           {/* <Text>Tite</Text> */}
         </View>
       </View>
-      {isSidebarVisible && (
+      {isSidebarVisible && isScreenActive && (
         <>
           <TouchableOpacity
             style={globalStyles.overlay}
