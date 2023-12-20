@@ -27,7 +27,7 @@ export default function PostCards({
   datetime,
   comments,
   user_id,
-  image,
+  images,
   id,
 }) {
   const { eventData, setEventData } = useData();
@@ -39,27 +39,15 @@ export default function PostCards({
     setIsAbsent(false);
 
     const data = {
-      user_id: user_id,
-      event_id: id,
+      user_id: 1, // Static user_id
+      event_id: 1, // Static event_id
       attend: true,
     };
 
-    try {
-      const response = await axios.patch(
-        `${global.baseurl}:4000/updateAttendee`,
-        data
-      );
-
-      if (response.status === 200) {
-        console.log("success");
-      } else {
-        console.log("sad");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    console.log("Present data:", data);
   };
-  const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").format(
+
+  const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").fromNow(
     "MM/DD/YYYY HH:mm:ss"
   );
 
@@ -68,27 +56,14 @@ export default function PostCards({
     setIsPresent(false);
 
     const data = {
-      user_id: user_id,
-      event_id: id,
+      user_id: 1, // Static user_id
+      event_id: 1, // Static event_id
       attend: false,
     };
 
-    try {
-      const response = await axios.patch(
-        `${global.baseurl}:4000/updateAttendee`,
-        data
-      );
-
-      if (response.status === 200) {
-        console.log("success");
-      } else {
-        console.log("sad");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    console.log("Absent data:", data);
   };
-  console.log(image);
+
   return (
     <View>
       <View
@@ -140,12 +115,28 @@ export default function PostCards({
             marginBottom: 10,
           }}
         >
-          <View style={{ width: "100%", flexDirection: "column" }}>
-            <Image
-              style={{ height: hp("40%"), width: "100%" }}
-              source={{ uri: image }}
-            />
-          </View>
+          {images.map((image, index) => (
+            <View
+              key={index}
+              style={{
+                width:
+                  images.length === 1
+                    ? "100%"
+                    : images.length === 3 && index === 2
+                    ? "100%"
+                    : "50%",
+                flexDirection: "column",
+              }}
+            >
+              <Image
+                style={{
+                  height: images.length === 1 ? hp("40%") : hp("20%"),
+                  width: "100%",
+                }}
+                source={{ uri: image }}
+              />
+            </View>
+          ))}
         </View>
         <View
           style={{

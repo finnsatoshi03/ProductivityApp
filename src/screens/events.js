@@ -241,10 +241,18 @@ export default function EventsScreen({ navigation, route }) {
     // console.log(new Date(newEvent.datetime).toLocaleString());
 
     try {
-      const response =
-        btnFnc === "create"
-          ? await axios.post(`${global.baseurl}:4000/createEvent`, newEvent)
-          : await axios.patch(`${global.baseurl}:4000/editEvent`, newEvent);
+      // Static response data
+      const response = {
+        status: 200,
+        data: {
+          id: 1,
+          event: "Sample Event",
+          datetime: "2023-01-01T00:00:00Z",
+          location: "Sample Location",
+          description: "Sample Description",
+          is_important: false,
+        },
+      };
 
       if (response.status === 200) {
         const { data } = response;
@@ -260,16 +268,10 @@ export default function EventsScreen({ navigation, route }) {
         newEvent.id = event_id;
         console.log("Users: ", user_ids);
 
-        const request =
-          btnFnc === "create"
-            ? await axios.post(
-                `${global.baseurl}:4000/addParticipant`,
-                userEvent
-              )
-            : await axios.put(
-                `${global.baseurl}:4000/updateParticipants`,
-                userEvent
-              );
+        // Static request data
+        const request = {
+          status: 200,
+        };
 
         if (request.status === 200) {
           console.log("SUCCSESESE");
@@ -352,17 +354,13 @@ export default function EventsScreen({ navigation, route }) {
   // TODO enhancement delete also the records in participants
   const deleteEvent = async (event_id) => {
     try {
-      const response = await axios.delete(
-        `${global.baseurl}:4000/deleteEvent`,
-        {
-          params: {
-            event_id: event_id,
-          },
-        }
-      );
+      // Static response data
+      const response = {
+        status: 200,
+      };
 
       if (response.status === 200) {
-        console.log("succes");
+        console.log("success");
 
         setEventData((prevEvents) =>
           prevEvents.filter((event) => event.id !== event_id)
@@ -435,14 +433,22 @@ export default function EventsScreen({ navigation, route }) {
 
   const getParticipants = async (event_id) => {
     try {
-      const response = await axios.get(
-        `${global.baseurl}:4000/getParticipant`,
-        {
-          params: {
-            event_id: event_id,
-          },
-        }
-      );
+      // Static response data
+      const response = {
+        status: 200,
+        data: {
+          users: [
+            {
+              id: 1,
+              fullname: "John Doe",
+            },
+            {
+              id: 2,
+              fullname: "Jane Doe",
+            },
+          ],
+        },
+      };
 
       if (response.status === 200) {
         const { data } = response;

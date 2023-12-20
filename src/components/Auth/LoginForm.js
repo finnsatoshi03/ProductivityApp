@@ -30,8 +30,8 @@ export default function AdminLogin({
   userType,
 }) {
   const [isFocused, setIsFocused] = useState(false);
-  const [username, setUsername] = useState("1");
-  const [password, setPassword] = useState("1");
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const logoSize = useRef(new Animated.Value(1)).current;
   const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
@@ -59,13 +59,17 @@ export default function AdminLogin({
     setPasswordError(null);
 
     try {
-      let baseurl = `${global.baseurl}:4000/adminlogin`;
-
-      if (userType === "User") {
-        baseurl = `${global.baseurl}:4000/userlogin`;
-      }
-
-      const response = await axios.post(baseurl, credentials);
+      // Static response data
+      const response = {
+        status: 200,
+        data: {
+          username: "username",
+          token: "sample_token",
+          user_id: "1",
+          role: userType,
+          fullname: userType === "admin" ? "Admin User" : "User",
+        },
+      };
 
       if (response.status === 200) {
         login({
@@ -76,13 +80,11 @@ export default function AdminLogin({
           fullname: response.data.fullname,
         });
         setIsLoading(false);
-        let user_id = response.data.user_id;
-        let baseurlimage = `${global.baseurl}:4000/adminImage/${user_id}`;
 
-        if (userType === "User") {
-          baseurlimage = `${global.baseurl}:4000/userImage/${user_id}`;
-        }
-        const responseimage = await axios.get(baseurlimage);
+        // Static image response data
+        const responseimage = {
+          data: "https://images.genius.com/f650ad84012da6cd00e8f10725a3bf99.1000x560x1.jpg",
+        };
 
         setErrorMessage("Login successful");
         navigation.navigate("Calendar", {

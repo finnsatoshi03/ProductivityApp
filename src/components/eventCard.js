@@ -83,47 +83,59 @@ export default function eventCard({
   const showParticipantsModal = async () => {
     setParticipantsModalVisible(true);
 
-    try {
-      const response = await axios.get(`${global.baseurl}:4000/getPresents`, {
-        params: {
-          event_id: id,
-        },
-      });
+    const presentData = [
+      { id: 1, name: "John Doe", attend: true },
+      { id: 2, name: "Jane Doe", attend: true },
+    ];
+    const absentData = [
+      { id: 3, name: "Richard Roe", attend: false },
+      { id: 4, name: "Jane Roe", attend: false },
+    ];
 
-      if (response.status === 200) {
-        const { data } = response;
-        const presents = data.users;
+    setPresent(presentData);
+    setAbsent(absentData);
 
-        setPresent(presents);
+    // try {
+    //   const response = await axios.get(`${global.baseurl}:4000/getPresents`, {
+    //     params: {
+    //       event_id: id,
+    //     },
+    //   });
 
-        console.log("success");
-      } else {
-        console.log("failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    //   if (response.status === 200) {
+    //     const { data } = response;
+    //     const presents = data.users;
 
-    try {
-      const response = await axios.get(`${global.baseurl}:4000/getAbsents`, {
-        params: {
-          event_id: id,
-        },
-      });
+    //     setPresent(presents);
 
-      if (response.status === 200) {
-        const { data } = response;
-        const absents = data.users;
+    //     console.log("success");
+    //   } else {
+    //     console.log("failed");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
 
-        setAbsent(absents);
+    // try {
+    //   const response = await axios.get(`${global.baseurl}:4000/getAbsents`, {
+    //     params: {
+    //       event_id: id,
+    //     },
+    //   });
 
-        console.log("success");
-      } else {
-        console.log("failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
+    //   if (response.status === 200) {
+    //     const { data } = response;
+    //     const absents = data.users;
+
+    //     setAbsent(absents);
+
+    //     console.log("success");
+    //   } else {
+    //     console.log("failed");
+    //   }
+    // } catch (error) {
+    //   console.log(error);
+    // }
   };
 
   const hideParticipantsModal = () => {
@@ -159,44 +171,32 @@ export default function eventCard({
   const [participants, setParticipants] = useState([]);
 
   const viewEvent = async () => {
-    const response = await axios.get(`${global.baseurl}:4000/getParticipant`, {
-      params: {
-        event_id: id,
-      },
+    // Static data
+    const participantsData = [
+      { fullname: "John Doe", id: 1 },
+      { fullname: "Jane Doe", id: 2 },
+    ];
+
+    setParticipants(participantsData);
+
+    navigation.navigate("ViewEvent", {
+      title: event,
+      dateTime: datetime,
+      id: id,
+      location: location,
+      description: description,
+      joinReasons: [reason],
+      participants: participantsData,
+      starred: starred,
+
+      fullname: fullname,
+      user: user,
+      user_id: user_id,
+      role: role,
+      contact: contact,
+      email: email,
+      image: image,
     });
-
-    if (response.status === 200) {
-      const { data } = response;
-      const users = data.users;
-
-      const participantsData = users.map((user) => ({
-        fullname: user.fullname,
-        id: user.id,
-      }));
-
-      setParticipants(participantsData);
-
-      navigation.navigate("ViewEvent", {
-        title: event,
-        dateTime: datetime,
-        id: id,
-        location: location,
-        description: description,
-        joinReasons: [reason],
-        participants: participantsData,
-        starred: starred,
-
-        fullname: fullname,
-        user: user,
-        user_id: user_id,
-        role: role,
-        contact: contact,
-        email: email,
-        image: image,
-      });
-    } else {
-      console.log("error");
-    }
   };
 
   const handleDelete = async () => {
@@ -246,41 +246,25 @@ export default function eventCard({
 
       console.log(reportData);
 
-      // Fetch present and absent data
-      const presentResponse = await axios.get(
-        `${global.baseurl}:4000/getPresents`,
-        {
-          params: {
-            event_id: id,
-          },
-        }
+      // Static data
+      const presentData = [
+        { id: 1, name: "John Doe", attend: true },
+        { id: 2, name: "Jane Doe", attend: true },
+      ];
+      const absentData = [
+        { id: 3, name: "Richard Roe", attend: false },
+        { id: 4, name: "Jane Roe", attend: false },
+      ];
+
+      const htmlContent = generateHTMLReport(
+        reportData,
+        presentData,
+        absentData
       );
 
-      const absentResponse = await axios.get(
-        `${global.baseurl}:4000/getAbsents`,
-        {
-          params: {
-            event_id: id,
-          },
-        }
-      );
+      const { uri } = await Print.printToFileAsync({ html: htmlContent });
 
-      if (presentResponse.status === 200 && absentResponse.status === 200) {
-        const presentData = presentResponse.data.users;
-        const absentData = absentResponse.data.users;
-
-        const htmlContent = generateHTMLReport(
-          reportData,
-          presentData,
-          absentData
-        );
-
-        const { uri } = await Print.printToFileAsync({ html: htmlContent });
-
-        await Sharing.shareAsync(uri);
-      } else {
-        console.log("Failed to fetch present or absent data");
-      }
+      await Sharing.shareAsync(uri);
     } catch (error) {
       console.error("Error exporting report data:", error);
     }

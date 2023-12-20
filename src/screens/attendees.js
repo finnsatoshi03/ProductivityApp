@@ -39,51 +39,76 @@ export default function Attendees({
   modalVisible,
   setModalVisible,
 }) {
-  // const { eventData } = useData();
-  const [post, setPost] = useState({
-    fullname: "",
-    datetime: "",
-    images: "",
-    comments: "",
-    id: "",
-    user_id: "",
-  });
-  console.log("Events Data: s", currentViewedEventData);
+  const [post, setPost] = useState([]);
 
   useEffect(() => {
-    const getAttendees = async () => {
-      const response = await axios.get(`${global.baseurl}:4000/getAttendees`, {
-        params: {
-          event_id: event_id,
-        },
-      });
-
-      if (response.status === 200) {
-        const { data } = response;
-        const attendees = data.users;
-        const id = attendees[0].attendance_id;
-
-        const imageResponse = axios.get(
-          `${global.baseurl}:4000/attendanceImage/${id}`
-        );
-
-        imageResponse
-          .then((response) => {
-            const imageData = response.data;
-            console.log(imageData);
-            // Update the image property of the first attendee
-            attendees[0].image = imageData;
-          })
-          .catch((error) => {
-            console.error("Failed to fetch image data:", error);
-            // Handle error if needed
-          });
-
-        setPost(attendees);
-      }
-    };
     if (role === "admin") {
-      getAttendees();
+      // Static data
+      const attendees = [
+        {
+          fullname: "John Doe",
+          datetime: "2023-12-19T11:56:11.000Z",
+          images: [
+            "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZXZlbnR8ZW58MHx8MHx8fDA%3DD%3D",
+          ],
+          comments:
+            "The event was fantastic! The speakers were engaging and I learned a lot from the workshops. Can't wait for the next one!",
+          id: "1",
+          user_id: "1",
+        },
+        {
+          fullname: "Jane Smith",
+          datetime: "2023-12-18T12:30:30.000Z",
+          images: [
+            "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=2012&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          ],
+          comments:
+            "I had a great time at the event. The sessions were informative and the networking opportunities were excellent. Looking forward to the next one!",
+          id: "2",
+          user_id: "2",
+        },
+        {
+          fullname: "Alice Johnson",
+          datetime: "2023-12-12T15:00:00.000Z",
+          images: [
+            "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZXZlbnR8ZW58MHx8MHx8fDA%3DD%3D",
+            "https://images.unsplash.com/photo-1503428593586-e225b39bddfe?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          ],
+          comments:
+            "The event was well-organized and the speakers were very knowledgeable. I learned a lot and met some great people. Looking forward to the next one!",
+          id: "3",
+          user_id: "3",
+        },
+        {
+          fullname: "Bob Williams",
+          datetime: "2023-12-14T18:00:00.000Z",
+          images: [
+            "https://images.unsplash.com/photo-1511795409834-ef04bbd61622?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          ],
+          comments:
+            "I enjoyed the event, especially the networking opportunities. The venue was great and the food was delicious. Can't wait for the next one!",
+          id: "4",
+          user_id: "4",
+        },
+        {
+          fullname: "Charlie Brown",
+          datetime: "2023-12-19T20:00:00.000Z",
+          images: [
+            "https://images.unsplash.com/photo-1472653431158-6364773b2a56?q=80&w=2069&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://images.unsplash.com/photo-1468234560893-89c00b6385c8?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
+            "https://images.unsplash.com/photo-1524368535928-5b5e00ddc76b?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            "https://images.unsplash.com/photo-1416273567255-8abe875affcd?q=80&w=1974&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+          ],
+          comments:
+            "The event was a great experience. The presentations were insightful and I was able to connect with like-minded individuals. Highly recommend!",
+          id: "5",
+          user_id: "5",
+        },
+      ];
+
+      setPost(attendees);
     }
   }, []);
 
@@ -94,7 +119,7 @@ export default function Attendees({
         moment(a.datetime, "MM/DD/YYYY HH:mm:ss")
     );
   }
-  console.log(post);
+
   const [text, setText] = useState("");
   const maxChars = 200;
   const [images, setImages] = useState();
@@ -102,14 +127,17 @@ export default function Attendees({
   const [hasSubmittedAttendance, setHasSubmittedAttendance] = useState(false);
 
   const selectImage = async () => {
-    let result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.All,
-      allowsEditing: true,
-      aspect: [4, 3],
-      quality: 1,
-    });
-    console.log(result.assets[0].uri);
-    if (!result.canceled) {
+    let result = {
+      cancelled: false,
+      assets: [
+        {
+          uri: "https://images.unsplash.com/photo-1501281668745-f7f57925c3b4?w=400&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8M3x8ZXZlbnR8ZW58MHx8MHx8fDA%3DD%3D",
+          // Add more images as needed
+        },
+      ],
+    };
+
+    if (!result.cancelled) {
       setImages(result.assets[0].uri);
     }
   };
@@ -119,13 +147,6 @@ export default function Attendees({
       alert("Please add some text and at least one image before posting.");
       return;
     }
-
-    // setIsLoading(true);
-
-    // const event = eventData.find(
-    //   (e) => e.title === viewEvent && e.eventID === event_id
-    // );
-    // console.log("Events Data: ", eventData);
 
     const eventEndTime = new Date(currentViewedEventData.datetime);
     if (new Date() < eventEndTime) {
@@ -139,26 +160,18 @@ export default function Attendees({
     setTimeout(async () => {
       try {
         const data = {
-          user_id: user_id,
-          events_id: event_id,
+          user_id: "1", // Static user_id
+          events_id: "1", // Static event_id
           comments: text,
           image: images,
         };
 
-        const response = await axios.post(
-          `${global.baseurl}:4000/createAttendance`,
-          data
-        );
+        console.log("Post data:", data);
 
-        if (response.status === 200) {
-          Alert.alert("Success", "Post submitted successfully");
-          setIsLoading(false);
-          setHasSubmittedAttendance(true);
-          setModalVisible(false);
-        } else {
-          Alert.alert("Error", "Failed to submit post");
-          setIsLoading(false);
-        }
+        Alert.alert("Success", "Post submitted successfully");
+        setIsLoading(false);
+        setHasSubmittedAttendance(true);
+        setModalVisible(false);
       } catch (error) {
         console.log(error);
         Alert.alert("Error", "Failed to submit post");

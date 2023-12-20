@@ -31,10 +31,27 @@ import { format } from "date-fns-tz";
 import * as Notifications from "expo-notifications";
 
 export default function Calendar({ navigation, route }) {
-  const { fullname, user, user_id, role, contact, email, image } = route.params;
+  const {
+    fullname,
+    user,
+    user_id,
+    role,
+    contact,
+    email,
+    image = "https://images.genius.com/f650ad84012da6cd00e8f10725a3bf99.1000x560x1.jpg",
+  } = route.params;
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);
-  const { eventData, setEventData } = useData();
+  const { eventData, setEventData } = useData(
+    {
+      event: "Sample Event 1",
+      datetime: "2023-12-12T00:00:00Z",
+    },
+    {
+      event: "Sample Event 2",
+      datetime: "2023-12-16:00:00Z",
+    }
+  );
   const [loading, setLoading] = useState(true);
   const [filteredEvents, setFilteredEvents] = useState([]);
   const [selectedDay, setSelectedDay] = useState(moment().format("YYYY-MM-DD"));
@@ -150,15 +167,71 @@ export default function Calendar({ navigation, route }) {
   useEffect(() => {
     const fetchEventsData = async () => {
       try {
-        // setLoading(true);
-        const response =
-          role === "admin"
-            ? await axios.get(`${global.baseurl}:4000/getEvents`)
-            : await axios.get(`${global.baseurl}:4000/userViewEvents`, {
-                params: {
-                  user_id: user_id,
-                },
-              });
+        // Static response data
+        const response = {
+          status: 200,
+          data: {
+            events: [
+              {
+                event: "Thanksgiving Dinner",
+                datetime: "2023-11-24T18:00:00Z",
+                description: "Family gathering for Thanksgiving",
+                is_important: true,
+                id: 1,
+                location: "Home",
+              },
+              {
+                event: "Black Friday Shopping",
+                datetime: "2023-11-25T09:00:00Z",
+                description: "Shopping for Black Friday deals",
+                is_important: false,
+                id: 2,
+                location: "Mall",
+              },
+              {
+                event: "Cyber Monday",
+                datetime: "2023-11-28T00:00:00Z",
+                description: "Online shopping for Cyber Monday deals",
+                is_important: false,
+                id: 3,
+                location: "Online",
+              },
+              {
+                event: "Company Holiday Party",
+                datetime: "2023-12-09T19:00:00Z",
+                description: "Annual company holiday party",
+                is_important: true,
+                id: 4,
+                location: "Company Headquarters",
+              },
+              {
+                event: "School Winter Concert",
+                datetime: "2023-12-15T19:00:00Z",
+                description: "Children's school winter concert",
+                is_important: true,
+                id: 5,
+                location: "School Auditorium",
+              },
+              {
+                event: "Family Holiday Dinner",
+                datetime: "2023-12-18T18:00:00Z",
+                description: "Family gathering for the holidays",
+                is_important: true,
+                id: 6,
+                location: "Home",
+              },
+              {
+                event: "Christmas Shopping",
+                datetime: "2023-12-19T10:00:00Z",
+                description: "Last minute Christmas shopping",
+                is_important: false,
+                id: 7,
+                location: "Mall",
+              },
+            ],
+          },
+        };
+
         if (response.status === 200) {
           const { data } = response;
           const events = data.events;
@@ -183,8 +256,6 @@ export default function Calendar({ navigation, route }) {
         }
       } catch (error) {
         console.log(error);
-      } finally {
-        // setLoading(false);
       }
     };
 
@@ -193,7 +264,7 @@ export default function Calendar({ navigation, route }) {
     const intervalId = setInterval(fetchEventsData, 5000);
 
     return () => clearInterval(intervalId);
-  }, [user_id, role]);
+  }, []);
 
   useEffect(() => {
     if (selectedDay !== "" && Array.isArray(eventData)) {

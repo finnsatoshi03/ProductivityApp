@@ -108,10 +108,14 @@ const ViewEvent = ({ route, navigation }) => {
         starred: iconType === "outlined-star" ? true : false,
       };
 
-      const response = await axios.patch(
-        `${global.baseurl}:4000/starredEvent`,
-        data
-      );
+      // Static response data
+      const response = {
+        status: 200,
+        data: {
+          ...data,
+          id: "1",
+        },
+      };
 
       if (response.status === 200) {
         setEventData((prevEventData) => {
@@ -137,17 +141,15 @@ const ViewEvent = ({ route, navigation }) => {
   useEffect(() => {
     const fetchFileData = async () => {
       try {
-        const response = await axios.get(`${global.baseurl}:4000/file/${id}`);
+        // Static data
+        const fileData = {
+          id: "1",
+          name: "sample",
+          url: "https://www.africau.edu/images/default/sample.pdf",
+        };
 
-        if (response.status === 200) {
-          const { data } = response;
-          setFileData(data);
-          console.log("File Data: ", fileData);
-        } else {
-          console.log(
-            `Failed to fetch signed document. Status code: ${response.status}`
-          );
-        }
+        setFileData(fileData);
+        console.log("File Data: ", fileData);
       } catch (error) {
         console.error("Error fetching signed document:", error);
       }
@@ -162,20 +164,19 @@ const ViewEvent = ({ route, navigation }) => {
   const showDocs = async () => {
     console.log("File Data: ", fileData);
     try {
-      if (!fileData || fileData.length === 0) {
+      if (!fileData || !fileData.url) {
         console.log("Signed document is empty");
         Alert.alert(
           "Missing Signature",
           "No signature detected in the document"
         );
       } else {
-        const cUri = await FileSystem.getContentUriAsync(fileData);
-
-        await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-          data: cUri,
-          flags: 1,
-          type: "application/pdf",
-        });
+        // const cUri = await FileSystem.getContentUriAsync(fileData.url);
+        // await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+        //   data: cUri,
+        //   flags: 1,
+        //   type: "application/pdf",
+        // });
       }
     } catch (error) {
       console.error("Error launching PDF viewer:", error);

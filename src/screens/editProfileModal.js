@@ -50,12 +50,17 @@ export default function EditProfile({ navigation, route }) {
     };
 
     try {
-      let baseurl =
-        role === "admin"
-          ? `${global.baseurl}:4000/editAdmin`
-          : `${global.baseurl}:4000/editUser`;
-
-      const response = await axios.patch(baseurl, data);
+      // Static response data
+      const response = {
+        status: 200,
+        data: {
+          username: usernamefield,
+          email: emailfield,
+          contact: contactfield,
+          user_id: user_id,
+          image: img,
+        },
+      };
 
       if (response.status === 200) {
         navigation.navigate("Calendar", {
@@ -175,7 +180,11 @@ export default function EditProfile({ navigation, route }) {
             onPress={requestPermission}
           >
             <Avatar
-              avatar={{ uri: img }}
+              avatar={
+                img
+                  ? { uri: img }
+                  : "https://images.genius.com/f650ad84012da6cd00e8f10725a3bf99.1000x560x1.jpg"
+              }
               customHeight={hp("12.5%")}
               customWidth={hp("12.5%")}
             />

@@ -188,9 +188,20 @@ export default function SignupForm({ navigation }) {
 
       setModalVisible(true);
       setTimeout(async () => {
-        const baseurl = `${global.baseurl}:4000/register`;
         try {
-          const response = await axios.post(baseurl, formdata);
+          // Static response data
+          const response = {
+            status: 200,
+            data: {
+              username: formdata.username,
+              password: formdata.password,
+              fullname: formdata.fullname,
+              employment_id: formdata.employment_id,
+              office: formdata.office,
+              email: formdata.email,
+              contact: formdata.contact,
+            },
+          };
 
           if (response.status === 200) {
             console.log("success");
