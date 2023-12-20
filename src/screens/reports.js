@@ -30,6 +30,17 @@ import { useFocusEffect } from "@react-navigation/native";
 import axios from "axios";
 import "../../global";
 
+const StaticReportData = [
+  {
+    datetime: "2023-11-24T18:00:00Z",
+    description: "Family gathering for Thanksgiving",
+    event: "Thanksgiving Dinner",
+    id: 1,
+    is_important: true,
+    location: "Home",
+  },
+];
+
 export default function Reports({ navigation, route }) {
   const { fullname, user, user_id, role, participants, contact, email, image } =
     route.params;
@@ -178,7 +189,12 @@ export default function Reports({ navigation, route }) {
   const getReport = async () => {
     try {
       setIsLoading(true);
-      const response = await axios.get(`${global.baseurl}:4000/getReports`);
+      const response = {
+        status: 200,
+        data: {
+          reports: StaticReportData,
+        },
+      };
 
       if (response.status === 200) {
         const { data } = response;
@@ -197,6 +213,7 @@ export default function Reports({ navigation, route }) {
 
   useEffect(() => {
     getReport();
+    console.log("Report data:", reportData);
   }, []);
 
   const showAlert = (message) => {
@@ -226,17 +243,12 @@ export default function Reports({ navigation, route }) {
         (selectedEndTimeHours === selectedEventHours &&
           selectedEndTimeMinutes <= selectedEventMinutes)
       ) {
-        // console.log("Selected end time:", selectedEndTime);
-        // console.log("Selected event time:", selectedEvent.datetime);
         showAlert("Invalid start or end time");
         return;
       } else if (!selectedEventTitle || !selectedEndTime) {
         showAlert("Please fill out all fields");
         return;
       }
-
-      // console.log("Selected event:", selectedEvent);
-      // console.log("End Time:", selectedEndTime);
 
       const newReport = {
         event_id: selectedEvent.id,
@@ -247,10 +259,9 @@ export default function Reports({ navigation, route }) {
         datetime: selectedEvent.datetime,
       };
 
-      const response = await axios.post(
-        `${global.baseurl}:4000/createReport`,
-        newReport
-      );
+      const response = {
+        status: 200,
+      };
 
       if (response.status === 200) {
         console.log("tr");
@@ -260,7 +271,6 @@ export default function Reports({ navigation, route }) {
 
       setReportData((prevData) => [...prevData, newReport]);
 
-      // console.log("New report:", newReport);
       console.log("Report data:", reportData);
       console.log(
         "Report IDs:",
@@ -283,14 +293,9 @@ export default function Reports({ navigation, route }) {
   const deleteReport = async (report_id) => {
     console.log("Deleting report:", report_id);
     try {
-      const response = await axios.delete(
-        `${global.baseurl}:4000/deleteReport`,
-        {
-          params: {
-            event_id: report_id,
-          },
-        }
-      );
+      const response = {
+        status: 200,
+      };
 
       if (response.status === 200) {
         console.log(`Report ${report_id} has been deleted.`);

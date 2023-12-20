@@ -28,32 +28,39 @@ export default function Participants({
   navigation,
   onParticipantsSelected,
   onBack,
-  addedParticipants,  
+  addedParticipants,
 }) {
-  const [data, setData] = useState([]);
-  
+  const [data, setData] = useState([
+    {
+      contact: "1554754",
+      email: "johndoe@example.com",
+      employment_id: "user-213",
+      fullname: "John Doe",
+      id: 4,
+      image: null,
+      office: "Main Office",
+      password: "3",
+      username: "3",
+      verify: true,
+    },
+    {
+      contact: "091818818281",
+      email: "otherdoe@example.com",
+      employment_id: "user-123",
+      fullname: "Other Doe",
+      id: 1,
+      image: null,
+      office: "Main Office",
+      password: "1",
+      username: "1",
+      verify: true,
+    },
+  ]);
+
   useEffect(() => {
-    const retrieveUsers = async () => {
-      try {
-        const response = await axios.get(
-          `${global.baseurl}:4000/retrieveVUsers`
-        );
-
-        if (response.status === 200) {
-          // Assuming your server responds with the 'users' data in the response
-          const { data } = response;
-          const users = data.users;
-
-          setData(users);
-        } else {
-          console.log("error");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    retrieveUsers();
+    console.log("data", data);
   }, []);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [participants, setParticipants] = useState(addedParticipants);
   const [selectAll, setSelectAll] = useState(false);
@@ -67,38 +74,38 @@ export default function Participants({
     setSelectAll(!selectAll);
   };
 
-  const handleParticipantSelection = (participant,id) => {    
-   
+  const handleParticipantSelection = (participant, id) => {
     setParticipants((prevParticipants) => {
-      const isParticipantAdded = prevParticipants.some((p) => p.id === participant.id);
-    
-      if (!isParticipantAdded) {        
+      const isParticipantAdded = prevParticipants.some(
+        (p) => p.id === participant.id
+      );
+
+      if (!isParticipantAdded) {
         // Participant is not added, add them
         return [...prevParticipants, participant];
       } else {
-                
-        const updatedParticipants = participants.filter((participant) => participant.id !== id);
-        
+        const updatedParticipants = participants.filter(
+          (participant) => participant.id !== id
+        );
+
         return updatedParticipants;
-        
       }
     });
-    
   };
-  console.log('yo',participants);  
+  console.log("yo", participants);
   const addParticipants = () => {
-    
     const mergedParticipants = participants;
 
     // Remove duplicates based on the 'id' property
-    const uniqueMergedParticipants = mergedParticipants.filter((participant, index, self) =>
-      index === self.findIndex(p => p.id === participant.id)
+    const uniqueMergedParticipants = mergedParticipants.filter(
+      (participant, index, self) =>
+        index === self.findIndex((p) => p.id === participant.id)
     );
-    
+
     onParticipantsSelected(uniqueMergedParticipants);
     setParticipants([]);
   };
-    
+
   useEffect(() => {
     const filteredData = data.filter(
       (participant) =>
@@ -159,9 +166,9 @@ export default function Participants({
                 {...item}
                 addedParticipants={addedParticipants}
                 onParticipantSelect={handleParticipantSelection}
-                selectAll={selectAll}         
-                participants={participants}  
-                purpose="edit"     
+                selectAll={selectAll}
+                participants={participants}
+                purpose="edit"
               />
             )}
             keyExtractor={(item) => item.name}

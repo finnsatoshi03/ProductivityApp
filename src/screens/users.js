@@ -39,9 +39,61 @@ export default function Users({ navigation, route }) {
     const retrieveVerifiedUsers = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          `${global.baseurl}:4000/retrieveVUsers`
-        );
+        const response = {
+          status: 200,
+          data: {
+            users: [
+              {
+                contact: "1554754",
+                email: "peter@example.com",
+                employment_id: "user-213",
+                fullname: "Peter Griffin",
+                id: 1,
+                image: null,
+                office: "Main Office",
+                password: "peter",
+                username: "peter",
+                verify: true,
+              },
+              {
+                contact: "091818818281",
+                email: "rick@example.com",
+                employment_id: "user-123",
+                fullname: "Rick Grimes",
+                id: 2,
+                image: null,
+                office: "Main Office",
+                password: "rick",
+                username: "rick",
+                verify: true,
+              },
+              {
+                contact: "091828828282",
+                email: "homer@example.com",
+                employment_id: "user-456",
+                fullname: "Homer Simpson",
+                id: 3,
+                image: null,
+                office: "Main Office",
+                password: "homer",
+                username: "homer",
+                verify: true,
+              },
+              {
+                contact: "091838838383",
+                email: "michael@example.com",
+                employment_id: "user-789",
+                fullname: "Michael Scott",
+                id: 4,
+                image: null,
+                office: "Main Office",
+                password: "michael",
+                username: "michael",
+                verify: true,
+              },
+            ],
+          },
+        };
 
         if (response.status === 200) {
           const { data } = response;
@@ -56,6 +108,7 @@ export default function Users({ navigation, route }) {
       setIsLoading(false);
     };
 
+    console.log(verifiedUsers);
     retrieveVerifiedUsers();
   }, []);
 
@@ -100,11 +153,12 @@ export default function Users({ navigation, route }) {
   const handleDelete = async (id) => {
     console.log(id);
     try {
-      const response = await axios.delete(`${global.baseurl}:4000/deleteUser`, {
-        params: {
-          id: id,
+      const response = {
+        status: 200,
+        data: {
+          message: "User deleted successfully",
         },
-      });
+      };
 
       if (response.status === 200) {
         console.log(response.data.message);

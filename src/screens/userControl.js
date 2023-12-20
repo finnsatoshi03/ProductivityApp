@@ -76,9 +76,74 @@ export default function UserControl({ navigation, route }) {
     const retrieveNotVerifiedUsers = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get(
-          `${global.baseurl}:4000/retrieveNVUsers`
-        );
+        const response = {
+          status: 200,
+          data: {
+            title: "Success",
+            users: [
+              {
+                contact: "09171817372",
+                email: "akajaiw019@gmail.com",
+                employment_id: "O919",
+                fullname: "Oamaoak Ja",
+                id: 1,
+                image: null,
+                office: "municipal_civil_registrar",
+                password: "kanqoajaoq",
+                username: "sksksksk69",
+                verify: false,
+              },
+              {
+                contact: "09172828384",
+                email: "johnsmith@gmail.com",
+                employment_id: "J123",
+                fullname: "John Smith",
+                id: 2,
+                image: null,
+                office: "municipal_civil_registrar",
+                password: "johnsmith",
+                username: "johnsmith",
+                verify: false,
+              },
+              {
+                contact: "09173839495",
+                email: "janedoe@gmail.com",
+                employment_id: "D456",
+                fullname: "Jane Doe",
+                id: 3,
+                image: null,
+                office: "municipal_civil_registrar",
+                password: "janedoe",
+                username: "janedoe",
+                verify: false,
+              },
+              {
+                contact: "09174840506",
+                email: "robertbrown@gmail.com",
+                employment_id: "B789",
+                fullname: "Robert Brown",
+                id: 4,
+                image: null,
+                office: "municipal_civil_registrar",
+                password: "robertbrown",
+                username: "robertbrown",
+                verify: false,
+              },
+              {
+                contact: "09175851617",
+                email: "emilywhite@gmail.com",
+                employment_id: "W012",
+                fullname: "Emily White",
+                id: 5,
+                image: null,
+                office: "municipal_civil_registrar",
+                password: "emilywhite",
+                username: "emilywhite",
+                verify: false,
+              },
+            ],
+          },
+        };
 
         if (response.status === 200) {
           const { data } = response;
@@ -92,7 +157,7 @@ export default function UserControl({ navigation, route }) {
       }
       setIsLoading(false);
     };
-
+    console.log("Data: ", notVerifiedUsers);
     retrieveNotVerifiedUsers();
   }, []);
 
@@ -112,7 +177,10 @@ export default function UserControl({ navigation, route }) {
         user_id: id,
         verify: true,
       };
-      const response = await axios.patch(`${global.baseurl}:4000/verify`, data);
+
+      const response = {
+        status: 200,
+      };
 
       if (response.status === 200) {
         setNotVerifiedUsers((prevUsers) => {
@@ -133,7 +201,9 @@ export default function UserControl({ navigation, route }) {
       verify: false,
     };
 
-    const response = await axios.patch(`${global.baseurl}:4000/verify`, data);
+    const response = {
+      status: 200,
+    };
 
     if (response.status === 200) {
       setNotVerifiedUsers((prevUsers) => {

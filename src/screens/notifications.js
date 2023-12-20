@@ -36,6 +36,65 @@ const extractEventDetails = (message) => {
   };
 };
 
+const StaticEventData = [
+  {
+    datetime: "2023-11-24T18:00:00Z",
+    description: "Family gathering for Thanksgiving",
+    event: "Thanksgiving Dinner",
+    id: 1,
+    is_important: true,
+    location: "Home",
+  },
+  {
+    datetime: "2023-11-25T09:00:00Z",
+    description: "Shopping for Black Friday deals",
+    event: "Black Friday Shopping",
+    id: 2,
+    is_important: false,
+    location: "Mall",
+  },
+  {
+    datetime: "2023-11-28T00:00:00Z",
+    description: "Online shopping for Cyber Monday deals",
+    event: "Cyber Monday",
+    id: 3,
+    is_important: false,
+    location: "Online",
+  },
+  {
+    datetime: "2023-12-09T19:00:00Z",
+    description: "Annual company holiday party",
+    event: "Company Holiday Party",
+    id: 4,
+    is_important: true,
+    location: "Company Headquarters",
+  },
+  {
+    datetime: "2023-12-15T19:00:00Z",
+    description: "Children's school winter concert",
+    event: "School Winter Concert",
+    id: 5,
+    is_important: true,
+    location: "School Auditorium",
+  },
+  {
+    datetime: "2023-12-18T18:00:00Z",
+    description: "Family gathering for the holidays",
+    event: "Family Holiday Dinner",
+    id: 6,
+    is_important: true,
+    location: "Home",
+  },
+  {
+    datetime: "2023-12-19T10:00:00Z",
+    description: "Last minute Christmas shopping",
+    event: "Christmas Shopping",
+    id: 7,
+    is_important: false,
+    location: "Mall",
+  },
+];
+
 export default function Notifications({ navigation, route }) {
   const { fullname, user, user_id, role, contact, email, image } = route.params;
   const { eventData, setEventData } = useData();
@@ -74,12 +133,117 @@ export default function Notifications({ navigation, route }) {
         // setIsLoading(true);
         const response =
           role === "user"
-            ? await axios.get(`${global.baseurl}:4000/getNotifications`, {
-                params: {
-                  user_id: user_id,
+            ? {
+                status: 200,
+                data: {
+                  notifications: [
+                    {
+                      comment: "",
+                      created_at: "2023-12-20T04:58:10.065Z",
+                      eventDate: "Wed, 27 Dec 2023 06:30:00",
+                      eventLocation: "Location:",
+                      eventTitle: "Jajaja",
+                      event_id: 162,
+                      id: 540,
+                      invitation: true,
+                      is_important: true,
+                      message:
+                        "We are inviting you to join us!\nEvent: Jajaja\nDate: Wed, 27 Dec 2023 06:30:00\nLocation: ",
+                      read: false,
+                      reason: "",
+                      user_id: 1,
+                      username: "1",
+                    },
+                    {
+                      comment: "This is a comment for the event",
+                      created_at: "2023-12-21T04:58:10.065Z",
+                      eventDate: "Thu, 28 Dec 2023 06:30:00",
+                      eventLocation: "Main Office",
+                      eventTitle: "Annual Meeting",
+                      event_id: 163,
+                      id: 541,
+                      invitation: false,
+                      is_important: true,
+                      message:
+                        "We are informing you about the Annual Meeting.\nEvent: Annual Meeting\nDate: Thu, 28 Dec 2023 06:30:00\nLocation: Main Office",
+                      read: false,
+                      reason: "",
+                      user_id: 1,
+                      username: "1",
+                    },
+                    {
+                      comment: "This is another comment for the event",
+                      created_at: "2023-12-22T04:58:10.065Z",
+                      eventDate: "Fri, 29 Dec 2023 06:30:00",
+                      eventLocation: "Branch Office",
+                      eventTitle: "Branch Meeting",
+                      event_id: 164,
+                      id: 542,
+                      invitation: false,
+                      is_important: false,
+                      message:
+                        "We are informing you about the Branch Meeting.\nEvent: Branch Meeting\nDate: Fri, 29 Dec 2023 06:30:00\nLocation: Branch Office",
+                      read: false,
+                      reason: "",
+                      user_id: 1,
+                      username: "1",
+                    },
+                    {
+                      comment: "",
+                      created_at: "2023-12-03T03:45:30.652Z",
+                      eventDate: undefined,
+                      eventLocation: undefined,
+                      eventTitle: undefined,
+                      event_id: null,
+                      id: 1,
+                      invitation: false,
+                      is_important: null,
+                      message: "Congratulations! 🎉 You are now verified!",
+                      read: true,
+                      reason: "",
+                      user_id: 1,
+                      username: "1",
+                    },
+                  ],
                 },
-              })
-            : await axios.get(`${global.baseurl}:4000/getAdminNotification`);
+              }
+            : {
+                status: 200,
+                data: {
+                  notifications: [
+                    {
+                      adminNotif: true,
+                      contact: "091818818281",
+                      created_at: "2023-12-20T06:10:38.109Z",
+                      datetime: "2023-12-26T22:30:00.000Z",
+                      description: "",
+                      document: { data: [Array], type: "Buffer" },
+                      email: "tite@maik.com",
+                      employment_id: "user-123",
+                      event: "Jajaja",
+                      eventDate: "2023-12-26T22:30:00.000Z",
+                      eventLocation: "",
+                      eventTitle: "Jajaja",
+                      fullname: "User",
+                      id: 162,
+                      image: null,
+                      invitation: true,
+                      is_important: true,
+                      location: "",
+                      message: "",
+                      notification_id: 513,
+                      office: "Main Office",
+                      password: "1",
+                      read: false,
+                      reason: "",
+                      reminder: "2023-12-26T22:30:00.000Z",
+                      user_id: 1,
+                      username: "1",
+                      verify: true,
+                    },
+                  ],
+                },
+              };
 
         if (response.status === 200) {
           const { data } = response;
@@ -128,6 +292,7 @@ export default function Notifications({ navigation, route }) {
       }
     };
 
+    console.log("Notification Data: ", data);
     fetchNotifications();
 
     const intervalId = setInterval(fetchNotifications, 5000);
@@ -138,14 +303,10 @@ export default function Notifications({ navigation, route }) {
   useEffect(() => {
     const fetchUserViewEvents = async () => {
       try {
-        const response = await axios.get(
-          `${global.baseurl}:4000/userViewEvents`,
-          {
-            params: {
-              user_id: user_id,
-            },
-          }
-        );
+        const response = {
+          status: 200,
+          data: StaticEventData,
+        };
 
         if (response.status === 200) {
           const { data } = response;
@@ -158,6 +319,7 @@ export default function Notifications({ navigation, route }) {
       }
     };
 
+    console.log("Event Data: ", eventData);
     fetchUserViewEvents();
 
     const intervalId = setInterval(fetchUserViewEvents, 5000);
@@ -181,7 +343,7 @@ export default function Notifications({ navigation, route }) {
   const [overwriteInProgress, setOverwriteInProgress] = useState(false);
 
   const getConflictingEvent = (notification) => {
-    const conflictingEvent = eventData.find(
+    const conflictingEvent = StaticEventData.find(
       (item) =>
         item.event_id !== notification.event_id &&
         new Date(item.datetime).getTime() ===
@@ -199,15 +361,9 @@ export default function Notifications({ navigation, route }) {
     setOverwriteInProgress(true);
 
     try {
-      const response = await axios.delete(
-        `${global.baseurl}:4000/deleteUserEvent`,
-        {
-          params: {
-            user_id: notification.user_id,
-            event_id: conflictingEvent.id,
-          },
-        }
-      );
+      const response = {
+        status: 200,
+      };
 
       if (response.status === 200) {
         console.log(`Event ${conflictingEvent.event} has been deleted.`);
@@ -232,25 +388,17 @@ export default function Notifications({ navigation, route }) {
         comment: "",
       };
 
-      const response = await axios.patch(
-        `${global.baseurl}:4000/stateNotification`,
-        data
-      );
+      const response = {
+        status: 200,
+        data: {
+          events: StaticEventData,
+        },
+      };
 
       if (response.status === 200) {
-        const response = await axios.get(
-          `${global.baseurl}:4000/userViewEvents`,
-          {
-            params: {
-              user_id: user_id,
-            },
-          }
-        );
-        if (response.status === 200) {
-          const { data } = response;
-          const events = data.events;
-          setEventData(events);
-        }
+        const { data } = response;
+        const events = data.events;
+        setEventData(events);
         Alert.alert("Accepted and Overwritten", notification.eventTitle, [
           {
             text: "OK",
@@ -260,7 +408,6 @@ export default function Notifications({ navigation, route }) {
             },
           },
         ]);
-        // setModalVisible(false);
         console.log("Accepted and Overwritten", notification.eventTitle);
       } else {
         console.log("something went wrong");
@@ -268,34 +415,26 @@ export default function Notifications({ navigation, route }) {
     } catch (error) {
       console.log(error);
     }
-    // setOverwriteInProgress(false);
-    // setModalVisible(false);
   };
 
   const showModal = async (notification, buttonType, conflictingEvent) => {
-    // console.log("Notification: ", notification);
     setSelectedEventTitle(notification.eventTitle);
     setButtonPressed(buttonType);
     setCurrentNotification(notification);
 
     const currentDate = new Date();
     const eventDate = new Date(notification.eventDate);
-    // console.log("Event Data Date", eventData);
-    // console.log("Notification Data Date", notification.eventDate);
 
-    const hasConflict = eventData.some((item) => {
+    const hasConflict = StaticEventData.some((item) => {
       const itemDate = new Date(item.datetime);
-      console.log("Comparing:", itemDate.getTime(), eventDate.getTime());
-      console.log("Comparing 2:", item.event_id, notification.event_id);
       return (
         item.event_id !== notification.event_id &&
         itemDate.getTime() === eventDate.getTime()
       );
     });
-    console.log("Has Conflict: ", hasConflict);
 
     if (hasConflict) {
-      const conflictingEvent = eventData.find(
+      const conflictingEvent = StaticEventData.find(
         (item) =>
           item.event_id !== notification.event_id &&
           new Date(item.eventDate).getTime() === eventDate.getTime()
@@ -307,8 +446,6 @@ export default function Notifications({ navigation, route }) {
 
       setHasValidationOrConflict(true);
       getConflictingEvent(notification);
-      // setConflictingEvent(conflictingEvent);
-      console.log("Conflicting Event: ", conflictingEvent);
       setModalVisible(true);
       return;
     }
@@ -331,39 +468,22 @@ export default function Notifications({ navigation, route }) {
         comment: buttonType === "accept" ? "" : "false",
       };
       if (buttonType === "accept") {
-        const response = await axios.patch(
-          `${global.baseurl}:4000/stateNotification`,
-          data
-        );
+        const response = {
+          status: 200,
+        };
 
         if (response.status === 200) {
-          const response = await axios.get(
-            `${global.baseurl}:4000/userViewEvents`,
-            {
-              params: {
-                user_id: user_id,
-              },
-            }
-          );
+          const response = {
+            status: 200,
+            data: {
+              events: StaticEventData,
+            },
+          };
           if (response.status === 200) {
             const { data } = response;
             const events = data.events;
             setEventData(events);
           }
-          // setData((prevData) =>
-          //   prevData.map((item) =>
-          //     item.user_id === notification.user_id &&
-          //     item.event_id === notification.event_id
-          //       ? {
-          //           ...item,
-          //         }
-          //       : item
-          //   )
-          // );
-          // handleOverwriteConflict(
-          //   notification,
-          //   getConflictingEvent(notification)
-          // );
           console.log("sucess");
         } else {
           console.log("something went wrong");
@@ -400,10 +520,9 @@ export default function Notifications({ navigation, route }) {
         comment: comment,
       };
 
-      const response = await axios.patch(
-        `${global.baseurl}:4000/stateNotification`,
-        data
-      );
+      const response = {
+        status: 200,
+      };
 
       if (response.status === 200) {
         setData((prevData) => {
@@ -415,14 +534,14 @@ export default function Notifications({ navigation, route }) {
               )
           );
         });
-        const response = await axios.get(
-          `${global.baseurl}:4000/userViewEvents`,
-          {
-            params: {
-              user_id: user_id,
-            },
-          }
-        );
+
+        const response = {
+          status: 200,
+          data: {
+            events: StaticEventData,
+          },
+        };
+
         if (response.status === 200) {
           const { data } = response;
           const events = data.events;
@@ -520,7 +639,7 @@ export default function Notifications({ navigation, route }) {
                   renderItem={({ item }) => (
                     <NotificationCard
                       {...item}
-                      data={eventData}
+                      data={StaticEventData}
                       eventDateProp={item.eventDate}
                       notificationIdProp={item.id}
                       isImportant={item.is_important}
