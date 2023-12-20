@@ -1,6 +1,6 @@
 const UNSPLASH_ACCESS_KEY = "DwofUXPr1rcqUsoyYR2_Y9nAYxj8Z7z3rCxvpRrF7gc";
 const DEFAULT_IMAGE_URL =
-  "https://i.kym-cdn.com/photos/images/original/002/041/579/228.jpg";
+  "https://images.genius.com/f650ad84012da6cd00e8f10725a3bf99.1000x560x1.jpg";
 
 export default async function fetchSquareImage(query) {
   try {

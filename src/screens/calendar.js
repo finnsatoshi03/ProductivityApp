@@ -148,9 +148,52 @@ export default function Calendar({ navigation, route }) {
   });
 
   useEffect(() => {
-    requestNotificationPermission();
+    const fetchEventsData = async () => {
+      try {
+        // setLoading(true);
+        const response =
+          role === "admin"
+            ? await axios.get(`${global.baseurl}:4000/getEvents`)
+            : await axios.get(`${global.baseurl}:4000/userViewEvents`, {
+                params: {
+                  user_id: user_id,
+                },
+              });
+        if (response.status === 200) {
+          const { data } = response;
+          const events = data.events;
+          setEventData(events);
+
+          // Check if there are events for today
+          const todayEvents = events.filter((event) => {
+            const eventDate = new Date(event.datetime);
+            const today = new Date();
+            return (
+              eventDate.getFullYear() === today.getFullYear() &&
+              eventDate.getMonth() === today.getMonth() &&
+              eventDate.getDate() === today.getDate()
+            );
+          });
+
+          // Schedule notifications for each event
+          todayEvents.forEach((event) => {
+            const eventTime = new Date(event.datetime);
+            scheduleNotificationOneHourBeforeEvent(eventTime, event.event); // Pass event time and event title
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      } finally {
+        // setLoading(false);
+      }
+    };
+
     fetchEventsData();
-  }, []);
+
+    const intervalId = setInterval(fetchEventsData, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [user_id, role]);
 
   useEffect(() => {
     if (selectedDay !== "" && Array.isArray(eventData)) {
@@ -166,46 +209,6 @@ export default function Calendar({ navigation, route }) {
       setFilteredEvents(filtered);
     }
   }, [selectedDay, eventData]);
-
-  const fetchEventsData = async () => {
-    try {
-      setLoading(true);
-      const response =
-        role === "admin"
-          ? await axios.get(`${global.baseurl}:4000/getEvents`)
-          : await axios.get(`${global.baseurl}:4000/userViewEvents`, {
-              params: {
-                user_id: user_id,
-              },
-            });
-      if (response.status === 200) {
-        const { data } = response;
-        const events = data.events;
-        setEventData(events);
-
-        // Check if there are events for today
-        const todayEvents = events.filter((event) => {
-          const eventDate = new Date(event.datetime);
-          const today = new Date();
-          return (
-            eventDate.getFullYear() === today.getFullYear() &&
-            eventDate.getMonth() === today.getMonth() &&
-            eventDate.getDate() === today.getDate()
-          );
-        });
-
-        // Schedule notifications for each event
-        todayEvents.forEach((event) => {
-          const eventTime = new Date(event.datetime);
-          scheduleNotificationOneHourBeforeEvent(eventTime, event.event); // Pass event time and event title
-        });
-      }
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const requestNotificationPermission = async () => {
     const { status } = await Notifications.requestPermissionsAsync();
@@ -316,24 +319,7 @@ export default function Calendar({ navigation, route }) {
                   : compareDates(selectedDay)}
               </Text>
             </View>
-            {loading ? (
-              <View
-                style={{
-                  flex: 1,
-                  justifyContent: "center",
-                  alignSelf: "center",
-                }}
-              >
-                <ActivityIndicator
-                  style={{}}
-                  size="large"
-                  color={globalStyles.colors.darkGreen}
-                />
-                <Text style={{ textAlign: "center" }}>
-                  Fetching events from the database...
-                </Text>
-              </View>
-            ) : filteredEvents.length === 0 ? (
+            {filteredEvents.length === 0 ? (
               <View
                 style={{
                   flex: 1,

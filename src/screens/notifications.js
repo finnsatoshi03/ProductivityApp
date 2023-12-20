@@ -69,9 +69,9 @@ export default function Notifications({ navigation, route }) {
   );
 
   useEffect(() => {
-    const getNotifications = async () => {
+    const fetchNotifications = async () => {
       try {
-        setIsLoading(true);
+        // setIsLoading(true);
         const response =
           role === "user"
             ? await axios.get(`${global.baseurl}:4000/getNotifications`, {
@@ -84,7 +84,6 @@ export default function Notifications({ navigation, route }) {
         if (response.status === 200) {
           const { data } = response;
           const notification = data.notifications;
-          // console.log("Notifications: ", notification);
 
           if (role === "user") {
             const formattedNotifications = notification.map((notification) => {
@@ -117,18 +116,54 @@ export default function Notifications({ navigation, route }) {
               });
 
             setData(formattedNotifications);
-            console.log("asd", formattedNotifications);
           }
-          console.log("sucess");
-          setIsLoading(false);
-        } else console.log("failed");
+
+          // setIsLoading(false);
+        } else {
+          console.log("failed");
+        }
       } catch (err) {
         console.log(err);
-        setIsLoading(false);
+        // setIsLoading(false);
       }
     };
-    getNotifications();
-  }, []);
+
+    fetchNotifications();
+
+    const intervalId = setInterval(fetchNotifications, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [user_id, role]);
+
+  useEffect(() => {
+    const fetchUserViewEvents = async () => {
+      try {
+        const response = await axios.get(
+          `${global.baseurl}:4000/userViewEvents`,
+          {
+            params: {
+              user_id: user_id,
+            },
+          }
+        );
+
+        if (response.status === 200) {
+          const { data } = response;
+          const events = data.events;
+
+          setEventData(events);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    fetchUserViewEvents();
+
+    const intervalId = setInterval(fetchUserViewEvents, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [user_id]);
   // console.log(data);
 
   const [isSidebarVisible, setSidebarVisible] = useState(false);

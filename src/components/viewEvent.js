@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   Pressable,
+  Alert,
 } from "react-native";
 import fetchSquareImage from "./imagefetchAPI";
 import {
@@ -131,27 +132,56 @@ const ViewEvent = ({ route, navigation }) => {
     }
   };
 
+  const [fileData, setFileData] = useState(null);
+
+  useEffect(() => {
+    const fetchFileData = async () => {
+      try {
+        const response = await axios.get(`${global.baseurl}:4000/file/${id}`);
+
+        if (response.status === 200) {
+          const { data } = response;
+          setFileData(data);
+          console.log("File Data: ", fileData);
+        } else {
+          console.log(
+            `Failed to fetch signed document. Status code: ${response.status}`
+          );
+        }
+      } catch (error) {
+        console.error("Error fetching signed document:", error);
+      }
+    };
+    fetchFileData();
+
+    const intervalId = setInterval(fetchFileData, 5000);
+
+    return () => clearInterval(intervalId);
+  }, [id]);
+
   const showDocs = async () => {
-    const response = await axios.get(`${global.baseurl}:4000/file/${id}`);
+    console.log("File Data: ", fileData);
+    try {
+      if (!fileData || fileData.length === 0) {
+        console.log("Signed document is empty");
+        Alert.alert(
+          "Missing Signature",
+          "No signature detected in the document"
+        );
+      } else {
+        const cUri = await FileSystem.getContentUriAsync(fileData);
 
-    if (response.status === 200) {
-      console.log(response.data);
-      const cUri = await FileSystem.getContentUriAsync(response.data);
-
-      await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
-        data: cUri,
-        flags: 1,
-        type: "application/pdf",
-      });
+        await IntentLauncher.startActivityAsync("android.intent.action.VIEW", {
+          data: cUri,
+          flags: 1,
+          type: "application/pdf",
+        });
+      }
+    } catch (error) {
+      console.error("Error launching PDF viewer:", error);
     }
-    // FileSystem.getContentUriAsync(uri).then(cUri => {
-    //   IntentLauncher.startActivityAsync('android.intent.action.VIEW', {
-    //       data: cUri.uri,
-    //       flags: 1,
-    //       type: 'application/pdf'
-    //    });
-    // });
   };
+
   return (
     <View>
       <Modal isVisible={isModalVisible} onBackdropPress={hideModal}>
