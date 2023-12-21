@@ -185,6 +185,17 @@ export default function EventsScreen({ navigation, route }) {
     document
   ) => {
     // Creation of event
+    if (!eventTitle || !participants || !startDate || !endDate) {
+      setCreatingEvent(true);
+      Alert.alert("Error", "Missing required fields", [
+        {
+          text: "OK",
+          onPress: () => setCreatingEvent(false),
+        },
+      ]);
+      return;
+    }
+
     setCreatingEvent(true);
 
     const datetime = new Date(
@@ -258,7 +269,8 @@ export default function EventsScreen({ navigation, route }) {
           location: location,
         };
         newEvent.id = event_id;
-        console.log("Users: ", user_ids);
+        // console.log("Users: ", user_ids);
+        console.log("created");
 
         const request =
           btnFnc === "create"
@@ -323,32 +335,49 @@ export default function EventsScreen({ navigation, route }) {
       );
     } catch (error) {
       console.log(error);
-
-      Alert.alert(
-        "Error",
-        btnFnc === "create"
-          ? "Error creating event. Please try again."
-          : "Error editing event. Please try again.",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              console.log("OK Pressed");
-            },
-          },
-        ],
-        { cancelable: false }
-      );
     } finally {
       setCreatingEvent(false);
     }
   };
 
-  const handleCreateEvent = () => {
+  const handleCreateEvent = async () => {
     setParticipantNames("");
-    setBottomSheetVisible(true);
-    setBtnFnc("create");
+    const isDateTimeValid = await handleDateTimeConfirm(new Date(), "date");
+    if (isDateTimeValid) {
+      setBottomSheetVisible(true);
+      setBtnFnc("create");
+    }
   };
+
+  const handleEditEvent = async (event) => {
+    const isDateTimeValid = await handleDateTimeConfirm(
+      new Date(event.datetime),
+      "date"
+    );
+    if (isDateTimeValid) {
+      setBottomSheetVisible(true);
+      setBtnFnc("edit");
+      setSelectedEvent(event.id);
+
+      setIsImportant(event.is_important);
+      getParticipants(event.id).then(() => {
+        // After fetching participants, compare and remove any participants not present in the fetched list
+        const removedParticipants = addedParticipants.filter(
+          (participant) => !participants.includes(participant.id.toString())
+        );
+        console.log("Participants to remove: ", removedParticipants);
+      });
+      // setParticipantNames(event.)
+      const dateTime = new Date(event.datetime);
+
+      handleDateTimeConfirm(dateTime, "date");
+      setEventTitle(event.event);
+      setLocation(event.location);
+      setDescription(event.description);
+      setDocumentName(event.document ? "Already have an file" : "");
+    }
+  };
+
   // TODO enhancement delete also the records in participants
   const deleteEvent = async (event_id) => {
     try {
@@ -478,29 +507,6 @@ export default function EventsScreen({ navigation, route }) {
     }
   };
 
-  const handleEditEvent = (event) => {
-    setBottomSheetVisible(true);
-    setBtnFnc("edit");
-    setSelectedEvent(event.id);
-
-    setIsImportant(event.is_important);
-    getParticipants(event.id).then(() => {
-      // After fetching participants, compare and remove any participants not present in the fetched list
-      const removedParticipants = addedParticipants.filter(
-        (participant) => !participants.includes(participant.id.toString())
-      );
-      console.log("Participants to remove: ", removedParticipants);
-    });
-    // setParticipantNames(event.)
-    const dateTime = new Date(event.datetime);
-
-    handleDateTimeConfirm(dateTime, "date");
-    setEventTitle(event.event);
-    setLocation(event.location);
-    setDescription(event.description);
-    setDocumentName(event.document ? "Already have an file" : "");
-  };
-
   const toggleImportance = () => {
     setIsImportant((prevIsImportant) => {
       console.log("Previous isImportant:", prevIsImportant);
@@ -565,7 +571,7 @@ export default function EventsScreen({ navigation, route }) {
           { cancelable: false }
         );
         hideDatePicker();
-        return;
+        return false;
       }
 
       const selectedDate = new Date(date.setHours(0, 0, 0, 0));
@@ -586,12 +592,13 @@ export default function EventsScreen({ navigation, route }) {
           { cancelable: false }
         );
         hideDatePicker();
-        return;
+        return false;
       }
 
       setStartDate(date);
       console.log(date);
       hideDatePicker();
+      return true;
     } else {
       const selectedTime = date.getHours();
       const selectedDate = new Date(startDate);
@@ -612,7 +619,7 @@ export default function EventsScreen({ navigation, route }) {
           { cancelable: false }
         );
         hideTimePicker();
-        return;
+        return false;
       }
 
       const twoHoursFromNow = new Date();
@@ -638,12 +645,13 @@ export default function EventsScreen({ navigation, route }) {
           { cancelable: false }
         );
         hideTimePicker();
-        return;
+        return false;
       }
 
       setEndDate(date);
       console.log(date.toLocaleTimeString());
       hideTimePicker();
+      return true;
     }
   };
 

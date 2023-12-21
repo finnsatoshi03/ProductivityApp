@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import * as Font from "expo-font";
-import { Animated, View } from "react-native";
+import { Animated, View, Easing } from "react-native";
 import Navigator from "./Layout/navigationStack";
 
 const getFonts = () =>
@@ -26,15 +26,15 @@ export default function App() {
           duration: 1000,
           useNativeDriver: true,
         }),
-        Animated.spring(bounceAnim, {
+        Animated.timing(bounceAnim, {
           toValue: 1,
-          friction: 1,
-          tension: 50,
+          duration: 500,
+          easing: Easing.bounce,
           useNativeDriver: true,
         }),
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration: 1000,
+          duration: 1200,
           useNativeDriver: true,
         }),
       ]).start(() => setFontsLoaded(true));
