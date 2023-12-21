@@ -41,13 +41,22 @@ export default function EditProfile({ navigation, route }) {
   };
 
   const onSubmit = async (values) => {
-    const data = {
-      image: img,
-      username: usernamefield,
-      email: emailfield,
-      contact: contactfield,
-      user_id: user_id,
-    };
+    const data = new FormData();
+    data.append("username", usernamefield);
+    data.append("email", emailfield);
+    data.append("contact", contactfield);
+    data.append("user_id", user_id);
+
+    if (img) {
+      const uriParts = img.split(".");
+      const fileType = uriParts[uriParts.length - 1];
+
+      data.append("image", {
+        uri: img,
+        name: `photo.${fileType}`,
+        type: `image/${fileType}`,
+      });
+    }
 
     try {
       let baseurl =
@@ -55,7 +64,11 @@ export default function EditProfile({ navigation, route }) {
           ? `${global.baseurl}:4000/editAdmin`
           : `${global.baseurl}:4000/editUser`;
 
-      const response = await axios.patch(baseurl, data);
+      const response = await axios.patch(baseurl, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
 
       if (response.status === 200) {
         navigation.navigate("Calendar", {
@@ -76,7 +89,6 @@ export default function EditProfile({ navigation, route }) {
               text: "OK",
               onPress: () => {
                 setModalVisible(false);
-                navigation.goBack();
               },
             },
           ],
@@ -119,8 +131,8 @@ export default function EditProfile({ navigation, route }) {
     });
 
     if (!result.canceled) {
-      setAvatar({ uri: result.assets[0].uri });
-      setImg({ uri: result.assets[0].uri });
+      setAvatar(result.assets[0].uri);
+      setImg(result.assets[0].uri);
     }
   };
   const handlUsername = (text) => {
@@ -174,11 +186,20 @@ export default function EditProfile({ navigation, route }) {
             style={{ alignItems: "center" }}
             onPress={requestPermission}
           >
-            <Avatar
-              avatar={{ uri: img }}
-              customHeight={hp("12.5%")}
-              customWidth={hp("12.5%")}
-            />
+            {img ? (
+              <Avatar
+                avatar={img}
+                customHeight={hp("10.5%")}
+                customWidth={hp("10.5%")}
+              />
+            ) : (
+              <Avatar
+                firstName={fullname}
+                customHeight={hp("12.5%")}
+                customWidth={hp("12.5%")}
+                size={10}
+              />
+            )}
             <Text
               style={{
                 fontFamily: globalStyles.fontStyle.semiBold,

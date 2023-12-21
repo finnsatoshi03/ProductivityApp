@@ -115,7 +115,16 @@ export default function sideBar({
               paddingVertical: 20,
             }}
           >
-            <Avatar avatar={{ uri: image?.uri || avatar }} firstName={name} />
+            {image ? (
+              <Avatar
+                avatar={image}
+                customHeight={hp("10.5%")}
+                customWidth={hp("10.5%")}
+              />
+            ) : (
+              <Avatar firstName={fullname} size={10} />
+            )}
+
             <Text
               style={{
                 fontFamily: globalStyles.fontStyle.bold,

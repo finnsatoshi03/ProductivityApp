@@ -99,7 +99,7 @@ export default function CalendarComponent({ events, onDayPress }) {
     // "2023-11-01", // All Saints' Day & All Souls' Day (Take a leave on November 3)
     "2023-11-25", // Bonifacio Day
     "2023-12-08", // Feast of the Immaculate Concepcion
-    "2023-12-23", // Christmas Day
+    // "2023-12-23", // Christmas Day
     "2023-12-30", // Rizal Day, Last Day of the Year, and New Year's Day (Take a leave on November 3)
     "2024-01-01", // New Year’s Day
     "2024-03-28", // Maundy Thursday

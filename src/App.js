@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import * as Font from "expo-font";
+import { Animated, View } from "react-native";
 import Navigator from "./Layout/navigationStack";
 
 const getFonts = () =>
@@ -13,15 +14,48 @@ const getFonts = () =>
   });
 
 export default function App() {
-  // const [loadFonts, setLoadFonts] = useState(false);
+  const [fontsLoaded, setFontsLoaded] = useState(false);
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+  const bounceAnim = useRef(new Animated.Value(0)).current;
 
-  // useEffect(() => {
-  //   SplashScreen.preventAutoHideAsync()
-  //     .then(() => getFonts())
-  //     .then(() => setLoadFonts(true))
-  //     .catch(console.warn)
-  //     .finally(() => SplashScreen.hideAsync());
-  // }, []);
+  useEffect(() => {
+    getFonts().then(() => {
+      Animated.sequence([
+        Animated.timing(fadeAnim, {
+          toValue: 1,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+        Animated.spring(bounceAnim, {
+          toValue: 1,
+          friction: 1,
+          tension: 50,
+          useNativeDriver: true,
+        }),
+        Animated.timing(fadeAnim, {
+          toValue: 0,
+          duration: 1000,
+          useNativeDriver: true,
+        }),
+      ]).start(() => setFontsLoaded(true));
+    });
+  }, []);
+
+  if (!fontsLoaded) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <Animated.Image
+          style={{
+            opacity: fadeAnim,
+            transform: [{ scale: bounceAnim }],
+            width: 200,
+            height: 200,
+          }}
+          source={require("../assets/icon.png")}
+        />
+      </View>
+    );
+  }
 
   return <Navigator />;
 }
