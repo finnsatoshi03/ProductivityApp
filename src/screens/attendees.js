@@ -121,14 +121,14 @@ export default function Attendees({
       return;
     }
 
-    // const eventEndTime = new Date(currentViewedEventData.datetime);
-    // if (new Date() < eventEndTime) {
-    //   Alert.alert(
-    //     "Error",
-    //     "You can't submit attendance before the event has finished."
-    //   );
-    //   return;
-    // }
+    const eventEndTime = new Date(currentViewedEventData.datetime);
+    if (new Date() < eventEndTime) {
+      Alert.alert(
+        "Error",
+        "You can't submit attendance before the event has finished."
+      );
+      return;
+    }
 
     setTimeout(async () => {
       try {
