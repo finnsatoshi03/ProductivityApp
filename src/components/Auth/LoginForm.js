@@ -198,7 +198,7 @@ export default function AdminLogin({
       behavior={Platform.OS === "ios" ? "padding" : "height"}
       style={[
         globalStyles.container,
-        { justifyContent: "center", alignItems: "center" },
+        { justifyContent: "center", alignItems: "center", paddingTop: 24 },
       ]}
     >
       <Background topProperty={hp("5%")} />

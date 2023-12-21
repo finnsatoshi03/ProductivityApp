@@ -9,10 +9,8 @@ import Background from "./background";
 import HeroMessage from "./heroMessage";
 
 export default function Home({ navigation }) {
-  
-  
   return (
-    <View style={globalStyles.container}>
+    <View style={{ ...globalStyles.container, paddingTop: 34 }}>
       <Image
         style={{
           height: hp("30%"),
