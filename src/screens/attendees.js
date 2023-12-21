@@ -50,38 +50,39 @@ export default function Attendees({
   });
   console.log("Events Data: s", currentViewedEventData);
 
+  const getAttendees = async () => {
+    const response = await axios.get(`${global.baseurl}:4000/getAttendees`, {
+      params: {
+        event_id: event_id,
+      },
+    });
+
+    if (response.status === 200) {
+      const { data } = response;
+      const attendees = data.users;
+      const id = attendees[0].attendance_id;
+
+      const imageResponse = axios.get(
+        `${global.baseurl}:4000/attendanceImage/${id}`
+      );
+
+      imageResponse
+        .then((response) => {
+          const imageData = response.data;
+          console.log(imageData);
+          // Update the image property of the first attendee
+          attendees[0].image = imageData;
+        })
+        .catch((error) => {
+          console.error("Failed to fetch image data:", error);
+          // Handle error if needed
+        });
+
+      setPost(attendees);
+    }
+  };
+
   useEffect(() => {
-    const getAttendees = async () => {
-      const response = await axios.get(`${global.baseurl}:4000/getAttendees`, {
-        params: {
-          event_id: event_id,
-        },
-      });
-
-      if (response.status === 200) {
-        const { data } = response;
-        const attendees = data.users;
-        const id = attendees[0].attendance_id;
-
-        const imageResponse = axios.get(
-          `${global.baseurl}:4000/attendanceImage/${id}`
-        );
-
-        imageResponse
-          .then((response) => {
-            const imageData = response.data;
-            console.log(imageData);
-            // Update the image property of the first attendee
-            attendees[0].image = imageData;
-          })
-          .catch((error) => {
-            console.error("Failed to fetch image data:", error);
-            // Handle error if needed
-          });
-
-        setPost(attendees);
-      }
-    };
     if (role === "admin") {
       getAttendees();
     }
@@ -120,35 +121,43 @@ export default function Attendees({
       return;
     }
 
-    // setIsLoading(true);
-
-    // const event = eventData.find(
-    //   (e) => e.title === viewEvent && e.eventID === event_id
-    // );
-    // console.log("Events Data: ", eventData);
-
-    const eventEndTime = new Date(currentViewedEventData.datetime);
-    if (new Date() < eventEndTime) {
-      Alert.alert(
-        "Error",
-        "You can't submit attendance before the event has finished."
-      );
-      return;
-    }
+    // const eventEndTime = new Date(currentViewedEventData.datetime);
+    // if (new Date() < eventEndTime) {
+    //   Alert.alert(
+    //     "Error",
+    //     "You can't submit attendance before the event has finished."
+    //   );
+    //   return;
+    // }
 
     setTimeout(async () => {
       try {
-        const data = {
-          user_id: user_id,
-          events_id: event_id,
-          comments: text,
-          image: images,
-        };
+        const data = new FormData();
+        data.append("user_id", user_id);
+        data.append("events_id", event_id);
+        data.append("comments", text);
+
+        if (images) {
+          const uriParts = images.split(".");
+          const fileType = uriParts[uriParts.length - 1];
+
+          data.append("image", {
+            uri: images,
+            name: `photo.${fileType}`,
+            type: `image/${fileType}`,
+          });
+        }
 
         const response = await axios.post(
           `${global.baseurl}:4000/createAttendance`,
-          data
+          data,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         );
+        console.log(images);
 
         if (response.status === 200) {
           Alert.alert("Success", "Post submitted successfully");

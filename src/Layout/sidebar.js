@@ -17,6 +17,7 @@ import Button from "../components/button";
 import Avatar from "../components/avatar";
 
 import { Authentication } from "../Auth/Authentication";
+import axios from "axios";
 
 export default function sideBar({
   avatar,
@@ -81,6 +82,39 @@ export default function sideBar({
     }, 2000);
   };
 
+  const [fetchedImage, setFetchedImage] = useState(null);
+
+  useEffect(() => {
+    const fetchImage = async () => {
+      let baseurlimage = `${global.baseurl}:4000/adminImage/${user_id}`;
+
+      if (role.toLowerCase() === "user") {
+        baseurlimage = `${global.baseurl}:4000/userImage/${user_id}`;
+      }
+
+      try {
+        const responseimage = await axios.get(baseurlimage);
+
+        // Extract the image name from the response and build the correct URL
+        let imageName = responseimage.data.image.replace("\\", "/"); // Replace backslash with forward slash
+        imageName = imageName.replace("uploadsx", ""); // Remove 'uploadsx' from the image name
+        const originalNumber = imageName.split("/")[1].split("-")[0]; // Extract the number from the image name
+        let imageUrl = null;
+        if (originalNumber !== "null") {
+          const newNumber = "170" + originalNumber; // Prepend '170' to the original number
+          imageUrl = `${global.baseurl}:4000/uploads/${newNumber}-photo.jpeg`;
+        }
+
+        setFetchedImage(imageUrl);
+      } catch (error) {
+        console.error("An error occurred while fetching the image:", error);
+      }
+    };
+
+    fetchImage();
+  }, [user_id, role]);
+  console.log(fetchedImage);
+
   return (
     <Modal
       isVisible={isVisible}
@@ -115,9 +149,9 @@ export default function sideBar({
               paddingVertical: 20,
             }}
           >
-            {image ? (
+            {fetchedImage ? (
               <Avatar
-                avatar={image}
+                avatar={fetchedImage}
                 customHeight={hp("10.5%")}
                 customWidth={hp("10.5%")}
               />

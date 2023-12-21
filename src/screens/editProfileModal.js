@@ -104,6 +104,7 @@ export default function EditProfile({ navigation, route }) {
             text: "OK",
             onPress: () => {
               setModalVisible(false);
+              navigation.goBack();
             },
           },
         ],

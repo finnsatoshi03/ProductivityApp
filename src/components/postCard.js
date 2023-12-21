@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, Image } from "react-native";
 import { globalStyles } from "../styles/globalStyles";
 import {
@@ -59,7 +59,7 @@ export default function PostCards({
       console.log(error);
     }
   };
-  const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").format(
+  const formattedDate = moment(datetime, "YYYY-MM-DDTHH:mm:ss.SSSZ").fromNow(
     "MM/DD/YYYY HH:mm:ss"
   );
 
@@ -88,7 +88,56 @@ export default function PostCards({
       console.log(error);
     }
   };
-  console.log(image);
+
+  const [attendanceImage, setAttendanceImage] = useState(null);
+  console.log(user_id);
+  console.log(attendanceImage);
+
+  const fetchAttendanceImage = async () => {
+    let baseurlimage = `${global.baseurl}:4000/attendanceImage/${user_id}`;
+
+    const responseimage = await axios.get(baseurlimage);
+
+    // Extract the image name from the response and build the correct URL
+    let imageName = responseimage.data.image.replace("\\", "/"); // Replace backslash with forward slash
+    imageName = imageName.replace("uploadsx", ""); // Remove 'uploadsx' from the image name
+    const originalNumber = imageName.split("/")[1].split("-")[0]; // Extract the number from the image name
+    let imageUrl = null;
+    if (originalNumber !== "null") {
+      const newNumber = "170" + originalNumber; // Prepend '170' to the original number
+      imageUrl = `${global.baseurl}:4000/uploads/${newNumber}-photo.jpeg`;
+    }
+
+    setAttendanceImage(imageUrl);
+  };
+
+  // console.log(image);
+
+  const [userImage, setUserImage] = useState(null);
+
+  const fetchUserImage = async () => {
+    let baseurlimage = `${global.baseurl}:4000/userImage/${user_id}`;
+
+    const responseimage = await axios.get(baseurlimage);
+
+    // Extract the image name from the response and build the correct URL
+    let imageName = responseimage.data.image.replace("\\", "/"); // Replace backslash with forward slash
+    imageName = imageName.replace("uploadsx", ""); // Remove 'uploadsx' from the image name
+    const originalNumber = imageName.split("/")[1].split("-")[0]; // Extract the number from the image name
+    let imageUrl = null;
+    if (originalNumber !== "null") {
+      const newNumber = "170" + originalNumber; // Prepend '170' to the original number
+      imageUrl = `${global.baseurl}:4000/uploads/${newNumber}-photo.jpeg`;
+    }
+
+    setUserImage(imageUrl);
+  };
+
+  useEffect(() => {
+    fetchAttendanceImage();
+    fetchUserImage();
+  }, []);
+
   return (
     <View>
       <View
@@ -105,11 +154,11 @@ export default function PostCards({
           }}
         >
           <Avatar
-            avatar={avatar}
+            avatar={userImage || avatar}
             firstName={fullname}
             // style={{ height: hp("7%"), width: hp("7%") }}
-            customHeight={hp("3.5%")}
-            customWidth={hp("3.5%")}
+            customHeight={hp("6.5%")}
+            customWidth={hp("6.5%")}
             size={6}
           />
           <View>
@@ -143,7 +192,7 @@ export default function PostCards({
           <View style={{ width: "100%", flexDirection: "column" }}>
             <Image
               style={{ height: hp("40%"), width: "100%" }}
-              source={{ uri: image }}
+              source={{ uri: attendanceImage }}
             />
           </View>
         </View>
