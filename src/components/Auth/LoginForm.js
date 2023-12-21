@@ -30,8 +30,8 @@ export default function AdminLogin({
   userType,
 }) {
   const [isFocused, setIsFocused] = useState(false);
-  const [username, setUsername] = useState("1");
-  const [password, setPassword] = useState("1");
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
 
   const logoSize = useRef(new Animated.Value(1)).current;
   const logoPosition = useRef(new Animated.Value(0)).current; // New Animated.Value
@@ -79,10 +79,23 @@ export default function AdminLogin({
         let user_id = response.data.user_id;
         let baseurlimage = `${global.baseurl}:4000/adminImage/${user_id}`;
 
-        if (userType === "User") {
+        if (userType.toLowerCase() === "user") {
           baseurlimage = `${global.baseurl}:4000/userImage/${user_id}`;
         }
+
+        console.log(userType);
+
         const responseimage = await axios.get(baseurlimage);
+
+        // Extract the image name from the response and build the correct URL
+        let imageName = responseimage.data.image.replace("\\", "/"); // Replace backslash with forward slash
+        imageName = imageName.replace("uploadsx", ""); // Remove 'uploadsx' from the image name
+        const originalNumber = imageName.split("/")[1].split("-")[0]; // Extract the number from the image name
+        let imageUrl = null;
+        if (originalNumber !== "null") {
+          const newNumber = "170" + originalNumber; // Prepend '170' to the original number
+          imageUrl = `${global.baseurl}:4000/uploads/${newNumber}-photo.jpeg`;
+        }
 
         setErrorMessage("Login successful");
         navigation.navigate("Calendar", {
@@ -92,7 +105,7 @@ export default function AdminLogin({
           role: response.data.role,
           contact: response.data.contact,
           email: response.data.email,
-          image: responseimage.data,
+          image: imageUrl,
         });
       }
     } catch (error) {
